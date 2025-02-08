@@ -1,8 +1,8 @@
 ﻿namespace EnglishVocabApp.Models
 {
-    public class Word
+    public class Word : BaseModelClass
     {
-        public int Id { get; set; }
+        // public int Id { get; set; }
         public string Name { get; set; }
         
         // a new class must be created named Type
