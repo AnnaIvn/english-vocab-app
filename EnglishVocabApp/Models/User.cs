@@ -1,19 +1,19 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace EnglishVocabApp.Models
-public class User:IdentityUser
 {
-    public string Username { get; set; } // Ім’я користувача
-    public string Email { get; set; } // Адреса електронної пошти
-    public string PasswordHash { get; set; } // Хешований пароль
-    public DateTime DateJoined { get; set; } // Дата створення облікового запису
+    public class User : IdentityUser
+    {
+        public DateTime? DateJoined { get; set; }   // Дата створення облікового запису
 
-    // Колекція папок, створених користувачем
-    public List<Folder> CreatedFolders { get; set; } = new List<Folder>();
+        public List<Folder> CreatedFolders { get; set; } = new List<Folder>();    // Колекція папок, створених користувачем
 
-    // Колекція вивчених слів
-    public List<Word> LearnedWords { get; set; } = new List<Word>();
+        public List<Word> LearnedWords { get; set; } = new List<Word>();          // Колекція вивчених слів
 
-    // Загальна кількість вивчених слів
-    public int TotalWordsLearned => LearnedWords.Count;
+        public int TotalWordsLearned => LearnedWords?.Count ?? 0;    // Загальна кількість вивчених слів   // will work even if it is null
+        // public string PasswordHash { get; set; } // Хешований пароль  // password is in IdentityUser, i'll coment this for now
+        // ? - is to be able for these fields to be null, because they aren't implemented right now in any way
+    }
 }
 
 
