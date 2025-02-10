@@ -1,4 +1,5 @@
-﻿public class User:IdentityUser
+namespace EnglishVocabApp.Models
+public class User:IdentityUser
 {
     public string Username { get; set; } // Ім’я користувача
     public string Email { get; set; } // Адреса електронної пошти
