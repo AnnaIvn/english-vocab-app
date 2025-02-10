@@ -1,4 +1,5 @@
-﻿public class Folder
+namespace EnglishVocabApp.Models
+public class Folder
 {
     public int Id { get; set; } // Ідентифікатор папки
     public string Name { get; set; } // Назва папки
