@@ -5,7 +5,8 @@
         public int WordId { get; set; }
         public int FolderId { get; set; }
 
-        public Word Word { get; set; }
+
+        public Word Word { get; set; }          // navigational properties
         public Folder Folder { get; set; }
     }
 }
