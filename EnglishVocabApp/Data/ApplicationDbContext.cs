@@ -42,6 +42,7 @@ namespace EnglishVocabApp.Data
             Builder.Entity<WordsFolders>()
                 .HasOne(wf => wf.Folder)
                 .WithMany(f => f.WordsFolders);
+           
             Builder.Entity<FoldersUsers>()
                 .HasKey(fu => new { fu.UserId, fu.FolderId });
 
