@@ -48,13 +48,11 @@ namespace EnglishVocabApp.Data
 
             Builder.Entity<FoldersUsers>()
                 .HasOne(fu => fu.User)
-                .WithMany(u => u.FoldersUsers)
-                .HasForeignKey(fu => fu.UserId);
+                .WithMany(u => u.FoldersUsers);
 
             Builder.Entity<FoldersUsers>()
                 .HasOne(fu => fu.Folder)
-                .WithMany(f => f.FoldersUsers)
-                .HasForeignKey(fu => fu.FolderId);
+                .WithMany(f => f.FoldersUsers);
         }
     }
 }
