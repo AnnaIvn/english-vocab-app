@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace EnglishVocabApp.Models
 {
     public class Folder
@@ -12,7 +14,9 @@ namespace EnglishVocabApp.Models
 
 
         public User User { get; set; }                                 // navigational property
+        [NotMapped]                                                    // 
         public IEnumerable<WordsFolders> WordsFolders { get; set; }    // navigational property for many-to-many relationship between Word and Folder
+        [NotMapped]
         public IEnumerable<FoldersUsers> FoldersUsers { get; set; }    // navigational property for many-to-many relationship between Folder and User
     }
 }
