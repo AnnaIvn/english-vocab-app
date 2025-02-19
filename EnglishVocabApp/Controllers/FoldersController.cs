@@ -59,7 +59,7 @@ namespace EnglishVocabApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,UserId,CreatedAt,UpdatedAt,IsPrivate")] Folder folder)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)              // commented for now
             {
                 _context.Add(folder);
                 await _context.SaveChangesAsync();
@@ -98,7 +98,7 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)           // commented for now
             {
                 try
                 {

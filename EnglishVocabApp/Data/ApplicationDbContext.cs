@@ -7,7 +7,7 @@ namespace EnglishVocabApp.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>     // added User 
     {
-        public DbSet<User> Users {  get; set; }
+        public new DbSet<User> Users { get; set; }                 // IdentityDbContext has also User, but we need to use our User class, probably temporary fix
         public DbSet<Models.Type> Types { get; set; }
         public DbSet<Word> Words { get; set; }
         public DbSet<Folder> Folders { get; set; }
