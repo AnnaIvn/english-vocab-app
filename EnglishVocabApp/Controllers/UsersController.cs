@@ -1,20 +1,24 @@
 ﻿using EnglishVocabApp.Data;
+using EnglishVocabApp.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishVocabApp.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public UsersController(ApplicationDbContext db)
+        public UsersController(ApplicationDbContext context, UserManager<User> userManager)
         {
-            _db = db;
+            _context = context;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
-            var users = _db.Users.ToList();
+            var users = _context.Users.ToList();
 
             return View(users);
         }
