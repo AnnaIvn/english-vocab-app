@@ -48,7 +48,7 @@ namespace EnglishVocabApp.Controllers
         // GET: Words/Create         for form creation
         public IActionResult Create()
         {
-            ViewData["TypeId"] = new SelectList(_context.Types, "Id", "Id");
+            ViewData["TypeId"] = new SelectList(_context.Types, "Id", "Name");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace EnglishVocabApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TypeId"] = new SelectList(_context.Types, "Id", "Id", word.TypeId);
+            ViewBag.TypeId = new SelectList(_context.Types, "Id", "Name", word.TypeId);
             return View(word);
         }
 
@@ -82,7 +82,7 @@ namespace EnglishVocabApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["TypeId"] = new SelectList(_context.Types, "Id", "Id", word.TypeId);
+            ViewData["TypeId"] = new SelectList(_context.Types, "Id", "Name", word.TypeId);
             return View(word);
         }
 

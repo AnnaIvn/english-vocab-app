@@ -48,7 +48,7 @@ namespace EnglishVocabApp.Controllers
         // GET: Folders/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");        // changed Id to UserName
             return View();
         }
 
@@ -82,7 +82,7 @@ namespace EnglishVocabApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", folder.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", folder.UserId);        // changed Id to UserName
             return View(folder);
         }
 
