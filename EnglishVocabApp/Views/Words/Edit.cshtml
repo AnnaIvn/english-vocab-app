@@ -5,51 +5,100 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
-
-<h4>Word</h4>
+<h2>Word Editor</h2>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Id" />
+
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label">Name of the word: </label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="TypeId" class="control-label"></label>
+                <label asp-for="TypeId" class="control-label">Type/Class of the word: </label>
                 <select asp-for="TypeId" class="form-control" asp-items="ViewBag.TypeId"></select>
                 <span asp-validation-for="TypeId" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Transcript" class="control-label"></label>
+                <label asp-for="Transcript" class="control-label">Transcript of the word: </label>
                 <input asp-for="Transcript" class="form-control" />
                 <span asp-validation-for="Transcript" class="text-danger"></span>
             </div>
+
+            <!-- Synonyms Section -->
             <div class="form-group">
-                <label asp-for="Synonyms" class="control-label"></label>
-                <input asp-for="Synonyms" class="form-control" />
-                <span asp-validation-for="Synonyms" class="text-danger"></span>
+                <label class="control-label">Synonyms: </label>
+                <div id="synonyms-container">
+                    @foreach (var synonym in Model.Synonyms)
+                    {
+                        <div class="synonym-item">
+                            <input type="text" name="Synonyms[]" value="@synonym" class="form-control d-inline w-75" />
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>
+                        </div>
+                    }
+                </div>
+                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="addSynonym()">Add Synonym</button>
             </div>
+
+
+            <!-- Antonyms Section -->
             <div class="form-group">
-                <label asp-for="Antonyms" class="control-label"></label>
-                <input asp-for="Antonyms" class="form-control" />
-                <span asp-validation-for="Antonyms" class="text-danger"></span>
+                <label class="control-label">Antonyms: </label>
+                <div id="antonyms-container">
+                    @foreach (var antonym in Model.Antonyms)  @*by using name="Synonyms[]", model automatically binds all synonyms without requiring sequential indexes*@
+
+                    {
+                        <div class="antonym-item">
+                            <input type="text" name="Antonyms[]" value="@antonym" class="form-control d-inline w-75" />
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>
+                        </div>
+                    }
+                </div>
+                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="addAntonym()">Add Antonym</button>
             </div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Save" class="btn btn-success" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function addSynonym() {
+            let container = document.getElementById("synonyms-container");
+            let div = document.createElement("div");
+            div.className = "synonym-item";
+            div.innerHTML = `<input type="text" name="Synonyms[]" class="form-control d-inline w-75" />
+                             <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>`;
+            container.appendChild(div);
+        }
+
+        function addAntonym() {
+            let container = document.getElementById("antonyms-container");
+            let div = document.createElement("div");
+            div.className = "antonym-item";
+            div.innerHTML = `<input type="text" name="Antonyms[]" class="form-control d-inline w-75" />
+                             <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>`;
+            container.appendChild(div);
+        }
+
+        function removeElement(button) {
+            button.parentElement.remove();
+        }
+    </script>
 }

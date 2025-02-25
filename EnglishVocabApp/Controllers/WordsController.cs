@@ -61,6 +61,9 @@ namespace EnglishVocabApp.Controllers
         {
             //if (ModelState.IsValid)    // commented for now
             {
+                word.SynonymsString = string.Join(", ", word.Synonyms.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Synonyms list to comma-separated SynonymsString before saving
+                word.AntonymsString = string.Join(", ", word.Antonyms.Where(a => !string.IsNullOrWhiteSpace(a)));  // convert Antonyms list to comma-separated AntonymsString before saving
+
                 _context.Add(word);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -83,6 +86,10 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
             ViewData["TypeId"] = new SelectList(_context.Types, "Id", "Name", word.TypeId);
+            
+            word.Synonyms = word.SynonymsString?.Split(',').Select(s => s.Trim()).ToList() ?? new List<string>();   // convert comma-separated values in SynonymsString into Synonym list
+            word.Antonyms = word.AntonymsString?.Split(',').Select(a => a.Trim()).ToList() ?? new List<string>();   // convert comma-separated values in AntonymsString into Antonym list
+
             return View(word);
         }
 
@@ -102,12 +109,16 @@ namespace EnglishVocabApp.Controllers
             {
                 try
                 {
+                    word.SynonymsString = string.Join(", ", word.Synonyms.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Synonyms list to comma-separated SynonymsString before saving
+                    word.AntonymsString = string.Join(", ", word.Antonyms.Where(a => !string.IsNullOrWhiteSpace(a)));  // convert Antonyms list to comma-separated AntonymsString before saving
+
                     _context.Update(word);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!WordExists(word.Id))
+                    //if (!_context.Words.Any(e => e.Id == word.Id))
                     {
                         return NotFound();
                     }

@@ -5,10 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>List of all words</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Add new word</a>
 </p>
 <table class="table">
     <thead>
@@ -41,10 +41,10 @@
                 @Html.DisplayFor(modelItem => item.Transcript)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Synonyms)
+                @(item.SynonymsString != null ? string.Join(", ", item.SynonymsString) : "None")    @* converts list to string, if null -> displays none *@
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Antonyms)
+                @(item.AntonymsString != null ? string.Join(", ", item.AntonymsString) : "None")    @* converts list to string, if null -> displays none *@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Type.Name)

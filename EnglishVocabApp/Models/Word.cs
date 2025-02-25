@@ -11,8 +11,14 @@ namespace EnglishVocabApp.Models
 
         //public List<(string Meaning, string Example)> MeaningsAndExamples { get; set; }       // meaning of the word - example of use in sentence
 
-        public List <string> Synonyms { get; set; }
-        public List <string> Antonyms { get; set; }
+        public string SynonymsString { get; set; }   // this is how synonyms are stored in the database (comma-separated)
+        public string AntonymsString { get; set; }   // this is how antonyms are stored in the database (comma-separated)
+
+       
+        [NotMapped]  // for UI and data binding
+        public List<string> Synonyms { get; set; } = new List<string>();
+        [NotMapped]
+        public List<string> Antonyms { get; set; } = new List<string>();
 
 
         public Type Type { get; set; }                                   // navigational property for one-to-many relationship between Type and Word
