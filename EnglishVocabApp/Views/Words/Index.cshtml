@@ -20,13 +20,19 @@
                 @Html.DisplayNameFor(model => model.Transcript)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Meaning)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Examples)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Synonyms)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Antonyms)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
             </th>
             <th></th>
         </tr>
@@ -41,13 +47,19 @@
                 @Html.DisplayFor(modelItem => item.Transcript)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Type.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Meaning)
+            </td>
+            <td>
+                @(item.ExamplesString != null ? string.Join(". ", item.ExamplesString) : "None")    @* converts list to string, if null -> displays none *@
+            </td>
+            <td>
                 @(item.SynonymsString != null ? string.Join(", ", item.SynonymsString) : "None")    @* converts list to string, if null -> displays none *@
             </td>
             <td>
                 @(item.AntonymsString != null ? string.Join(", ", item.AntonymsString) : "None")    @* converts list to string, if null -> displays none *@
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

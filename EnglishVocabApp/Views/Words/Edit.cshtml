@@ -32,6 +32,27 @@
                 <span asp-validation-for="Transcript" class="text-danger"></span>
             </div>
 
+            <div class="form-group">
+                <label asp-for="Meaning" class="control-label">Meaning of the word: </label>
+                <input asp-for="Meaning" class="form-control" />
+                <span asp-validation-for="Meaning" class="text-danger"></span>
+            </div>
+
+            <!-- Examples Section -->
+            <div class="form-group">
+                <label class="control-label">Examples: </label>
+                <div id="examples-container">
+                    @foreach (var example in Model.Examples)
+                    {
+                        <div class="example-item">
+                            <input type="text" name="Examples[]" value="@example" class="form-control d-inline w-75" />
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>
+                        </div>
+                    }
+                </div>
+                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="addExample()">Add Example</button>
+            </div>
+
             <!-- Synonyms Section -->
             <div class="form-group">
                 <label class="control-label">Synonyms: </label>
@@ -47,13 +68,11 @@
                 <button type="button" class="btn btn-primary btn-sm mt-2" onclick="addSynonym()">Add Synonym</button>
             </div>
 
-
             <!-- Antonyms Section -->
             <div class="form-group">
                 <label class="control-label">Antonyms: </label>
                 <div id="antonyms-container">
-                    @foreach (var antonym in Model.Antonyms)  @*by using name="Synonyms[]", model automatically binds all synonyms without requiring sequential indexes*@
-
+                    @foreach (var antonym in Model.Antonyms)
                     {
                         <div class="antonym-item">
                             <input type="text" name="Antonyms[]" value="@antonym" class="form-control d-inline w-75" />
@@ -63,7 +82,6 @@
                 </div>
                 <button type="button" class="btn btn-primary btn-sm mt-2" onclick="addAntonym()">Add Antonym</button>
             </div>
-
 
             <div class="form-group mt-3">
                 <input type="submit" value="Save" class="btn btn-success" />
@@ -79,6 +97,15 @@
     }
 
     <script>
+        function addExample() {
+            let container = document.getElementById("examples-container");
+            let div = document.createElement("div");
+            div.className = "example-item";
+            div.innerHTML = `<input type="text" name="Examples[]" class="form-control d-inline w-75" />
+                             <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>`;
+            container.appendChild(div);
+        }
+
         function addSynonym() {
             let container = document.getElementById("synonyms-container");
             let div = document.createElement("div");

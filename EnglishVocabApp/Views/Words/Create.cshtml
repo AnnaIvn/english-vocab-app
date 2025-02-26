@@ -30,6 +30,20 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="Meaning" class="control-label">Meaning of the word: </label>
+                <input asp-for="Meaning" class="form-control" />
+                <span asp-validation-for="Meaning" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Examples: </label>
+                <ul id="examplesList"></ul>
+                <input type="text" id="newExample" class="form-control" placeholder="Add an example" />
+                <button type="button" class="btn btn-secondary mt-2" onclick="addExample()">Add</button>
+                <input type="hidden" name="Examples" id="examplesInput" />
+            </div>
+
+            <div class="form-group">
                 <label>Synonyms: </label>
                 <ul id="synonymsList"></ul>
                 <input type="text" id="newSynonym" class="form-control" placeholder="Add a synonym" />
@@ -54,8 +68,26 @@
 
 @section Scripts {
     <script>
+        let examples = [];
         let synonyms = [];
         let antonyms = [];
+
+        function addExample() {
+            let value = document.getElementById("newExample").value;
+            if (value) {
+                examples.push(value);
+                document.getElementById("examplesList").innerHTML += `<li>${value} <button type="button" onclick="removeExample('${value}')">x</button></li>`;
+                document.getElementById("examplesInput").value = examples.join(". ");
+                document.getElementById("newExample").value = "";
+            }
+        }
+
+        function removeExample(value) {
+            examples = examples.filter(item => item !== value);
+            document.getElementById("examplesList").innerHTML = examples.map(item => `<li>${item} <button type="button" onclick="removeExample('${item}')">x</button></li>`).join("");
+            document.getElementById("examplesInput").value = examples.join(". ");
+        }
+
 
         function addSynonym() {
             let value = document.getElementById("newSynonym").value;

@@ -57,10 +57,11 @@ namespace EnglishVocabApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,TypeId,Transcript,Synonyms,Antonyms,Id")] Word word)
+        public async Task<IActionResult> Create([Bind("Name,TypeId,Transcript,Meaning,Examples,Synonyms,Antonyms,Id")] Word word)
         {
             //if (ModelState.IsValid)    // commented for now
             {
+                word.ExamplesString = string.Join(". ", word.Examples.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Examples list to comma-separated ExamplesString before saving
                 word.SynonymsString = string.Join(", ", word.Synonyms.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Synonyms list to comma-separated SynonymsString before saving
                 word.AntonymsString = string.Join(", ", word.Antonyms.Where(a => !string.IsNullOrWhiteSpace(a)));  // convert Antonyms list to comma-separated AntonymsString before saving
 
@@ -86,7 +87,8 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
             ViewData["TypeId"] = new SelectList(_context.Types, "Id", "Name", word.TypeId);
-            
+
+            word.Examples = word.ExamplesString?.Split('.').Select(s => s.Trim()).ToList() ?? new List<string>();   // convert comma-separated values in SynonymsString into Synonym list
             word.Synonyms = word.SynonymsString?.Split(',').Select(s => s.Trim()).ToList() ?? new List<string>();   // convert comma-separated values in SynonymsString into Synonym list
             word.Antonyms = word.AntonymsString?.Split(',').Select(a => a.Trim()).ToList() ?? new List<string>();   // convert comma-separated values in AntonymsString into Antonym list
 
@@ -98,7 +100,7 @@ namespace EnglishVocabApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,TypeId,Transcript,Synonyms,Antonyms,Id")] Word word)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,TypeId,Transcript,Meaning,Examples,Synonyms,Antonyms,Id")] Word word)
         {
             if (id != word.Id)
             {
@@ -109,6 +111,7 @@ namespace EnglishVocabApp.Controllers
             {
                 try
                 {
+                    word.ExamplesString = string.Join(". ", word.Examples.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Examples list to comma-separated ExamplesString before saving
                     word.SynonymsString = string.Join(", ", word.Synonyms.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Synonyms list to comma-separated SynonymsString before saving
                     word.AntonymsString = string.Join(", ", word.Antonyms.Where(a => !string.IsNullOrWhiteSpace(a)));  // convert Antonyms list to comma-separated AntonymsString before saving
 
