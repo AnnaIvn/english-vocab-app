@@ -1,0 +1,35 @@
+﻿@model IEnumerable<EnglishVocabApp.Models.Folder>
+
+@{
+    ViewData["Title"] = "My Folders";
+}
+
+<h2>My Folders</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var folder in Model)
+        {
+            <tr>
+                <td>@folder.Name</td>
+                <td>@folder.Description</td>
+                <td>@folder.CreatedAt.ToString("yyyy-MM-dd")</td>
+                <td>@folder.UpdatedAt.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@folder.Id">View</a> |
+                    <a asp-action="Edit" asp-route-id="@folder.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@folder.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

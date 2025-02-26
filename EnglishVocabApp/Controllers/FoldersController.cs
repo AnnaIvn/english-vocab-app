@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EnglishVocabApp.Data;
 using EnglishVocabApp.Models;
+using System.Security.Claims;
 
 namespace EnglishVocabApp.Controllers
 {
@@ -22,8 +23,32 @@ namespace EnglishVocabApp.Controllers
         // GET: Folders
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Folders.Include(f => f.User);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = (User.Identity != null && User.Identity.IsAuthenticated)
+               ? User.FindFirstValue(ClaimTypes.NameIdentifier)
+               : null;
+
+            var foldersQuery = _context.Folders
+                .Include(f => f.User)
+                .Where(f => !f.IsPrivate || (userId != null && f.UserId == userId));
+
+            return View(await foldersQuery.ToListAsync());
+        }
+
+        public async Task<IActionResult> MyFolders()
+        {
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+
+            if (currentUserId == null)
+            {
+                return Unauthorized(); 
+            }
+
+            var userFolders = await _context.Folders
+                .Where(f => f.UserId == currentUserId)
+                .Include(f => f.User)
+                .ToListAsync();
+
+            return View(userFolders);
         }
 
         // GET: Folders/Details/5
