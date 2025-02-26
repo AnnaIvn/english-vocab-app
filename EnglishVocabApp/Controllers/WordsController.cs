@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EnglishVocabApp.Data;
 using EnglishVocabApp.Models;
+using Microsoft.Data.SqlClient;
 
 namespace EnglishVocabApp.Controllers
 {
@@ -20,11 +21,39 @@ namespace EnglishVocabApp.Controllers
         }
 
         // GET: Words
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(String sortOrder)
         {
             var applicationDbContext = _context.Words.Include(w => w.Type);
-            return View(await applicationDbContext.ToListAsync());
+            // Задаємо параметри сортування
+            ViewBag.NameSortParam = sortOrder == "name_asc" ? "name_desc" : "name_asc";
+            ViewBag.TypeSortParam = sortOrder == "type_asc" ? "type_desc" : "type_asc";
+
+            // Запит на отримання слів
+            var words = _context.Words.Include(w => w.Type).AsQueryable();
+
+            // Сортування
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    words = words.OrderByDescending(w => w.Name);
+                    break;
+                case "name_asc":
+                    words = words.OrderBy(w => w.Name);
+                    break;
+                case "type_desc":
+                    words = words.OrderByDescending(w => w.Type.Name);
+                    break;
+                case "type_asc":
+                    words = words.OrderBy(w => w.Type.Name);
+                    break;
+                default:
+                    words = words.OrderBy(w => w.Name); // За замовчуванням сортуємо за Name
+                    break;
+            }
+            //return View(await applicationDbContext.ToListAsync());
+            return View(words.ToList());
         }
+        
 
         // GET: Words/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -173,6 +202,7 @@ namespace EnglishVocabApp.Controllers
             }
 
             return View(words);
+        }
         // POST: Words/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -194,3 +224,4 @@ namespace EnglishVocabApp.Controllers
         }
     }
 }
+
