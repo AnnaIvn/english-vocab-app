@@ -154,7 +154,25 @@ namespace EnglishVocabApp.Controllers
 
             return View(word);
         }
+        // GET: Words/ByName?name=run
+        public async Task<IActionResult> ByName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return BadRequest("Name parameter is required.");
+            }
 
+            var words = await _context.Words
+                .Where(w => w.Name == name)
+                .Include(w => w.Type)
+                .ToListAsync();
+
+            if (!words.Any())
+            {
+                return NotFound($"No words found with the name '{name}'.");
+            }
+
+            return View(words);
         // POST: Words/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
