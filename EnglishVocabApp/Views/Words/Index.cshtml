@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EnglishVocabApp.Models.Word>
+@model IEnumerable<EnglishVocabApp.Models.Word>
 
 @{
     ViewData["Title"] = "Index";
@@ -14,13 +14,17 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSortParam">
+                    @Html.DisplayNameFor(model => model.Name)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Transcript)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Type)
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.TypeSortParam">
+                    @Html.DisplayNameFor(model => model.Type)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Meaning)
@@ -38,35 +42,36 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Transcript)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Meaning)
-            </td>
-            <td>
-                @(item.ExamplesString != null ? string.Join(". ", item.ExamplesString) : "None")    @* converts list to string, if null -> displays none *@
-            </td>
-            <td>
-                @(item.SynonymsString != null ? string.Join(", ", item.SynonymsString) : "None")    @* converts list to string, if null -> displays none *@
-            </td>
-            <td>
-                @(item.AntonymsString != null ? string.Join(", ", item.AntonymsString) : "None")    @* converts list to string, if null -> displays none *@
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Transcript)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Meaning)
+                </td>
+                <td>
+                    @(item.ExamplesString != null ? string.Join(". ", item.ExamplesString) : "None")
+                </td>
+                <td>
+                    @(item.SynonymsString != null ? string.Join(", ", item.SynonymsString) : "None")
+                </td>
+                <td>
+                    @(item.AntonymsString != null ? string.Join(", ", item.AntonymsString) : "None")
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
