@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using EnglishVocabApp.Data;
 using EnglishVocabApp.Models;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EnglishVocabApp.Controllers
 {
@@ -184,6 +185,51 @@ namespace EnglishVocabApp.Controllers
         private bool FolderExists(int id)
         {
             return _context.Folders.Any(e => e.Id == id);
+        }
+
+        [Authorize]  // Ensures only logged-in users can save folders
+        public async Task<IActionResult> SaveFolder(int folderId)
+        {
+            string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == null) return Unauthorized();
+
+            var folder = await _context.Folders.FindAsync(folderId);
+            if (folder == null || folder.IsPrivate) return NotFound(); // Only public folders
+
+            // Check if the user already has this folder
+            bool alreadySaved = await _context.FoldersUsers
+                .AnyAsync(fu => fu.UserId == currentUserId && fu.FolderId == folderId);
+
+            if (!alreadySaved)
+            {
+                var folderUser = new FoldersUsers
+                {
+                    UserId = currentUserId,
+                    FolderId = folderId
+                };
+                _context.FoldersUsers.Add(folderUser);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index)); // Return to Folders list
+        }
+
+        [Authorize]
+        public async Task<IActionResult> RemoveFolder(int folderId)
+        {
+            string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUserId == null) return Unauthorized();
+
+            var folderUser = await _context.FoldersUsers
+                .FirstOrDefaultAsync(fu => fu.UserId == currentUserId && fu.FolderId == folderId);
+
+            if (folderUser != null)
+            {
+                _context.FoldersUsers.Remove(folderUser);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index)); // Return to Folders list
         }
     }
 }

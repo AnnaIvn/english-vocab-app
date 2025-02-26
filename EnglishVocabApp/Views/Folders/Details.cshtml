@@ -1,4 +1,5 @@
 ﻿@model EnglishVocabApp.Models.Folder
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "Details";
@@ -52,3 +53,18 @@
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+@if (User?.Identity?.IsAuthenticated == true) // Only show for authenticated users and public folders
+{
+    // Check if the user has already saved this folder
+    if (!Model.FoldersUsers?.Any(fu => fu.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)) == true)
+    {
+        <form asp-action="SaveFolder" asp-controller="Folders" method="post" style="display:inline;">
+            <input type="hidden" name="folderId" value="@Model.Id" />
+            <button type="submit" class="btn btn-sm btn-primary">Save to My Folders</button>
+        </form>
+    }
+    else
+    {
+        <p>You have already saved this folder to your list.</p>
+    }
+}
