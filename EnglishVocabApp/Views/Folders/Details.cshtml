@@ -53,18 +53,29 @@
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
-@if (User?.Identity?.IsAuthenticated == true) // Only show for authenticated users and public folders
+@if (User?.Identity?.IsAuthenticated == true)
 {
-    // Check if the user has already saved this folder
-    if (!Model.FoldersUsers?.Any(fu => fu.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)) == true)
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    bool isOwner = Model.UserId == userId;
+
+    if (!isOwner)
     {
-        <form asp-action="SaveFolder" asp-controller="Folders" method="post" style="display:inline;">
-            <input type="hidden" name="folderId" value="@Model.Id" />
-            <button type="submit" class="btn btn-sm btn-primary">Save to My Folders</button>
-        </form>
-    }
-    else
-    {
-        <p>You have already saved this folder to your list.</p>
+        bool isSaved = Model.FoldersUsers?.Any(fu => fu.UserId == userId) ?? false;
+
+        if (!isSaved) // Show "Save to My Folders" if not saved
+        {
+            <form asp-action="SaveFolder" asp-controller="Folders" method="post" style="display:inline;">
+                <input type="hidden" name="folderId" value="@Model.Id" />
+                <button type="submit" class="btn btn-sm btn-primary">Save to My Folders</button>
+            </form>
+        }
+        else // Show "Remove from My Folders" if already saved
+        {
+            <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;">
+                <input type="hidden" name="folderId" value="@Model.Id" />
+                <button type="submit" class="btn btn-sm btn-danger">Remove from My Folders</button>
+            </form>
+        }
     }
 }

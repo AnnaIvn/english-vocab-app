@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<EnglishVocabApp.Models.Folder>
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "My Folders";
@@ -19,6 +20,9 @@
     <tbody>
         @foreach (var folder in Model)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            bool isOwner = folder.UserId == userId;
+
             <tr>
                 <td>@folder.Name</td>
                 <td>@folder.Description</td>
@@ -26,8 +30,19 @@
                 <td>@folder.UpdatedAt.ToString("yyyy-MM-dd")</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@folder.Id">View</a> |
-                    <a asp-action="Edit" asp-route-id="@folder.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@folder.Id">Delete</a>
+
+                    @if (isOwner)
+                    {
+                        <a asp-action="Edit" asp-route-id="@folder.Id">Edit</a> 
+                        <a asp-action="Delete" asp-route-id = "@folder.Id"> Delete </a>
+                    }
+
+                    <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;">
+                        <input type="hidden" name="folderId" value="@folder.Id" />
+                        <button type="submit" class="btn btn-sm @(isOwner ? "btn-danger" : "btn-warning")">
+                            @(isOwner ? "Delete Folder" : "Remove from My Folders")
+                        </button>
+                    </form>
                 </td>
             </tr>
         }

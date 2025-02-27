@@ -25,11 +25,12 @@ namespace EnglishVocabApp.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = (User.Identity != null && User.Identity.IsAuthenticated)
-               ? User.FindFirstValue(ClaimTypes.NameIdentifier)
-               : null;
+                ? User.FindFirstValue(ClaimTypes.NameIdentifier)
+                : null;
 
             var foldersQuery = _context.Folders
                 .Include(f => f.User)
+                .Include(f => f.FoldersUsers) // Include saved folder-user relations
                 .Where(f => !f.IsPrivate || (userId != null && f.UserId == userId));
 
             return View(await foldersQuery.ToListAsync());
@@ -37,15 +38,15 @@ namespace EnglishVocabApp.Controllers
 
         public async Task<IActionResult> MyFolders()
         {
-            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
-
-            if (currentUserId == null)
-            {
-                return Unauthorized(); 
-            }
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty; ;
+            if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
             var userFolders = await _context.Folders
-                .Where(f => f.UserId == currentUserId)
+                .Where(f => f.UserId == currentUserId)  // Folders the user created
+                .Union( // Include folders the user saved
+                    _context.Folders
+                        .Where(f => f.FoldersUsers.Any(fu => fu.UserId == currentUserId))
+                )
                 .Include(f => f.User)
                 .ToListAsync();
 
@@ -55,18 +56,14 @@ namespace EnglishVocabApp.Controllers
         // GET: Folders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var folder = await _context.Folders
                 .Include(f => f.User)
+                .Include(f => f.FoldersUsers) // Include saved folder-user relations
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (folder == null)
-            {
-                return NotFound();
-            }
+
+            if (folder == null) return NotFound();
 
             return View(folder);
         }
@@ -187,16 +184,17 @@ namespace EnglishVocabApp.Controllers
             return _context.Folders.Any(e => e.Id == id);
         }
 
-        [Authorize]  // Ensures only logged-in users can save folders
+        [Authorize]
         public async Task<IActionResult> SaveFolder(int folderId)
         {
             string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null) return Unauthorized();
+            if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
             var folder = await _context.Folders.FindAsync(folderId);
             if (folder == null || folder.IsPrivate) return NotFound(); // Only public folders
 
-            // Check if the user already has this folder
+            if (folder.UserId == currentUserId) return BadRequest("You already own this folder."); // Prevent self-saving
+
             bool alreadySaved = await _context.FoldersUsers
                 .AnyAsync(fu => fu.UserId == currentUserId && fu.FolderId == folderId);
 
@@ -211,25 +209,37 @@ namespace EnglishVocabApp.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction(nameof(Index)); // Return to Folders list
+            return RedirectToAction(nameof(MyFolders));
         }
 
         [Authorize]
         public async Task<IActionResult> RemoveFolder(int folderId)
         {
             string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (currentUserId == null) return Unauthorized();
+            if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
-            var folderUser = await _context.FoldersUsers
-                .FirstOrDefaultAsync(fu => fu.UserId == currentUserId && fu.FolderId == folderId);
+            var folder = await _context.Folders.FindAsync(folderId);
+            if (folder == null) return NotFound();
 
-            if (folderUser != null)
+            if (folder.UserId == currentUserId)
             {
-                _context.FoldersUsers.Remove(folderUser);
-                await _context.SaveChangesAsync();
+                // If user owns the folder, delete it instead
+                _context.Folders.Remove(folder);
+            }
+            else
+            {
+                // If user does not own the folder, remove it from the list 
+                var folderUser = await _context.FoldersUsers
+                    .FirstOrDefaultAsync(fu => fu.UserId == currentUserId && fu.FolderId == folderId);
+
+                if (folderUser != null)
+                {
+                    _context.FoldersUsers.Remove(folderUser);
+                }
             }
 
-            return RedirectToAction(nameof(Index)); // Return to Folders list
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(MyFolders)); 
         }
     }
 }

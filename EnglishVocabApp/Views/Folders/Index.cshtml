@@ -35,42 +35,60 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsPrivate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedAt)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsPrivate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdatedAt)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 
-                @if (User?.Identity?.IsAuthenticated == true) // Show only for logged-in users
-                {
-                     if (!Model.Any(fu => fu.FoldersUsers?.Any(fu => fu.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)) == true))
-                     {
-                         <form asp-action="SaveFolder" asp-controller="Folders" method="post" style="display:inline;">
-                             <input type="hidden" name="folderId" value="@item.Id" />
-                             <button type="submit" class="btn btn-sm btn-primary">Save to My Folders</button>
-                         </form>
-                     }
-                }
-            </td>
+                    @if (User?.Identity?.IsAuthenticated == true)
+                    {
+                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                        // Check if the user owns the folder or has already saved it
+                        bool isOwner = item.UserId == userId;
+                        bool isSaved = item.FoldersUsers?.Any(fu => fu.UserId == userId) ?? false;
+
+                        if (!isOwner)
+                        {
+                            // Show Save to My Folders button only for folders the user does not own
+                            if (!isSaved)
+                            {
+                                <form asp-action="SaveFolder" asp-controller="Folders" method="post" style="display:inline;">
+                                    <input type="hidden" name="folderId" value="@item.Id" />
+                                    <button type="submit" class="btn btn-sm btn-primary">Save to My Folders</button>
+                                </form>
+                            }
+                            // Show Remove from My Folders button if the user has saved the folder
+                            else if (isSaved)
+                            {
+                                <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;">
+                                    <input type="hidden" name="folderId" value="@item.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger">Remove from My Folders</button>
+                                </form>
+                            }
+                        }
+                    }
+                </td>
         </tr>
 }
     </tbody>
