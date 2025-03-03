@@ -67,7 +67,23 @@ namespace EnglishVocabApp.Controllers
 
             return View(folder);
         }
+                // GET: Folders/UserFolders
+        //public async Task<IActionResult> UserFolders()
+        //{
+        //    string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
+        //    var userFolders = await _context.Folders
+        //        .Where(f => f.UserId == currentUserId)  // Власні папки
+        //       .Union( // Папки, які користувач зберіг
+        //            _context.Folders
+        //                .Where(f => f.FoldersUsers.Any(fu => fu.UserId == currentUserId))
+        //        )
+        //        .Include(f => f.User)
+        //        .ToListAsync();
+
+        //    return View(userFolders);
+        //}
         // GET: Folders/Create
         public IActionResult Create()
         {
