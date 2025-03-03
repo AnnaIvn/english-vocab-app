@@ -199,7 +199,32 @@ namespace EnglishVocabApp.Controllers
         {
             return _context.Folders.Any(e => e.Id == id);
         }
+        // GET: Folders/Available
+        //public async Task<IActionResult> Available()
+        //{
+        //    IQueryable<Folder> folders;
 
+         //   if (User.Identity.IsAuthenticated)
+          //  {
+           //     // Отримуємо ідентифікатор залогіненого користувача
+           //     var userId = _context.Users
+             //       .Where(u => u.UserName == User.Identity.Name)
+              //      .Select(u => u.Id)
+              //      .FirstOrDefault();
+
+                // Повертаємо публічні папки + папки, створені цим користувачем
+           //     folders = _context.Folders
+            //        .Where(f => !f.IsPrivate || f.UserId == userId);
+            //}
+            //else
+            //{
+                // Якщо користувач не увійшов, повертаємо лише публічні папки
+               // folders = _context.Folders
+               //     .Where(f => !f.IsPrivate);
+            //}
+
+            return View(await folders.ToListAsync());
+        }
         [Authorize]
         public async Task<IActionResult> SaveFolder(int folderId)
         {
