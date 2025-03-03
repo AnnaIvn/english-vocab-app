@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EnglishVocabApp.Data;
+using EnglishVocabApp.ViewModels;
 using EnglishVocabApp.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace EnglishVocabApp.Controllers
 {
@@ -28,17 +30,30 @@ namespace EnglishVocabApp.Controllers
                 ? User.FindFirstValue(ClaimTypes.NameIdentifier)
                 : null;
 
-            var foldersQuery = _context.Folders
+            var foldersQuery = await _context.Folders
                 .Include(f => f.User)
                 .Include(f => f.FoldersUsers) // Include saved folder-user relations
-                .Where(f => !f.IsPrivate || (userId != null && f.UserId == userId));
+                .Where(f => !f.IsPrivate || (userId != null && f.UserId == userId))
+            .ToListAsync();
 
-            return View(await foldersQuery.ToListAsync());
+            var folderViewModels = foldersQuery.Select(f => new FolderViewModel
+            {
+                Id = f.Id,
+                Name = f.Name,
+                Description = f.Description,
+                UserId = f.UserId,
+                User = f.User,
+                CreatedAt = f.CreatedAt,
+                UpdatedAt = f.UpdatedAt,
+                IsPrivate = f.IsPrivate
+            });
+
+            return View(folderViewModels);
         }
 
         public async Task<IActionResult> MyFolders()
         {
-            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty; ;
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
             if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
             var userFolders = await _context.Folders
@@ -50,7 +65,19 @@ namespace EnglishVocabApp.Controllers
                 .Include(f => f.User)
                 .ToListAsync();
 
-            return View(userFolders);
+            var folderViewModels = userFolders.Select(f => new FolderViewModel
+            {
+                Id = f.Id,
+                Name = f.Name,
+                Description = f.Description,
+                UserId = f.UserId,
+                User = f.User,
+                CreatedAt = f.CreatedAt,
+                UpdatedAt = f.UpdatedAt,
+                IsPrivate = f.IsPrivate
+            }).ToList();
+
+            return View(folderViewModels);
         }
 
         // GET: Folders/Details/5
@@ -65,7 +92,19 @@ namespace EnglishVocabApp.Controllers
 
             if (folder == null) return NotFound();
 
-            return View(folder);
+            var folderVm = new FolderViewModel
+            {
+                Id = folder.Id,
+                Name = folder.Name,
+                Description = folder.Description,
+                UserId = folder.UserId,
+                User = folder.User,
+                CreatedAt = folder.CreatedAt,
+                UpdatedAt = folder.UpdatedAt,
+                IsPrivate = folder.IsPrivate
+            };
+
+            return View(folderVm);
         }
                 // GET: Folders/UserFolders
         //public async Task<IActionResult> UserFolders()
@@ -87,8 +126,7 @@ namespace EnglishVocabApp.Controllers
         // GET: Folders/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");        // changed Id to UserName
-            return View();
+            return View(new FolderViewModel());
         }
 
         // POST: Folders/Create
@@ -96,11 +134,22 @@ namespace EnglishVocabApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,UserId,CreatedAt,UpdatedAt,IsPrivate")] Folder folder)
+        public async Task<IActionResult> Create(FolderViewModel folder)
         {
             //if (ModelState.IsValid)              // commented for now
             {
-                _context.Add(folder);
+                var folderEntity = new Folder
+                {
+                    Name = folder.Name,
+                    Description = folder.Description,
+                    UserId = folder.UserId,
+                    User = folder.User,
+                    CreatedAt = folder.CreatedAt,
+                    UpdatedAt = folder.UpdatedAt,
+                    IsPrivate = folder.IsPrivate
+                };
+
+                _context.Folders.Add(folderEntity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -116,13 +165,24 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            var folder = await _context.Folders.FindAsync(id);
+            var folder = await _context.Folders.Include(f => f.User).FirstOrDefaultAsync(f => f.Id == id);
             if (folder == null)
             {
                 return NotFound();
             }
+            var folderVm = new FolderViewModel
+            {
+                Id = folder.Id,
+                Name = folder.Name,
+                Description = folder.Description,
+                UserId = folder.UserId,
+                User = folder.User,
+                CreatedAt = folder.CreatedAt,
+                UpdatedAt = folder.UpdatedAt,
+                IsPrivate = folder.IsPrivate
+            };
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", folder.UserId);        // changed Id to UserName
-            return View(folder);
+            return View(folderVm);
         }
 
         // POST: Folders/Edit/5
@@ -130,35 +190,25 @@ namespace EnglishVocabApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,UserId,CreatedAt,UpdatedAt,IsPrivate")] Folder folder)
+        public async Task<IActionResult> Edit(int id, FolderViewModel folderVm)
         {
-            if (id != folder.Id)
-            {
-                return NotFound();
-            }
+            if (id != folderVm.Id) return NotFound();
 
-            //if (ModelState.IsValid)           // commented for now
+            //if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(folder);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FolderExists(folder.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var folder = await _context.Folders.Include(f => f.User).FirstOrDefaultAsync(f => f.Id == id);
+                if (folder == null) return NotFound();
+
+                folder.Name = folderVm.Name;
+                folder.Description = folderVm.Description;
+                folder.UpdatedAt = DateTime.UtcNow;
+                folder.IsPrivate = folderVm.IsPrivate;
+
+                _context.Update(folder);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", folder.UserId);
-            return View(folder);
+            return View(folderVm);
         }
 
         // GET: Folders/Delete/5
@@ -169,15 +219,21 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            var folder = await _context.Folders
-                .Include(f => f.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var folder = await _context.Folders.Include(f => f.User).FirstOrDefaultAsync(m => m.Id == id);
             if (folder == null)
             {
                 return NotFound();
             }
 
-            return View(folder);
+            var folderVm = new FolderViewModel
+            {
+                Id = folder.Id,
+                Name = folder.Name,
+                Description = folder.Description,
+                IsPrivate = folder.IsPrivate
+            };
+
+            return View(folderVm);
         }
 
         // POST: Folders/Delete/5
@@ -185,7 +241,7 @@ namespace EnglishVocabApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var folder = await _context.Folders.FindAsync(id);
+            var folder = await _context.Folders.Include(f => f.FoldersUsers).FirstOrDefaultAsync(f => f.Id == id);
             if (folder != null)
             {
                 _context.Folders.Remove(folder);
@@ -231,7 +287,7 @@ namespace EnglishVocabApp.Controllers
             string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
-            var folder = await _context.Folders.FindAsync(folderId);
+            var folder = await _context.Folders.Include(f => f.FoldersUsers).FirstOrDefaultAsync(f => f.Id == folderId);
             if (folder == null || folder.IsPrivate) return NotFound(); // Only public folders
 
             if (folder.UserId == currentUserId) return BadRequest("You already own this folder."); // Prevent self-saving
@@ -259,7 +315,7 @@ namespace EnglishVocabApp.Controllers
             string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
-            var folder = await _context.Folders.FindAsync(folderId);
+            var folder = await _context.Folders.Include(f => f.FoldersUsers).FirstOrDefaultAsync(f => f.Id == folderId);
             if (folder == null) return NotFound();
 
             if (folder.UserId == currentUserId)
@@ -280,7 +336,7 @@ namespace EnglishVocabApp.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(MyFolders)); 
+            return RedirectToAction(nameof(MyFolders));
         }
     }
 }

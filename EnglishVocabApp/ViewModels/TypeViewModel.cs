@@ -12,6 +12,5 @@
             Id = type.Id;
             Name = type.Name;
         }
-
     }
 }
