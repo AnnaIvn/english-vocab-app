@@ -204,7 +204,7 @@ namespace EnglishVocabApp.Controllers
             }
 
             var words = await _context.Words
-                .Where(w => w.Name == name)
+                .Where(w => w.Name.Contains(name))
                 .Include(w => w.Type)
                 .ToListAsync();
 
