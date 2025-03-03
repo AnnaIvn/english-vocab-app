@@ -53,7 +53,19 @@ namespace EnglishVocabApp.Controllers
             //return View(await applicationDbContext.ToListAsync());
             return View(words.ToList());
         }
-        
+        public async Task<IActionResult> Search(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                return View(new List<Word>());
+            }
+
+            var words = await _context.Words
+                .Where(w => w.Name.StartsWith(query)) // Фільтр по початку слова
+                .ToListAsync();
+
+            return View(words);
+        }
 
         // GET: Words/Details/5
         public async Task<IActionResult> Details(int? id)
