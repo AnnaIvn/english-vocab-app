@@ -1,6 +1,7 @@
 ﻿using EnglishVocabApp.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using EnglishVocabApp.ViewModels;
 //using EnglishVocabApp.Models;
 
 namespace EnglishVocabApp.Data
@@ -58,5 +59,6 @@ namespace EnglishVocabApp.Data
                 .WithMany(f => f.FoldersUsers)
                 .OnDelete(DeleteBehavior.NoAction);
         }
+        public DbSet<EnglishVocabApp.ViewModels.TypeViewModel> TypeViewModel { get; set; } = default!;
     }
 }

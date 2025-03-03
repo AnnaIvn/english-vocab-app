@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EnglishVocabApp.Data;
+using EnglishVocabApp.ViewModels;
 using EnglishVocabApp.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace EnglishVocabApp.Controllers
 {
@@ -19,13 +21,17 @@ namespace EnglishVocabApp.Controllers
             _context = context;
         }
 
-        // GET: Types
+        // GET: Type
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Types.ToListAsync());
+            var types = await _context.Types
+                //.Include(t => t.Name)              // it is just a string, so no need to use include
+                .Select(t => new TypeViewModel(t))
+                .ToListAsync();
+            return View(types);
         }
 
-        // GET: Types/Details/5
+        // GET: Type/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +39,51 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            var @type = await _context.Types
+            var types = await _context.Types
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (@type == null)
+            if (types == null)
             {
                 return NotFound();
             }
 
-            return View(@type);
+            // Convert Type to TypeViewModel
+            var typeVm = new TypeViewModel
+            {
+                Id = types.Id,
+                Name = types.Name
+            };
+
+            return View(typeVm);
         }
 
-        // GET: Types/Create
+        // GET: Type/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Types/Create
+        // POST: Type/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id")] Models.Type @type)
+        public async Task<IActionResult> Create([Bind("Id,Name")] TypeViewModel types)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
             {
-                _context.Add(@type);
+                var typeEntity = new Models.Type
+                {
+                    Name = types.Name // Convert ViewModel to Entity
+                };
+
+                _context.Add(typeEntity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(@type);
+            return View(types);
         }
 
-        // GET: Types/Edit/5
+        // GET: Type/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,36 +91,52 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            var @type = await _context.Types.FindAsync(id);
-            if (@type == null)
+            var types = await _context.Types.FindAsync(id);
+            if (types == null)
             {
                 return NotFound();
             }
-            return View(@type);
+
+            var typeVm = new TypeViewModel
+            {
+                Id = types.Id,
+                Name = types.Name
+            };
+
+            return View(typeVm);
         }
 
-        // POST: Types/Edit/5
+        // POST: Type/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Id")] Models.Type @type)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] TypeViewModel types)
         {
-            if (id != @type.Id)
+            if (id != types.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(@type);
+                    var typeEntity = await _context.Types.FindAsync(id);
+                    if (typeEntity == null)
+                    {
+                        return NotFound();
+                    }
+
+                    typeEntity.Name = types.Name; // Copy properties manually
+
+
+                    _context.Update(typeEntity);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TypeExists(@type.Id))
+                    if (!TypeViewModelExists(types.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +147,10 @@ namespace EnglishVocabApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(@type);
+            return View(types);
         }
 
-        // GET: Types/Delete/5
+        // GET: Type/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +158,40 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            var @type = await _context.Types
+            var types = await _context.Types
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (@type == null)
+            if (types == null)
             {
                 return NotFound();
             }
 
-            return View(@type);
+            var typeVm = new TypeViewModel
+            {
+                Id = types.Id,
+                Name = types.Name
+            };
+
+            return View(typeVm);
         }
 
-        // POST: Types/Delete/5
+        // POST: Type/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var @type = await _context.Types.FindAsync(id);
-            if (@type != null)
+            var types = await _context.Types.FindAsync(id);
+            if (types != null)
             {
-                _context.Types.Remove(@type);
+                _context.Types.Remove(types);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TypeExists(int id)
+        private bool TypeViewModelExists(int id)
         {
-            return _context.Types.Any(e => e.Id == id);
+            return _context.TypeViewModel.Any(e => e.Id == id);
         }
     }
 }
