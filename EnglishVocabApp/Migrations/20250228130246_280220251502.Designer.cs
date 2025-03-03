@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnglishVocabApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250219100231_190220251202")]
-    partial class _190220251202
+    [Migration("20250228130246_280220251502")]
+    partial class _280220251502
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,7 +169,15 @@ namespace EnglishVocabApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Antonyms")
+                    b.Property<string>("AntonymsString")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExamplesString")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Meaning")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -177,7 +185,7 @@ namespace EnglishVocabApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Synonyms")
+                    b.Property<string>("SynonymsString")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

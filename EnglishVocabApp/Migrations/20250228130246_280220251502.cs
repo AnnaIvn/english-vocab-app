@@ -5,7 +5,7 @@
 namespace EnglishVocabApp.Migrations
 {
     /// <inheritdoc />
-    public partial class _190220251202 : Migration
+    public partial class _280220251502 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

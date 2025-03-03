@@ -223,8 +223,8 @@ namespace EnglishVocabApp.Controllers
                //     .Where(f => !f.IsPrivate);
             //}
 
-            return View(await folders.ToListAsync());
-        }
+            //return View(await folders.ToListAsync());
+        //}
         [Authorize]
         public async Task<IActionResult> SaveFolder(int folderId)
         {
