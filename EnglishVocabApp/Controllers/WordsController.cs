@@ -178,43 +178,38 @@ namespace EnglishVocabApp.Controllers
         }
 
         // GET: Words/Delete/5       for window creation
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var word = await _context.Words
-                .Include(w => w.Type)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (word == null)
-            {
-                return NotFound();
-            }
-
-            return View(word);
-        }
-        // GET: Words/ByName?name=run
         public async Task<IActionResult> ByName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
-                return BadRequest("Name parameter is required.");
+                var words = await _context.Words
+                    .Where(w => w.Name.Contains(name))
+                    .Include(w => w.Type)
+                    .Select(w => new
+                    {
+                        w.Name,
+                        Type = w.Type != null ? w.Type.Name : "",
+                        w.Transcript,
+                        w.Meaning,
+                        ExamplesString = w.ExamplesString ?? "",
+                        SynonymsString = w.SynonymsString ?? "",
+                        AntonymsString = w.AntonymsString ?? ""
+                    })
+                    .ToListAsync();
+
+                return Json(new { words });
             }
 
-            var words = await _context.Words
+            var pageWords = await _context.Words
                 .Where(w => w.Name.Contains(name))
                 .Include(w => w.Type)
                 .ToListAsync();
 
-            if (!words.Any())
-            {
-                return NotFound($"No words found with the name '{name}'.");
-            }
-
-            return View(words);
+            return View(pageWords); // Відображаємо HTML-сторінку
         }
+
+
+
         // POST: Words/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

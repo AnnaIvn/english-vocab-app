@@ -1,12 +1,6 @@
-﻿@model IEnumerable<EnglishVocabApp.Models.Word>
+﻿<input type="text" id="searchInput" class="form-control" placeholder="Enter word..." />
 
-@{
-    ViewData["Title"] = "Words with the same Name";
-}
-
-<h2>Words with the name "@Model.FirstOrDefault()?.Name"</h2>
-
-<table class="table">
+<table class="table mt-3">
     <thead>
         <tr>
             <th>Name</th>
@@ -18,18 +12,48 @@
             <th>Antonyms</th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var word in Model)
-        {
-            <tr>
-                <td>@word.Name</td>
-                <td>@word.Type?.Name</td>
-                <td>@word.Transcript</td>
-                <td>@word.Meaning</td>
-                <td>@word.ExamplesString</td>
-                <td>@word.SynonymsString</td>
-                <td>@word.AntonymsString</td>
-            </tr>
-        }
+    <tbody id="wordsTableBody">
+        <!-- AJAX-запит вставлятиме сюди результати -->
     </tbody>
 </table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#searchInput").on("input", function () {
+            let query = $(this).val().trim();
+            if (query.length === 0) {
+                $("#wordsTableBody").html(""); // Очистити таблицю, якщо поле пусте
+                return;
+            }
+
+            $.ajax({
+                url: "/Words/ByName",
+                type: "GET",
+                data: { name: query },
+                success: function (response) {
+                    let words = response.words;
+                    let tableContent = "";
+
+                    if (words.length === 0) {
+                        tableContent = "<tr><td colspan='7'>No words found</td></tr>";
+                    } else {
+                        words.forEach(word => {
+                            tableContent += `
+                                <tr>
+                                    <td>${word.name}</td>
+                                    <td>${word.type ? word.type.name : ""}</td>
+                                    <td>${word.transcript}</td>
+                                    <td>${word.meaning}</td>
+                                    <td>${word.examplesString || ""}</td>
+                                    <td>${word.synonymsString || ""}</td>
+                                    <td>${word.antonymsString || ""}</td>
+                                </tr>`;
+                        });
+                    }
+                    $("#wordsTableBody").html(tableContent);
+                }
+            });
+        });
+    });
+</script>
