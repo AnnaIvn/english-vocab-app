@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using EnglishVocabApp.Models;
+using EnglishVocabApp.ViewModels;
 
 namespace EnglishVocabApp.Controllers
 {
@@ -18,7 +19,9 @@ namespace EnglishVocabApp.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            var users = _userManager.Users.ToList();
+            var users = _userManager.Users
+                .Select(u => new UserViewModel(u)) // Конвертація в UserViewModel
+                .ToList();
             return View(users);
         }
 
@@ -36,7 +39,8 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            return View(user);
+            var userVm = new UserViewModel(user);
+            return View(userVm);
         }
 
         // GET: Users/Create
@@ -48,21 +52,27 @@ namespace EnglishVocabApp.Controllers
         // POST: Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserName,Email,PhoneNumber")] User user)
+        public async Task<IActionResult> Create([Bind("UserName")] UserViewModel userVm)
         {
             if (ModelState.IsValid)
             {
-                var result = await _userManager.CreateAsync(user);
+                var userEntity = new User
+                {
+                    UserName = userVm.UserName
+                };
+
+                var result = await _userManager.CreateAsync(userEntity);
                 if (result.Succeeded)
                 {
                     return RedirectToAction(nameof(Index));
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            return View(user);
+            return View(userVm);
         }
 
         // GET: Users/Edit/5
@@ -78,15 +88,17 @@ namespace EnglishVocabApp.Controllers
             {
                 return NotFound();
             }
-            return View(user);
+
+            var userVm = new UserViewModel(user);
+            return View(userVm);
         }
 
         // POST: Users/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,Email,PhoneNumber")] User user)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,UserName")] UserViewModel userVm)
         {
-            if (id != user.Id)
+            if (id != userVm.Id)
             {
                 return NotFound();
             }
@@ -97,9 +109,7 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            existingUser.UserName = user.UserName;
-            existingUser.Email = user.Email;
-            existingUser.PhoneNumber = user.PhoneNumber;
+            existingUser.UserName = userVm.UserName;
 
             var result = await _userManager.UpdateAsync(existingUser);
             if (result.Succeeded)
@@ -111,7 +121,7 @@ namespace EnglishVocabApp.Controllers
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
-            return View(user);
+            return View(userVm);
         }
 
         // GET: Users/Delete/5
@@ -128,7 +138,8 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            return View(user);
+            var userVm = new UserViewModel(user);
+            return View(userVm);
         }
 
         // POST: Users/Delete/5
