@@ -126,6 +126,7 @@ namespace EnglishVocabApp.Controllers
         // GET: Folders/Create
         public IActionResult Create()
         {
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");
             return View(new FolderViewModel());
         }
 
@@ -208,6 +209,7 @@ namespace EnglishVocabApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", folderVm.UserId);
             return View(folderVm);
         }
 
