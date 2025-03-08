@@ -5,16 +5,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>List of all words</h1>
+<h1 style="text-transform: uppercase; text-align: center;">List of all words:</h1>
 
-<p>
-    <a asp-action="Create">Add new word</a>
+<p style="text-align: center;">
+    <a asp-action="Create" style="text-decoration: none; color: #5daade; font-weight: bold; text-transform: uppercase;">+ Add new word</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSortParam">
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSortParam" style="text-decoration: none; color: #5daade;">
                     @Html.DisplayNameFor(model => model.Name)
                 </a>
             </th>
@@ -22,10 +22,11 @@
                 @Html.DisplayNameFor(model => model.Transcript)
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.TypeSortParam">
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.TypeSortParam" style="text-decoration: none; color: #5daade;">
                     @Html.DisplayNameFor(model => model.Type)
                 </a>
             </th>
+
             <th>
                 @Html.DisplayNameFor(model => model.Meaning)
             </th>
@@ -38,7 +39,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Antonyms)
             </th>
-            <th></th>
+            <th>
+                <strong>Actions</strong>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -58,7 +61,14 @@
                     @Html.DisplayFor(modelItem => item.Meaning)
                 </td>
                 <td>
-                    @(item.ExamplesString != null ? string.Join(". ", item.ExamplesString) : "None")
+                    @if (!string.IsNullOrWhiteSpace(item.ExamplesString))
+                    {
+                        @Html.Raw("- " + item.ExamplesString.Replace(";", "<br>- "))  // replaces ';' with <br>- for multiline display
+                    }
+                    else
+                    {
+                        <text>None</text>
+                    }
                 </td>
                 <td>
                     @(item.SynonymsString != null ? string.Join(", ", item.SynonymsString) : "None")
@@ -67,9 +77,9 @@
                     @(item.AntonymsString != null ? string.Join(", ", item.AntonymsString) : "None")
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn rounded-pill w-60 mb-2" style="background-color: #6fa0bb; color: white; border: none;" onmouseover="this.style.backgroundColor='#55778e';" onmouseout="this.style.backgroundColor='#6fa0bb';">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn rounded-pill w-60 mb-2" style="background-color: #6f8bbb; color: white; border: none;" onmouseover="this.style.backgroundColor='#55778e';" onmouseout="this.style.backgroundColor='#6f8bbb';">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn rounded-pill w-60" style="background-color: #b53650; color: white; border: none;" onmouseover="this.style.backgroundColor='#9c3147';" onmouseout="this.style.backgroundColor='#b53650';">Delete</a>
                 </td>
             </tr>
         }

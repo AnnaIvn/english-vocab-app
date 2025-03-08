@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnglishVocabApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250228130246_280220251502")]
-    partial class _280220251502
+    [Migration("20250308121611_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -221,6 +221,23 @@ namespace EnglishVocabApp.Migrations
                     b.HasIndex("FolderId");
 
                     b.ToTable("WordsFolders");
+                });
+
+            modelBuilder.Entity("EnglishVocabApp.ViewModels.TypeViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TypeViewModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

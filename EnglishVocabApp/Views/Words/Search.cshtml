@@ -1,4 +1,11 @@
-﻿<input type="text" id="searchInput" class="form-control" placeholder="Enter word..." />
+﻿<h1 style="text-transform: uppercase; text-align: center; margin-top: 50px; margin-bottom: 30px;">Search for a word:</h1>
+
+<div class="input-group mb-3">
+    <input type="text" id="searchInput" class="form-control rounded-pill" placeholder="Search for the word..." style="width: 300px;" />
+    <span class="input-group-text bg-white border-0">
+        <i class="fa fa-search" style="color: #5daade;"></i> <!-- Search icon -->
+    </span>
+</div>
 
 <table class="table mt-3">
     <thead>
@@ -10,10 +17,11 @@
             <th>Examples</th>
             <th>Synonyms</th>
             <th>Antonyms</th>
+            <th>Actions</th> <!-- Add a column for actions -->
         </tr>
     </thead>
     <tbody id="wordsTableBody">
-        <!-- AJAX-запит вставлятиме сюди результати -->
+        <!-- AJAX results will be inserted here -->
     </tbody>
 </table>
 
@@ -23,7 +31,7 @@
         $("#searchInput").on("input", function () {
             let query = $(this).val().trim();
             if (query.length === 0) {
-                $("#wordsTableBody").html(""); // Очистити таблицю, якщо поле пусте
+                $("#wordsTableBody").html(""); // Clear table if input is empty
                 return;
             }
 
@@ -36,9 +44,14 @@
                     let tableContent = "";
 
                     if (words.length === 0) {
-                        tableContent = "<tr><td colspan='7'>No words found</td></tr>";
+                        tableContent = "<tr><td colspan='8'>No words found</td></tr>";
                     } else {
                         words.forEach(word => {
+                            // Create URLs for Edit, Details, and Delete actions
+                            let editUrl = `/Words/Edit/${word.id}`;
+                            let detailsUrl = `/Words/Details/${word.id}`;
+                            let deleteUrl = `/Words/Delete/${word.id}`;
+
                             tableContent += `
                                 <tr>
                                     <td>${word.name}</td>
@@ -48,12 +61,21 @@
                                     <td>${word.examplesString || ""}</td>
                                     <td>${word.synonymsString || ""}</td>
                                     <td>${word.antonymsString || ""}</td>
+                                    <td>
+                                        <a href="${editUrl}" class="btn btn-secondary rounded-pill w-60 mb-2" style="background-color: #6fa0bb; color: white; border: none;" onmouseover="this.style.backgroundColor='#55778e';" onmouseout="this.style.backgroundColor='#6fa0bb';">Edit</a>
+                                        <a href="${detailsUrl}" class="btn btn-secondary rounded-pill w-60 mb-2" style="background-color: #6f8bbb; color: white; border: none;" onmouseover="this.style.backgroundColor='#55778e';" onmouseout="this.style.backgroundColor='#6f8bbb';">Details</a>
+                                        <a href="${deleteUrl}" class="btn btn-danger rounded-pill w-60" style="background-color: #b53650; color: white; border: none;" onmouseover="this.style.backgroundColor='#9c3147';" onmouseout="this.style.backgroundColor='#b53650';">Delete</a>
+                                    </td>
                                 </tr>`;
                         });
                     }
                     $("#wordsTableBody").html(tableContent);
+                },
+                error: function (err) {
+                    console.error("Error:", err); // In case of error
                 }
             });
         });
     });
 </script>
+

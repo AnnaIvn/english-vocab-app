@@ -76,16 +76,23 @@
             let value = document.getElementById("newExample").value;
             if (value) {
                 examples.push(value);
-                document.getElementById("examplesList").innerHTML += `<li>${value} <button type="button" onclick="removeExample('${value}')">x</button></li>`;
-                document.getElementById("examplesInput").value = examples.join(". ");
+                updateExamplesList();
                 document.getElementById("newExample").value = "";
             }
         }
 
         function removeExample(value) {
             examples = examples.filter(item => item !== value);
-            document.getElementById("examplesList").innerHTML = examples.map(item => `<li>${item} <button type="button" onclick="removeExample('${item}')">x</button></li>`).join("");
-            document.getElementById("examplesInput").value = examples.join(". ");
+            updateExamplesList();
+        }
+
+        function updateExamplesList() {
+            let listHtml = examples.map(item =>
+                `<li>- ${item} <button type="button" onclick="removeExample('${item}')">x</button></li>`
+            ).join("");
+
+            document.getElementById("examplesList").innerHTML = listHtml;
+            document.getElementById("examplesInput").value = examples.join(";");
         }
 
 
@@ -104,6 +111,7 @@
             document.getElementById("synonymsList").innerHTML = synonyms.map(item => `<li>${item} <button type="button" onclick="removeSynonym('${item}')">x</button></li>`).join("");
             document.getElementById("synonymsInput").value = synonyms.join(", ");
         }
+
 
         function addAntonym() {
             let value = document.getElementById("newAntonym").value;

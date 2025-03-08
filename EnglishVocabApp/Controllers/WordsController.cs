@@ -129,7 +129,7 @@ namespace EnglishVocabApp.Controllers
             }
             ViewData["TypeId"] = new SelectList(_context.Types, "Id", "Name", word.TypeId);
 
-            word.Examples = word.ExamplesString?.Split('.').Select(s => s.Trim()).ToList() ?? new List<string>();   // convert comma-separated values in SynonymsString into Synonym list
+            word.Examples = word.ExamplesString?.Split(';').Select(s => s.Trim()).ToList() ?? new List<string>();
             word.Synonyms = word.SynonymsString?.Split(',').Select(s => s.Trim()).ToList() ?? new List<string>();   // convert comma-separated values in SynonymsString into Synonym list
             word.Antonyms = word.AntonymsString?.Split(',').Select(a => a.Trim()).ToList() ?? new List<string>();   // convert comma-separated values in AntonymsString into Antonym list
 
@@ -152,7 +152,7 @@ namespace EnglishVocabApp.Controllers
             {
                 try
                 {
-                    word.ExamplesString = string.Join(". ", word.Examples.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Examples list to comma-separated ExamplesString before saving
+                    word.ExamplesString = string.Join(";", word.Examples.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Examples list to comma-separated ExamplesString before saving
                     word.SynonymsString = string.Join(", ", word.Synonyms.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Synonyms list to comma-separated SynonymsString before saving
                     word.AntonymsString = string.Join(", ", word.Antonyms.Where(a => !string.IsNullOrWhiteSpace(a)));  // convert Antonyms list to comma-separated AntonymsString before saving
 
@@ -178,34 +178,22 @@ namespace EnglishVocabApp.Controllers
         }
 
         // GET: Words/Delete/5       for window creation
-        public async Task<IActionResult> ByName(string name)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            if (id == null)
             {
-                var words = await _context.Words
-                    .Where(w => w.Name.Contains(name))
-                    .Include(w => w.Type)
-                    .Select(w => new
-                    {
-                        w.Name,
-                        Type = w.Type != null ? w.Type.Name : "",
-                        w.Transcript,
-                        w.Meaning,
-                        ExamplesString = w.ExamplesString ?? "",
-                        SynonymsString = w.SynonymsString ?? "",
-                        AntonymsString = w.AntonymsString ?? ""
-                    })
-                    .ToListAsync();
-
-                return Json(new { words });
+                return NotFound();
             }
 
-            var pageWords = await _context.Words
-                .Where(w => w.Name.Contains(name))
-                .Include(w => w.Type)
-                .ToListAsync();
+            var word = await _context.Words
+                .FirstOrDefaultAsync(m => m.Id == id);
 
-            return View(pageWords); // Відображаємо HTML-сторінку
+            if (word == null)
+            {
+                return NotFound();
+            }
+
+            return View(word); // This renders the Delete.cshtml page for confirmation
         }
 
 
@@ -229,6 +217,31 @@ namespace EnglishVocabApp.Controllers
         {
             return _context.Words.Any(e => e.Id == id);
         }
+
+        // For Search.cshtml page
+        [HttpGet]
+        public async Task<IActionResult> ByName(string name)
+        {
+            var words = await _context.Words
+                .Where(w => w.Name.Contains(name)) // Adjust as needed for your search logic
+                .Include(w => w.Type)
+                .Select(w => new
+                {
+                    id = w.Id,  // Ensure the word ID is included
+                    name = w.Name,
+                    type = w.Type != null ? w.Type.Name : "",
+                    transcript = w.Transcript,
+                    meaning = w.Meaning,
+                    examplesString = w.ExamplesString ?? "",
+                    synonymsString = w.SynonymsString ?? "",
+                    antonymsString = w.AntonymsString ?? ""
+                })
+                .ToListAsync();
+
+            return Json(new { words });
+        }
+
+
     }
 }
 
