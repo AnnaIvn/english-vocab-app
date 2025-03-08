@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EnglishVocabApp.Data;
 using EnglishVocabApp.Models;
-using Microsoft.Data.SqlClient;
+using EnglishVocabApp.ViewModels;  // Importing the ViewModel namespace
 
 namespace EnglishVocabApp.Controllers
 {
@@ -21,38 +21,62 @@ namespace EnglishVocabApp.Controllers
         }
 
         // GET: Words
-        public async Task<IActionResult> Index(String sortOrder)
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            var applicationDbContext = _context.Words.Include(w => w.Type);
-            // Задаємо параметри сортування
+            // Set sort order parameters
             ViewBag.NameSortParam = sortOrder == "name_asc" ? "name_desc" : "name_asc";
             ViewBag.TypeSortParam = sortOrder == "type_asc" ? "type_desc" : "type_asc";
 
-            // Запит на отримання слів
-            var words = _context.Words.Include(w => w.Type).AsQueryable();
+            // Select only necessary fields and project into WordViewModel
+            var wordsQuery = _context.Words
+                .Select(w => new WordViewModel
+                {
+                    Id = w.Id,
+                    Name = w.Name,
+                    Transcript = w.Transcript,
+                    Meaning = w.Meaning,
+                    ExamplesString = w.ExamplesString,
+                    SynonymsString = w.SynonymsString,
+                    AntonymsString = w.AntonymsString,
+                    TypeName = w.Type.Name
+                });
 
-            // Сортування
-            switch (sortOrder)
+            // Apply sorting
+            wordsQuery = sortOrder switch
             {
-                case "name_desc":
-                    words = words.OrderByDescending(w => w.Name);
-                    break;
-                case "name_asc":
-                    words = words.OrderBy(w => w.Name);
-                    break;
-                case "type_desc":
-                    words = words.OrderByDescending(w => w.Type.Name);
-                    break;
-                case "type_asc":
-                    words = words.OrderBy(w => w.Type.Name);
-                    break;
-                default:
-                    words = words.OrderBy(w => w.Name); // За замовчуванням сортуємо за Name
-                    break;
-            }
-            //return View(await applicationDbContext.ToListAsync());
-            return View(words.ToList());
+                "name_desc" => wordsQuery.OrderByDescending(w => w.Name),
+                "name_asc" => wordsQuery.OrderBy(w => w.Name),
+                "type_desc" => wordsQuery.OrderByDescending(w => w.TypeName),
+                "type_asc" => wordsQuery.OrderBy(w => w.TypeName),
+                _ => wordsQuery.OrderBy(w => w.Name) // Default sort by Name
+            };
+
+            // Execute the query and return results
+            return View(await wordsQuery.ToListAsync());
         }
+
+        // Simpler Index that works, let it be for now, just in case
+        //public async Task<IActionResult> Index()
+        //{
+        //    var words = await _context.Words
+        //        .Select(w => new WordViewModel
+        //        {
+        //            Id = w.Id,
+        //            Name = w.Name,
+        //            Transcript = w.Transcript,
+        //            Meaning = w.Meaning,
+        //            ExamplesString = w.ExamplesString,
+        //            SynonymsString = w.SynonymsString,
+        //            AntonymsString = w.AntonymsString,
+        //            TypeName = w.Type.Name
+        //        })
+        //        .ToListAsync();
+
+        //    return View(words);
+        //}
+
+
+        // GET: Words/Search
         public async Task<IActionResult> Search(string query)
         {
             if (string.IsNullOrEmpty(query))
@@ -61,7 +85,7 @@ namespace EnglishVocabApp.Controllers
             }
 
             var words = await _context.Words
-                .Where(w => w.Name.StartsWith(query)) // Фільтр по початку слова
+                .Where(w => w.Name.StartsWith(query)) // filter by word starting with query
                 .ToListAsync();
 
             return View(words);
@@ -78,43 +102,76 @@ namespace EnglishVocabApp.Controllers
             var word = await _context.Words
                 .Include(w => w.Type)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (word == null)
             {
                 return NotFound();
             }
 
-            return View(word);
+            var wordVm = new WordViewModel
+            {
+                Id = word.Id,
+                Name = word.Name,
+                Transcript = word.Transcript,
+                Meaning = word.Meaning,
+                Examples = word.ExamplesString?.Split(';').Select(s => s.Trim()).ToList() ?? new List<string>(),
+                Synonyms = word.SynonymsString?.Split(',').Select(s => s.Trim()).ToList() ?? new List<string>(),
+                Antonyms = word.AntonymsString?.Split(',').Select(a => a.Trim()).ToList() ?? new List<string>(),
+                TypeName = word.Type?.Name
+            };
+
+            return View(wordVm);
         }
 
-        // GET: Words/Create         for form creation
+        // GET: Words/Create
         public IActionResult Create()
         {
-            ViewData["TypeId"] = new SelectList(_context.Types, "Id", "Name");
-            return View();
+            ViewBag.WordTypes = _context.Types.Select(t => t.Name).ToList();
+            return View(new WordViewModel());
         }
 
         // POST: Words/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,TypeId,Transcript,Meaning,Examples,Synonyms,Antonyms,Id")] Word word)
+        public async Task<IActionResult> Create(WordViewModel wordVm)
         {
-            //if (ModelState.IsValid)    // commented for now
+            if (!ModelState.IsValid)
             {
-                word.ExamplesString = string.Join(". ", word.Examples.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Examples list to comma-separated ExamplesString before saving
-                word.SynonymsString = string.Join(", ", word.Synonyms.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Synonyms list to comma-separated SynonymsString before saving
-                word.AntonymsString = string.Join(", ", word.Antonyms.Where(a => !string.IsNullOrWhiteSpace(a)));  // convert Antonyms list to comma-separated AntonymsString before saving
-
-                _context.Add(word);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewBag.WordTypes = await _context.Types.Select(t => t.Name).ToListAsync();
+                return View(wordVm);
             }
-            ViewBag.TypeId = new SelectList(_context.Types, "Id", "Name", word.TypeId);
-            return View(word);
+
+            var wordType = await _context.Types.FirstOrDefaultAsync(t => t.Name == wordVm.TypeName);
+            if (wordType == null)
+            {
+                ModelState.AddModelError("TypeName", "Invalid word type.");
+                ViewBag.WordTypes = await _context.Types.Select(t => t.Name).ToListAsync();
+                return View(wordVm);
+            }
+
+            var wordEntity = new Word
+            {
+                Name = wordVm.Name,
+                Transcript = wordVm.Transcript,
+                Meaning = wordVm.Meaning,
+                ExamplesString = wordVm.ExamplesString,
+                SynonymsString = wordVm.SynonymsString,
+                AntonymsString = wordVm.AntonymsString,
+                TypeId = wordType.Id
+            };
+
+            _context.Words.Add(wordEntity);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Words/Edit/5           for filled form 
+
+
+
+
+        // does not work properly right now
+        // GET: Words/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -122,62 +179,80 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            var word = await _context.Words.FindAsync(id);
-            if (word == null)
+            var wordEntity = await _context.Words
+                .Include(w => w.Type)
+                .FirstOrDefaultAsync(w => w.Id == id);
+
+            if (wordEntity == null)
             {
                 return NotFound();
             }
-            ViewData["TypeId"] = new SelectList(_context.Types, "Id", "Name", word.TypeId);
 
-            word.Examples = word.ExamplesString?.Split(';').Select(s => s.Trim()).ToList() ?? new List<string>();
-            word.Synonyms = word.SynonymsString?.Split(',').Select(s => s.Trim()).ToList() ?? new List<string>();   // convert comma-separated values in SynonymsString into Synonym list
-            word.Antonyms = word.AntonymsString?.Split(',').Select(a => a.Trim()).ToList() ?? new List<string>();   // convert comma-separated values in AntonymsString into Antonym list
+            var wordVm = new WordViewModel
+            {
+                Id = wordEntity.Id,
+                Name = wordEntity.Name,
+                Transcript = wordEntity.Transcript,
+                Meaning = wordEntity.Meaning,
+                ExamplesString = wordEntity.ExamplesString,
+                SynonymsString = wordEntity.SynonymsString,
+                AntonymsString = wordEntity.AntonymsString,
+                TypeName = wordEntity.Type.Name
+            };
 
-            return View(word);
+            ViewBag.WordTypes = await _context.Types.Select(t => t.Name).ToListAsync();
+            return View(wordVm);
         }
 
         // POST: Words/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,TypeId,Transcript,Meaning,Examples,Synonyms,Antonyms,Id")] Word word)
+        public async Task<IActionResult> Edit(int id, WordViewModel wordVm)
         {
-            if (id != word.Id)
+            if (id != wordVm.Id)
             {
                 return NotFound();
             }
 
-            //if (ModelState.IsValid)               // commented for now
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    word.ExamplesString = string.Join(";", word.Examples.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Examples list to comma-separated ExamplesString before saving
-                    word.SynonymsString = string.Join(", ", word.Synonyms.Where(s => !string.IsNullOrWhiteSpace(s)));  // convert Synonyms list to comma-separated SynonymsString before saving
-                    word.AntonymsString = string.Join(", ", word.Antonyms.Where(a => !string.IsNullOrWhiteSpace(a)));  // convert Antonyms list to comma-separated AntonymsString before saving
-
-                    _context.Update(word);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!WordExists(word.Id))
-                    //if (!_context.Words.Any(e => e.Id == word.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                ViewBag.WordTypes = await _context.Types.Select(t => t.Name).ToListAsync();
+                return View(wordVm);
             }
-            ViewData["TypeId"] = new SelectList(_context.Types, "Id", "Id", word.TypeId);
-            return View(word);
+
+            var wordType = await _context.Types.FirstOrDefaultAsync(t => t.Name == wordVm.TypeName);
+            if (wordType == null)
+            {
+                ModelState.AddModelError("TypeName", "Invalid word type.");
+                ViewBag.WordTypes = await _context.Types.Select(t => t.Name).ToListAsync();
+                return View(wordVm);
+            }
+
+            var wordEntity = await _context.Words.FindAsync(id);
+            if (wordEntity == null)
+            {
+                return NotFound();
+            }
+
+            wordEntity.Name = wordVm.Name;
+            wordEntity.Transcript = wordVm.Transcript;
+            wordEntity.Meaning = wordVm.Meaning;
+            wordEntity.ExamplesString = wordVm.ExamplesString;
+            wordEntity.SynonymsString = wordVm.SynonymsString;
+            wordEntity.AntonymsString = wordVm.AntonymsString;
+            wordEntity.TypeId = wordType.Id;
+
+            _context.Words.Update(wordEntity);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Words/Delete/5       for window creation
+
+
+
+
+        // GET: Words/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -185,7 +260,7 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            var word = await _context.Words
+            var word= await _context.Words
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (word == null)
@@ -193,10 +268,20 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            return View(word); // This renders the Delete.cshtml page for confirmation
+            var wordVm = new WordViewModel
+            {
+                Id = word.Id,
+                Name = word.Name,
+                Transcript = word.Transcript,
+                Meaning = word.Meaning,
+                Examples = word.ExamplesString?.Split(';').Select(s => s.Trim()).ToList() ?? new List<string>(),
+                Synonyms = word.SynonymsString?.Split(',').Select(s => s.Trim()).ToList() ?? new List<string>(),
+                Antonyms = word.AntonymsString?.Split(',').Select(a => a.Trim()).ToList() ?? new List<string>(),
+                TypeName = word.Type?.Name
+            };
+
+            return View(wordVm);
         }
-
-
 
         // POST: Words/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -218,16 +303,16 @@ namespace EnglishVocabApp.Controllers
             return _context.Words.Any(e => e.Id == id);
         }
 
-        // For Search.cshtml page
+        // For search by word name (ByName action)
         [HttpGet]
         public async Task<IActionResult> ByName(string name)
         {
             var words = await _context.Words
-                .Where(w => w.Name.Contains(name)) // Adjust as needed for your search logic
+                .Where(w => w.Name.Contains(name)) // Adjusted for partial match
                 .Include(w => w.Type)
                 .Select(w => new
                 {
-                    id = w.Id,  // Ensure the word ID is included
+                    id = w.Id,
                     name = w.Name,
                     type = w.Type != null ? w.Type.Name : "",
                     transcript = w.Transcript,
@@ -240,8 +325,5 @@ namespace EnglishVocabApp.Controllers
 
             return Json(new { words });
         }
-
-
     }
 }
-

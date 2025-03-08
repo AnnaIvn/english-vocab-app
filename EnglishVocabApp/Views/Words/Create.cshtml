@@ -1,67 +1,90 @@
-﻿@model EnglishVocabApp.Models.Word
+﻿@model EnglishVocabApp.ViewModels.WordViewModel
 
-@{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<h2>Create word</h2>
-<hr />
-<div class="row">
+<h1 style="text-transform: uppercase; text-align: center; margin-bottom: 30px;">Fill in word information</h1>
+<div class="row justify-content-center">
     <div class="col-md-6">
-        <form asp-action="Create">
+        <form asp-action="Create" onsubmit="updateHiddenFields()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label">Name of the word: </label>
-                <input asp-for="Name" class="form-control" />
+            <div class="form-group mb-3">
+                <input asp-for="Name" class="form-control" style="border-radius: 50px;" placeholder="Name of the word" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="TypeId" class="control-label">Type/Class of the word: </label>
-                <select asp-for="TypeId" class="form-control" asp-items="ViewBag.TypeId"></select>
+            <div class="form-group mb-3">
+                <select asp-for="TypeName" class="form-control" style="border-radius: 50px;">
+                    <option value="">Select type</option>
+                    @foreach (var type in ViewBag.WordTypes as List<string>)
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
+                <span asp-validation-for="TypeName" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Transcript" class="control-label">Transcript of the word: </label>
-                <input asp-for="Transcript" class="form-control" />
+            <div class="form-group mb-3">
+                <input asp-for="Transcript" class="form-control" placeholder="Transcript" style="border-radius: 50px;" />
                 <span asp-validation-for="Transcript" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Meaning" class="control-label">Meaning of the word: </label>
-                <input asp-for="Meaning" class="form-control" />
+            <div class="form-group mb-3">
+                <input asp-for="Meaning" class="form-control" placeholder="Meaning" style="border-radius: 50px;" />
                 <span asp-validation-for="Meaning" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label>Examples: </label>
+            <div class="form-group mb-2">
+                <label>Examples:</label>
                 <ul id="examplesList"></ul>
-                <input type="text" id="newExample" class="form-control" placeholder="Add an example" />
-                <button type="button" class="btn btn-secondary mt-2" onclick="addExample()">Add</button>
-                <input type="hidden" name="Examples" id="examplesInput" />
+                <input type="text" id="newExample" class="form-control" placeholder="Add an example" style="border-radius: 50px;" />
+                <button type="button" class="btn rounded-pill w-60 mt-2"
+                        style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
+                        onmouseover="this.style.backgroundColor='#f1f1f1';"
+                        onmouseout="this.style.backgroundColor='#ffffff';"
+                        onclick="addExample()">
+                    Add
+                </button>
+
+                <input type="hidden" asp-for="ExamplesString" id="examplesInput" />
             </div>
 
-            <div class="form-group">
-                <label>Synonyms: </label>
+            <div class="form-group mb-2">
+                <label>Synonyms:</label>
                 <ul id="synonymsList"></ul>
-                <input type="text" id="newSynonym" class="form-control" placeholder="Add a synonym" />
-                <button type="button" class="btn btn-secondary mt-2" onclick="addSynonym()">Add</button>
-                <input type="hidden" name="Synonyms" id="synonymsInput" />
+                <input type="text" id="newSynonym" class="form-control" placeholder="Add a synonym" style="border-radius: 50px;" />
+                <button type="button" class="btn rounded-pill w-60 mt-2"
+                        style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
+                        onmouseover="this.style.backgroundColor='#f1f1f1';"
+                        onmouseout="this.style.backgroundColor='#ffffff';"
+                        onclick="addSynonym()">
+                    Add
+                </button>
+
+                <input type="hidden" asp-for="SynonymsString" id="synonymsInput" />
             </div>
 
-            <div class="form-group">
-                <label>Antonyms: </label>
+            <div class="form-group mb-2">
+                <label>Antonyms:</label>
                 <ul id="antonymsList"></ul>
-                <input type="text" id="newAntonym" class="form-control" placeholder="Add an antonym" />
-                <button type="button" class="btn btn-secondary mt-2" onclick="addAntonym()">Add</button>
-                <input type="hidden" name="Antonyms" id="antonymsInput" />
+                <input type="text" id="newAntonym" class="form-control" placeholder="Add an antonym" style="border-radius: 50px;" />
+                <button type="button" class="btn rounded-pill w-60 mt-2"
+                        style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
+                        onmouseover="this.style.backgroundColor='#f1f1f1';"
+                        onmouseout="this.style.backgroundColor='#ffffff';"
+                        onclick="addAntonym()">
+                    Add
+                </button>
+
+                <input type="hidden" asp-for="AntonymsString" id="antonymsInput" />
             </div>
 
-            <div class="form-group mt-3">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group mt-3 text-center">
+                <input type="submit" value="Create" class="btn rounded-pill"
+                    style="background-color: #555555; color: white; border: none; font-weight: 500; padding-left: 25px; padding-right: 25px;"
+                    onmouseover="this.style.backgroundColor='#777777';"
+                    onmouseout="this.style.backgroundColor='#555555';" />
             </div>
+
+
         </form>
     </div>
 </div>
@@ -74,7 +97,7 @@
 
         function addExample() {
             let value = document.getElementById("newExample").value;
-            if (value) {
+            if (value.trim()) {
                 examples.push(value);
                 updateExamplesList();
                 document.getElementById("newExample").value = "";
@@ -87,46 +110,91 @@
         }
 
         function updateExamplesList() {
-            let listHtml = examples.map(item =>
-                `<li>- ${item} <button type="button" onclick="removeExample('${item}')">x</button></li>`
-            ).join("");
-
-            document.getElementById("examplesList").innerHTML = listHtml;
+            document.getElementById("examplesList").innerHTML = examples.map(item =>
+                `<li>${item} <button type="button" onclick="removeExample('${item}')" class="remove-btn"></button></li>`).join("");
             document.getElementById("examplesInput").value = examples.join(";");
         }
 
-
         function addSynonym() {
             let value = document.getElementById("newSynonym").value;
-            if (value) {
+            if (value.trim()) {
                 synonyms.push(value);
-                document.getElementById("synonymsList").innerHTML += `<li>${value} <button type="button" onclick="removeSynonym('${value}')">x</button></li>`;
-                document.getElementById("synonymsInput").value = synonyms.join(", ");
+                updateSynonymsList();
                 document.getElementById("newSynonym").value = "";
             }
         }
 
         function removeSynonym(value) {
             synonyms = synonyms.filter(item => item !== value);
-            document.getElementById("synonymsList").innerHTML = synonyms.map(item => `<li>${item} <button type="button" onclick="removeSynonym('${item}')">x</button></li>`).join("");
+            updateSynonymsList();
+        }
+
+        function updateSynonymsList() {
+            document.getElementById("synonymsList").innerHTML = synonyms.map(item =>
+                `<li>${item} <button type="button" onclick="removeSynonym('${item}')" class="remove-btn"></button></li>`).join("");
             document.getElementById("synonymsInput").value = synonyms.join(", ");
         }
 
-
         function addAntonym() {
             let value = document.getElementById("newAntonym").value;
-            if (value) {
+            if (value.trim()) {
                 antonyms.push(value);
-                document.getElementById("antonymsList").innerHTML += `<li>${value} <button type="button" onclick="removeAntonym('${value}')">x</button></li>`;
-                document.getElementById("antonymsInput").value = antonyms.join(", ");
+                updateAntonymsList();
                 document.getElementById("newAntonym").value = "";
             }
         }
 
         function removeAntonym(value) {
             antonyms = antonyms.filter(item => item !== value);
-            document.getElementById("antonymsList").innerHTML = antonyms.map(item => `<li>${item} <button type="button" onclick="removeAntonym('${item}')">x</button></li>`).join("");
+            updateAntonymsList();
+        }
+
+        function updateAntonymsList() {
+            document.getElementById("antonymsList").innerHTML = antonyms.map(item =>
+                `<li>${item} <button type="button" onclick="removeAntonym('${item}')" class="remove-btn"></button></li>`).join("");
+            document.getElementById("antonymsInput").value = antonyms.join(", ");
+        }
+
+        function updateHiddenFields() {
+            document.getElementById("examplesInput").value = examples.join(";");
+            document.getElementById("synonymsInput").value = synonyms.join(", ");
             document.getElementById("antonymsInput").value = antonyms.join(", ");
         }
     </script>
 }
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+<style>
+    .remove-btn {
+        background-color: black;
+        border: none;
+        border-radius: 50%;
+        width: 4px;
+        height: 4px;
+        cursor: pointer;
+        display: inline-block;
+        vertical-align: middle;
+        transition: all 0.3s ease;
+    }
+
+        .remove-btn:hover {
+            width: 25px;
+            height: 25px;
+            background-color: black;
+        }
+
+        .remove-btn:before {
+            content: '\f00d';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            line-height: 25px;
+        }
+
+        .remove-btn:focus {
+            outline: none;
+        }
+</style>

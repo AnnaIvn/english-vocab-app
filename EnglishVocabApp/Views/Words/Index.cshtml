@@ -1,4 +1,4 @@
-@model IEnumerable<EnglishVocabApp.Models.Word>
+@model IEnumerable<EnglishVocabApp.ViewModels.WordViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -15,33 +15,22 @@
         <tr>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSortParam" style="text-decoration: none; color: #5daade;">
-                    @Html.DisplayNameFor(model => model.Name)
+                    Word
                 </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Transcript)
+                Transcript
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.TypeSortParam" style="text-decoration: none; color: #5daade;">
-                    @Html.DisplayNameFor(model => model.Type)
+                    Type
                 </a>
             </th>
-
-            <th>
-                @Html.DisplayNameFor(model => model.Meaning)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Examples)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Synonyms)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Antonyms)
-            </th>
-            <th>
-                <strong>Actions</strong>
-            </th>
+            <th>Meaning</th>
+            <th>Examples</th>
+            <th>Synonyms</th>
+            <th>Antonyms</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -55,7 +44,7 @@
                     @Html.DisplayFor(modelItem => item.Transcript)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Type.Name)
+                    @Html.DisplayFor(modelItem => item.TypeName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Meaning)
@@ -63,7 +52,8 @@
                 <td>
                     @if (!string.IsNullOrWhiteSpace(item.ExamplesString))
                     {
-                        @Html.Raw("- " + item.ExamplesString.Replace(";", "<br>- "))  // replaces ';' with <br>- for multiline display
+                        @Html.Raw("- " + item.ExamplesString.Replace(";", "<br>- "))
+                        // replaces ';' with <br>- for multiline display
                     }
                     else
                     {
@@ -77,11 +67,33 @@
                     @(item.AntonymsString != null ? string.Join(", ", item.AntonymsString) : "None")
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn rounded-pill w-60 mb-2" style="background-color: #6fa0bb; color: white; border: none;" onmouseover="this.style.backgroundColor='#55778e';" onmouseout="this.style.backgroundColor='#6fa0bb';">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn rounded-pill w-60 mb-2" style="background-color: #6f8bbb; color: white; border: none;" onmouseover="this.style.backgroundColor='#55778e';" onmouseout="this.style.backgroundColor='#6f8bbb';">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn rounded-pill w-60" style="background-color: #b53650; color: white; border: none;" onmouseover="this.style.backgroundColor='#9c3147';" onmouseout="this.style.backgroundColor='#b53650';">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn rounded-pill w-60 mb-2"
+                       style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                       onmouseover="this.style.backgroundColor='#f1f1f1';"
+                       onmouseout="this.style.backgroundColor='#ffffff';">
+                        <i class="fa fa-pen-alt" aria-hidden="true" style="color: #808080;"></i> Edit
+                    </a>
+
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn rounded-pill w-60 mb-2"
+                       style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                       onmouseover="this.style.backgroundColor='#f1f1f1';"
+                       onmouseout="this.style.backgroundColor='#ffffff';">
+                        <i class="fa fa-scroll" aria-hidden="true" style="color: #808080;"></i> Details
+                    </a>
+
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn rounded-pill w-60"
+                       style="background-color: #555555; color: white; border: none; font-weight: 500;"
+                       onmouseover="this.style.backgroundColor='#777777';"
+                       onmouseout="this.style.backgroundColor='#555555';">
+                        <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                    </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<!-- Add FontAwesome CDN link in the <head> section of your layout file (_Layout.cshtml) -->
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+}

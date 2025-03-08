@@ -1,86 +1,90 @@
-﻿@model EnglishVocabApp.Models.Word
+﻿@model EnglishVocabApp.ViewModels.WordViewModel
+@* @model EnglishVocabApp.Models.Word *@
 
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Word Editor</h2>
+<h2>Edit Word</h2>
 <hr />
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Edit">
+        <form asp-action="Edit" onsubmit="updateHiddenFields()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <input type="hidden" asp-for="Id" />
 
             <div class="form-group">
-                <label asp-for="Name" class="control-label">Name of the word: </label>
+                <label asp-for="Name" class="control-label">Name of the word:</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="TypeId" class="control-label">Type/Class of the word: </label>
-                <select asp-for="TypeId" class="form-control" asp-items="ViewBag.TypeId"></select>
-                <span asp-validation-for="TypeId" class="text-danger"></span>
+                <label asp-for="TypeName" class="control-label">Type/Class of the word:</label>
+                <select asp-for="TypeName" class="form-control">
+                    <option value="">Select a type</option>
+                    @foreach (var type in ViewBag.WordTypes as List<string>)
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
+                <span asp-validation-for="TypeName" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Transcript" class="control-label">Transcript of the word: </label>
+                <label asp-for="Transcript" class="control-label">Transcript of the word:</label>
                 <input asp-for="Transcript" class="form-control" />
                 <span asp-validation-for="Transcript" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Meaning" class="control-label">Meaning of the word: </label>
+                <label asp-for="Meaning" class="control-label">Meaning of the word:</label>
                 <input asp-for="Meaning" class="form-control" />
                 <span asp-validation-for="Meaning" class="text-danger"></span>
             </div>
 
-            <!-- Examples Section -->
+            <!-- Examples -->
             <div class="form-group">
-                <label class="control-label">Examples: </label>
-                <div id="examples-container">
+                <label>Examples:</label>
+                <ul id="examplesList">
                     @foreach (var example in Model.Examples)
                     {
-                        <div class="example-item">
-                            <input type="text" name="Examples[]" value="@example" class="form-control d-inline w-75" />
-                            <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>
-                        </div>
+                        <li>@example <button type="button" onclick="removeExample('@example')">x</button></li>
                     }
-                </div>
-                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="addExample()">Add Example</button>
+                </ul>
+                <input type="text" id="newExample" class="form-control" placeholder="Add an example" />
+                <button type="button" class="btn btn-secondary mt-2" onclick="addExample()">Add</button>
+                <input type="hidden" asp-for="ExamplesString" id="examplesInput" />
             </div>
 
-            <!-- Synonyms Section -->
+            <!-- Synonyms -->
             <div class="form-group">
-                <label class="control-label">Synonyms: </label>
-                <div id="synonyms-container">
+                <label>Synonyms:</label>
+                <ul id="synonymsList">
                     @foreach (var synonym in Model.Synonyms)
                     {
-                        <div class="synonym-item">
-                            <input type="text" name="Synonyms[]" value="@synonym" class="form-control d-inline w-75" />
-                            <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>
-                        </div>
+                        <li>@synonym <button type="button" onclick="removeSynonym('@synonym')">x</button></li>
                     }
-                </div>
-                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="addSynonym()">Add Synonym</button>
+                </ul>
+                <input type="text" id="newSynonym" class="form-control" placeholder="Add a synonym" />
+                <button type="button" class="btn btn-secondary mt-2" onclick="addSynonym()">Add</button>
+                <input type="hidden" asp-for="SynonymsString" id="synonymsInput" />
             </div>
 
-            <!-- Antonyms Section -->
+            <!-- Antonyms -->
             <div class="form-group">
-                <label class="control-label">Antonyms: </label>
-                <div id="antonyms-container">
+                <label>Antonyms:</label>
+                <ul id="antonymsList">
                     @foreach (var antonym in Model.Antonyms)
                     {
-                        <div class="antonym-item">
-                            <input type="text" name="Antonyms[]" value="@antonym" class="form-control d-inline w-75" />
-                            <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>
-                        </div>
+                        <li>@antonym <button type="button" onclick="removeAntonym('@antonym')">x</button></li>
                     }
-                </div>
-                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="addAntonym()">Add Antonym</button>
+                </ul>
+                <input type="text" id="newAntonym" class="form-control" placeholder="Add an antonym" />
+                <button type="button" class="btn btn-secondary mt-2" onclick="addAntonym()">Add</button>
+                <input type="hidden" asp-for="AntonymsString" id="antonymsInput" />
             </div>
 
             <div class="form-group mt-3">
@@ -92,40 +96,78 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
     <script>
+        let examples = @Html.Raw(Json.Serialize(Model.Examples));
+        let synonyms = @Html.Raw(Json.Serialize(Model.Synonyms));
+        let antonyms = @Html.Raw(Json.Serialize(Model.Antonyms));
+
         function addExample() {
-            let container = document.getElementById("examples-container");
-            let div = document.createElement("div");
-            div.className = "example-item";
-            div.innerHTML = `<input type="text" name="Examples[]" class="form-control d-inline w-75" />
-                             <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>`;
-            container.appendChild(div);
+            let value = document.getElementById("newExample").value;
+            if (value.trim()) {
+                examples.push(value);
+                updateExamplesList();
+                document.getElementById("newExample").value = "";
+            }
+        }
+
+        function removeExample(value) {
+            examples = examples.filter(item => item !== value);
+            updateExamplesList();
+        }
+
+        function updateExamplesList() {
+            document.getElementById("examplesList").innerHTML = examples.map(item =>
+                `<li>${item} <button type="button" onclick="removeExample('${item}')">x</button></li>`
+            ).join("");
+            document.getElementById("examplesInput").value = examples.join(";");
         }
 
         function addSynonym() {
-            let container = document.getElementById("synonyms-container");
-            let div = document.createElement("div");
-            div.className = "synonym-item";
-            div.innerHTML = `<input type="text" name="Synonyms[]" class="form-control d-inline w-75" />
-                             <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>`;
-            container.appendChild(div);
+            let value = document.getElementById("newSynonym").value;
+            if (value.trim()) {
+                synonyms.push(value);
+                updateSynonymsList();
+                document.getElementById("newSynonym").value = "";
+            }
+        }
+
+        function removeSynonym(value) {
+            synonyms = synonyms.filter(item => item !== value);
+            updateSynonymsList();
+        }
+
+        function updateSynonymsList() {
+            document.getElementById("synonymsList").innerHTML = synonyms.map(item =>
+                `<li>${item} <button type="button" onclick="removeSynonym('${item}')">x</button></li>`
+            ).join("");
+            document.getElementById("synonymsInput").value = synonyms.join(", ");
         }
 
         function addAntonym() {
-            let container = document.getElementById("antonyms-container");
-            let div = document.createElement("div");
-            div.className = "antonym-item";
-            div.innerHTML = `<input type="text" name="Antonyms[]" class="form-control d-inline w-75" />
-                             <button type="button" class="btn btn-danger btn-sm" onclick="removeElement(this)">X</button>`;
-            container.appendChild(div);
+            let value = document.getElementById("newAntonym").value;
+            if (value.trim()) {
+                antonyms.push(value);
+                updateAntonymsList();
+                document.getElementById("newAntonym").value = "";
+            }
         }
 
-        function removeElement(button) {
-            button.parentElement.remove();
+        function removeAntonym(value) {
+            antonyms = antonyms.filter(item => item !== value);
+            updateAntonymsList();
+        }
+
+        function updateAntonymsList() {
+            document.getElementById("antonymsList").innerHTML = antonyms.map(item =>
+                `<li>${item} <button type="button" onclick="removeAntonym('${item}')">x</button></li>`
+            ).join("");
+            document.getElementById("antonymsInput").value = antonyms.join(", ");
+        }
+
+        function updateHiddenFields() {
+            document.getElementById("examplesInput").value = examples.join(";");
+            document.getElementById("synonymsInput").value = synonyms.join(", ");
+            document.getElementById("antonymsInput").value = antonyms.join(", ");
         }
     </script>
 }
