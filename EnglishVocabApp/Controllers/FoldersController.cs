@@ -45,7 +45,8 @@ namespace EnglishVocabApp.Controllers
                 User = f.User,
                 CreatedAt = f.CreatedAt,
                 UpdatedAt = f.UpdatedAt,
-                IsPrivate = f.IsPrivate
+                IsPrivate = f.IsPrivate,
+                FoldersUsers = f.FoldersUsers
             });
 
             return View(folderViewModels);
@@ -101,12 +102,13 @@ namespace EnglishVocabApp.Controllers
                 User = folder.User,
                 CreatedAt = folder.CreatedAt,
                 UpdatedAt = folder.UpdatedAt,
-                IsPrivate = folder.IsPrivate
+                IsPrivate = folder.IsPrivate,
+                FoldersUsers = folder.FoldersUsers
             };
 
             return View(folderVm);
         }
-                // GET: Folders/UserFolders
+        // GET: Folders/UserFolders
         //public async Task<IActionResult> UserFolders()
         //{
         //    string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -124,29 +126,34 @@ namespace EnglishVocabApp.Controllers
         //    return View(userFolders);
         //}
         // GET: Folders/Create
+        [Authorize]
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");
             return View(new FolderViewModel());
         }
 
         // POST: Folders/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FolderViewModel folder)
         {
             //if (ModelState.IsValid)              // commented for now
             {
+                string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
                 var folderEntity = new Folder
                 {
                     Name = folder.Name,
                     Description = folder.Description,
-                    UserId = folder.UserId,
+                    UserId = userId,
                     User = folder.User,
-                    CreatedAt = folder.CreatedAt,
-                    UpdatedAt = folder.UpdatedAt,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
                     IsPrivate = folder.IsPrivate
                 };
 
@@ -159,6 +166,7 @@ namespace EnglishVocabApp.Controllers
         }
 
         // GET: Folders/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -166,20 +174,27 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
             var folder = await _context.Folders.Include(f => f.User).FirstOrDefaultAsync(f => f.Id == id);
             if (folder == null)
             {
                 return NotFound();
+            }
+            if (folder.UserId != userId)
+            {
+                return Forbid();
             }
             var folderVm = new FolderViewModel
             {
                 Id = folder.Id,
                 Name = folder.Name,
                 Description = folder.Description,
-                UserId = folder.UserId,
-                User = folder.User,
-                CreatedAt = folder.CreatedAt,
-                UpdatedAt = folder.UpdatedAt,
+                //UserId = folder.UserId,
+                //User = folder.User,
+                //CreatedAt = folder.CreatedAt,
+                //UpdatedAt = folder.UpdatedAt,
                 IsPrivate = folder.IsPrivate
             };
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", folder.UserId);        // changed Id to UserName
@@ -189,16 +204,25 @@ namespace EnglishVocabApp.Controllers
         // POST: Folders/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, FolderViewModel folderVm)
         {
             if (id != folderVm.Id) return NotFound();
 
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
             //if (ModelState.IsValid)
             {
                 var folder = await _context.Folders.Include(f => f.User).FirstOrDefaultAsync(f => f.Id == id);
                 if (folder == null) return NotFound();
+
+                if (folder.UserId != userId)
+                {
+                    return Forbid();
+                }
 
                 folder.Name = folderVm.Name;
                 folder.Description = folderVm.Description;
@@ -214,17 +238,24 @@ namespace EnglishVocabApp.Controllers
         }
 
         // GET: Folders/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
             var folder = await _context.Folders.Include(f => f.User).FirstOrDefaultAsync(m => m.Id == id);
             if (folder == null)
             {
                 return NotFound();
+            }
+            if (folder.UserId != userId)
+            {
+                return Forbid();
             }
 
             var folderVm = new FolderViewModel
@@ -239,15 +270,27 @@ namespace EnglishVocabApp.Controllers
         }
 
         // POST: Folders/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
             var folder = await _context.Folders.Include(f => f.FoldersUsers).FirstOrDefaultAsync(f => f.Id == id);
-            if (folder != null)
+
+            if (folder == null)
             {
-                _context.Folders.Remove(folder);
+                return NotFound();
             }
+
+            if (folder.UserId != userId)
+            {
+                return Forbid();
+            }
+
+            _context.Folders.Remove(folder);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

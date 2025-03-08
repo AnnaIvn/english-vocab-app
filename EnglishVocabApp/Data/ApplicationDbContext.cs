@@ -52,12 +52,14 @@ namespace EnglishVocabApp.Data
             builder.Entity<FoldersUsers>()
                 .HasOne(fu => fu.User)
                 .WithMany(u => u.FoldersUsers)
+                .HasForeignKey(fu => fu.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.Entity<FoldersUsers>()
                 .HasOne(fu => fu.Folder)
                 .WithMany(f => f.FoldersUsers)
-                .OnDelete(DeleteBehavior.NoAction);
+                .HasForeignKey(fu => fu.FolderId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
         public DbSet<EnglishVocabApp.ViewModels.TypeViewModel> TypeViewModel { get; set; } = default!;
     }
