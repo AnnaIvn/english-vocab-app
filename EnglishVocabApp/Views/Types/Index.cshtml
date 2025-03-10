@@ -1,14 +1,19 @@
-﻿@model IEnumerable<EnglishVocabApp.ViewModels.TypeViewModel>
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+@model IEnumerable<EnglishVocabApp.ViewModels.TypeViewModel>
+
+
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = @Localizer["lblTitle"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>@Localizer["lblTitle"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">@Localizer["lblCreateNewType"]</a>
 </p>
 <table class="table">
     <thead>
