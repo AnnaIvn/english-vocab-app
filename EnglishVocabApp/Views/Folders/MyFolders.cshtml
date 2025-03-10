@@ -34,7 +34,7 @@
                     @if (isOwner)
                     {
                         <a asp-action="Edit" asp-route-id="@folder.Id">Edit</a> 
-                        <a asp-action="Delete" asp-route-id = "@folder.Id"> Delete </a>
+                       // <a asp-action="Delete" asp-route-id = "@folder.Id"> Delete </a>
                     }
 
                     <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;">
