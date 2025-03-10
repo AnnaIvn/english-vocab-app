@@ -1,14 +1,18 @@
-﻿@model IEnumerable<EnglishVocabApp.ViewModels.FolderViewModel>
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+@model IEnumerable<EnglishVocabApp.ViewModels.FolderViewModel>
 @using System.Security.Claims
 
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = @Localizer["lblTitleFold"];
 }
 
-<h1>Index</h1>
+<h1>@Localizer["lblTitleFold"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">@Localizer["lblCreateNewFolder"]</a>
 </p>
 <table class="table">
     <thead>
@@ -56,9 +60,9 @@
                     @Html.DisplayFor(modelItem => item.UpdatedAt)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id">@Localizer["lblEditFolder"]</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">@Localizer["lblDetailsAboutFolder"]</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">@Localizer["lblDeleteThisFolder"]</a>
 
                     @if (User?.Identity?.IsAuthenticated == true)
                     {
@@ -75,7 +79,7 @@
                             {
                                 <form asp-action="SaveFolder" asp-controller="Folders" method="post" style="display:inline;">
                                     <input type="hidden" name="folderId" value="@item.Id" />
-                                    <button type="submit" class="btn btn-sm btn-primary">Save to My Folders</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">@Localizer["lblSaveToTheListFolder"]</button>
                                 </form>
                             }
                             // Show Remove from My Folders button if the user has saved the folder
@@ -83,7 +87,7 @@
                             {
                                 <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;">
                                     <input type="hidden" name="folderId" value="@item.Id" />
-                                    <button type="submit" class="btn btn-sm btn-danger">Remove from My Folders</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">@Localizer["lblRemoveFromTheListFolder"]</button>
                                 </form>
                             }
                         }

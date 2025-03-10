@@ -1,12 +1,16 @@
-﻿@model EnglishVocabApp.ViewModels.FolderViewModel
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+@model EnglishVocabApp.ViewModels.FolderViewModel
+
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = @Localizer["lblTitleCreateFold"];
 }
 
-<h1>Create</h1>
+<h1>@Localizer["lblTitleCreateFold"]</h1>
 
-<h4>Folder</h4>
+<h4>@Localizer["lblFolderFold"]</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -28,14 +32,14 @@
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="@Localizer["lblCreateFold"]" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">@Localizer["lblReturnToFold"]</a>
 </div>
 
 @section Scripts {

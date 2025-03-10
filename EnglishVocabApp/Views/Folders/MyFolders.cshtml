@@ -1,20 +1,38 @@
-﻿@model IEnumerable<EnglishVocabApp.ViewModels.FolderViewModel>
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+@model IEnumerable<EnglishVocabApp.ViewModels.FolderViewModel>
 @using System.Security.Claims
 
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "My Folders";
+    ViewData["Title"] = @Localizer["lblTitleMyFoldersFold"];
 }
 
-<h2>My Folders</h2>
+<h2>@Localizer["lblTitleMyFoldersFold"]</h2>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Created At</th>
-            <th>Updated At</th>
-            <th>Actions</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPrivate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -24,23 +42,36 @@
             bool isOwner = folder.UserId == userId;
 
             <tr>
-                <td>@folder.Name</td>
-                <td>@folder.Description</td>
-                <td>@folder.CreatedAt.ToString("yyyy-MM-dd")</td>
-                <td>@folder.UpdatedAt.ToString("yyyy-MM-dd")</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@folder.Id">View</a> |
+                    @Html.DisplayFor(modelItem => folder.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => folder.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => folder.IsPrivate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => folder.User.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => folder.CreatedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => folder.UpdatedAt)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@folder.Id">@Localizer["lblDetailsAboutFolder"]</a> |
 
                     @if (isOwner)
                     {
-                        <a asp-action="Edit" asp-route-id="@folder.Id">Edit</a> 
-                       // <a asp-action="Delete" asp-route-id = "@folder.Id"> Delete </a>
+                        <a asp-action="Edit" asp-route-id="@folder.Id">@Localizer["lblEditFolder"]</a>
                     }
 
                     <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;">
                         <input type="hidden" name="folderId" value="@folder.Id" />
                         <button type="submit" class="btn btn-sm @(isOwner ? "btn-danger" : "btn-warning")">
-                            @(isOwner ? "Delete Folder" : "Remove from My Folders")
+                            @(isOwner ? @Localizer["lblDeleteThisFolder"] : @Localizer["lblRemoveFromTheListFolder"])
                         </button>
                     </form>
                 </td>

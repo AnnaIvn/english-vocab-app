@@ -117,10 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblCreateNewType" xml:space="preserve">
-    <value>Додати новий тип</value>
+  <data name="lblCreatedAtFolder" xml:space="preserve">
+    <value>Created at:</value>
   </data>
-  <data name="lblTitle" xml:space="preserve">
-    <value>Усі типи слів</value>
+  <data name="lblDescriptionFolder" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="lblIsPrivateFolder" xml:space="preserve">
+    <value>Is Private?</value>
+  </data>
+  <data name="lblNameFolder" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="lblUpdatedAtFolder" xml:space="preserve">
+    <value>Updated at:</value>
+  </data>
+  <data name="lblUserNameFolder" xml:space="preserve">
+    <value>Owner's name</value>
   </data>
 </root>

@@ -1,14 +1,18 @@
-﻿@model EnglishVocabApp.ViewModels.FolderViewModel
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+@model EnglishVocabApp.ViewModels.FolderViewModel
 @using System.Security.Claims
 
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = @Localizer["lblTitleDetailsFold"];
 }
 
-<h1>Details</h1>
+<h1>@Localizer["lblTitleDetailsFold"]</h1>
 
 <div>
-    <h4>Folder</h4>
+    <h4>@Localizer["lblFolderFold"]</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -50,8 +54,8 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">@Localizer["lblEditFolder"]</a> |
+    <a asp-action="Index">@Localizer["lblReturnToFold"]</a>
 </div>
 @if (User?.Identity?.IsAuthenticated == true)
 {
@@ -67,14 +71,14 @@
         {
             <form asp-action="SaveFolder" asp-controller="Folders" method="post" style="display:inline;">
                 <input type="hidden" name="folderId" value="@Model.Id" />
-                <button type="submit" class="btn btn-sm btn-primary">Save to My Folders</button>
+                <button type="submit" class="btn btn-sm btn-primary">@Localizer["lblSaveToTheListFolder"]</button>
             </form>
         }
         else // Show "Remove from My Folders" if already saved
         {
             <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;">
                 <input type="hidden" name="folderId" value="@Model.Id" />
-                <button type="submit" class="btn btn-sm btn-danger">Remove from My Folders</button>
+                <button type="submit" class="btn btn-sm btn-danger">@Localizer["lblRemoveFromTheListFolder"]</button>
             </form>
         }
     }

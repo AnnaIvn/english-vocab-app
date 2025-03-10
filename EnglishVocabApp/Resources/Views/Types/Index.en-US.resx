@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="lblCreateNewType" xml:space="preserve">
-    <value>Create new type</value>
+    <value>Create a new type</value>
   </data>
   <data name="lblTitle" xml:space="preserve">
     <value>All word types</value>

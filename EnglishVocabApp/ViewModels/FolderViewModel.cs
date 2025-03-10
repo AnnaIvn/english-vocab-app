@@ -1,16 +1,29 @@
 ﻿using EnglishVocabApp.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace EnglishVocabApp.ViewModels
 {
     public class FolderViewModel
     {
-        public int Id { get; set; }              
-        public string Name { get; set; }         
-        public string Description { get; set; }  
+        public int Id { get; set; }
+        [Required]
+        [Display(Name = "lblNameFolder")]
+        public string Name { get; set; }
+        [Required]
+        [Display(Name = "lblDescriptionFolder")]
+        public string Description { get; set; }
         public string UserId { get; set; }
+        [Required]
+        [Display(Name = "lblUserNameFolder")]
         public User User { get; set; }
-        public DateTime CreatedAt { get; set; } 
-        public DateTime UpdatedAt { get; set; } 
+        [Required]
+        [Display(Name = "lblCreatedAtFolder")]
+        public DateTime CreatedAt { get; set; }
+        [Required]
+        [Display(Name = "lblUpdatedAtFolder")]
+        public DateTime UpdatedAt { get; set; }
+        [Required]
+        [Display(Name = "lblIsPrivateFolder")]
         public bool IsPrivate { get; set; }
 
         public IEnumerable<FoldersUsers> FoldersUsers { get; set; }

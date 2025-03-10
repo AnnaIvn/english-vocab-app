@@ -117,10 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblCreateNewType" xml:space="preserve">
-    <value>Додати новий тип</value>
+  <data name="lblTitleFold" xml:space="preserve">
+    <value>All available folders</value>
   </data>
-  <data name="lblTitle" xml:space="preserve">
-    <value>Усі типи слів</value>
+  <data name="lblCreateNewFolder" xml:space="preserve">
+    <value>Create a new Folder</value>
+  </data>
+  <data name="lblEditFolder" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="lblDetailsAboutFolder" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="lblDeleteThisFolder" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="lblSaveToTheListFolder" xml:space="preserve">
+    <value>Save to the list</value>
+  </data>
+  <data name="lblRemoveFromTheListFolder" xml:space="preserve">
+    <value>Remove from the list</value>
   </data>
 </root>
