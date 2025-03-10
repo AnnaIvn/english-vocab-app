@@ -167,10 +167,6 @@ namespace EnglishVocabApp.Controllers
         }
 
 
-
-
-
-        // does not work properly right now
         // GET: Words/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -180,7 +176,7 @@ namespace EnglishVocabApp.Controllers
             }
 
             var wordEntity = await _context.Words
-                .Include(w => w.Type)
+                .Include(w => w.Type) 
                 .FirstOrDefaultAsync(w => w.Id == id);
 
             if (wordEntity == null)
@@ -188,17 +184,7 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            var wordVm = new WordViewModel
-            {
-                Id = wordEntity.Id,
-                Name = wordEntity.Name,
-                Transcript = wordEntity.Transcript,
-                Meaning = wordEntity.Meaning,
-                ExamplesString = wordEntity.ExamplesString,
-                SynonymsString = wordEntity.SynonymsString,
-                AntonymsString = wordEntity.AntonymsString,
-                TypeName = wordEntity.Type.Name
-            };
+            var wordVm = new WordViewModel(wordEntity);       // uses constructor written in WordViewModel.cs file
 
             ViewBag.WordTypes = await _context.Types.Select(t => t.Name).ToListAsync();
             return View(wordVm);
@@ -228,12 +214,13 @@ namespace EnglishVocabApp.Controllers
                 return View(wordVm);
             }
 
-            var wordEntity = await _context.Words.FindAsync(id);
+            var wordEntity = await _context.Words.FirstOrDefaultAsync(w => w.Id == id);
             if (wordEntity == null)
             {
                 return NotFound();
             }
 
+            // Update properties
             wordEntity.Name = wordVm.Name;
             wordEntity.Transcript = wordVm.Transcript;
             wordEntity.Meaning = wordVm.Meaning;
@@ -242,11 +229,12 @@ namespace EnglishVocabApp.Controllers
             wordEntity.AntonymsString = wordVm.AntonymsString;
             wordEntity.TypeId = wordType.Id;
 
-            _context.Words.Update(wordEntity);
+            // No need for _context.Words.Update(wordEntity);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
+
 
 
 

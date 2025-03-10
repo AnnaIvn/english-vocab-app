@@ -1,29 +1,27 @@
 ﻿@model EnglishVocabApp.ViewModels.WordViewModel
-@* @model EnglishVocabApp.Models.Word *@
 
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit Word</h2>
-<hr />
-<div class="row">
+<h1 style="text-transform: uppercase; text-align: center; margin-bottom: 30px;">Word Editor</h1>
+<div class="row justify-content-center">
     <div class="col-md-6">
         <form asp-action="Edit" onsubmit="updateHiddenFields()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <input type="hidden" asp-for="Id" />
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="Name" class="control-label">Name of the word:</label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" style="border-radius: 50px;" placeholder="Name of the word" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label asp-for="TypeName" class="control-label">Type/Class of the word:</label>
-                <select asp-for="TypeName" class="form-control">
+                <select asp-for="TypeName" class="form-control" style="border-radius: 50px;">
                     <option value="">Select a type</option>
                     @foreach (var type in ViewBag.WordTypes as List<string>)
                     {
@@ -33,20 +31,20 @@
                 <span asp-validation-for="TypeName" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Transcript" class="control-label">Transcript of the word:</label>
-                <input asp-for="Transcript" class="form-control" />
+            <div class="form-group mb-3">
+                @* <label asp-for="Transcript" class="control-label">Transcript of the word:</label> *@
+                <input asp-for="Transcript" class="form-control" style="border-radius: 50px;" />
                 <span asp-validation-for="Transcript" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Meaning" class="control-label">Meaning of the word:</label>
-                <input asp-for="Meaning" class="form-control" />
+            <div class="form-group mb-3">
+                @* <label asp-for="Meaning" class="control-label">Meaning of the word:</label> *@
+                <input asp-for="Meaning" class="form-control" style="border-radius: 50px;" />
                 <span asp-validation-for="Meaning" class="text-danger"></span>
             </div>
 
             <!-- Examples -->
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label>Examples:</label>
                 <ul id="examplesList">
                     @foreach (var example in Model.Examples)
@@ -54,13 +52,13 @@
                         <li>@example <button type="button" onclick="removeExample('@example')">x</button></li>
                     }
                 </ul>
-                <input type="text" id="newExample" class="form-control" placeholder="Add an example" />
+                <input type="text" id="newExample" class="form-control" placeholder="Add an example" style="border-radius: 50px;" />
                 <button type="button" class="btn btn-secondary mt-2" onclick="addExample()">Add</button>
                 <input type="hidden" asp-for="ExamplesString" id="examplesInput" />
             </div>
 
             <!-- Synonyms -->
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label>Synonyms:</label>
                 <ul id="synonymsList">
                     @foreach (var synonym in Model.Synonyms)
@@ -68,13 +66,13 @@
                         <li>@synonym <button type="button" onclick="removeSynonym('@synonym')">x</button></li>
                     }
                 </ul>
-                <input type="text" id="newSynonym" class="form-control" placeholder="Add a synonym" />
+                <input type="text" id="newSynonym" class="form-control" placeholder="Add a synonym" style="border-radius: 50px;" />
                 <button type="button" class="btn btn-secondary mt-2" onclick="addSynonym()">Add</button>
                 <input type="hidden" asp-for="SynonymsString" id="synonymsInput" />
             </div>
 
             <!-- Antonyms -->
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label>Antonyms:</label>
                 <ul id="antonymsList">
                     @foreach (var antonym in Model.Antonyms)
@@ -82,7 +80,7 @@
                         <li>@antonym <button type="button" onclick="removeAntonym('@antonym')">x</button></li>
                     }
                 </ul>
-                <input type="text" id="newAntonym" class="form-control" placeholder="Add an antonym" />
+                <input type="text" id="newAntonym" class="form-control" placeholder="Add an antonym" style="border-radius: 50px;" />
                 <button type="button" class="btn btn-secondary mt-2" onclick="addAntonym()">Add</button>
                 <input type="hidden" asp-for="AntonymsString" id="antonymsInput" />
             </div>
