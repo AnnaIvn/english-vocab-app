@@ -1,7 +1,7 @@
 ﻿@model EnglishVocabApp.ViewModels.WordViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit word";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -13,81 +13,130 @@
 
             <input type="hidden" asp-for="Id" />
 
-            <div class="form-group mb-3">
-                <label asp-for="Name" class="control-label">Name of the word:</label>
-                <input asp-for="Name" class="form-control" style="border-radius: 50px;" placeholder="Name of the word" />
+            <div class="form-group mb-3 position-relative">
+                <div class="input-wrapper">
+                    <input asp-for="Name" class="form-control custom-input" placeholder=" " style="border-radius: 50px;" />
+                    <span class="input-hint">Name of the word</span>
+                </div>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="TypeName" class="control-label">Type/Class of the word:</label>
-                <select asp-for="TypeName" class="form-control" style="border-radius: 50px;">
-                    <option value="">Select a type</option>
-                    @foreach (var type in ViewBag.WordTypes as List<string>)
-                    {
-                        <option value="@type">@type</option>
-                    }
-                </select>
+                <div class="input-wrapper">
+                    <select asp-for="TypeName" class="form-control custom-select" style="border-radius: 50px;">
+                        <option value="">Select a type</option>
+                        @foreach (var type in ViewBag.WordTypes as List<string>)
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </select>
+                    <span class="input-hint">Word type</span>
+                </div>
                 <span asp-validation-for="TypeName" class="text-danger"></span>
             </div>
 
-            <div class="form-group mb-3">
-                @* <label asp-for="Transcript" class="control-label">Transcript of the word:</label> *@
-                <input asp-for="Transcript" class="form-control" style="border-radius: 50px;" />
+            <div class="form-group mb-3 position-relative">
+                <div class="input-wrapper">
+                    <input asp-for="Transcript" class="form-control custom-input" placeholder=" " style="border-radius: 50px;" />
+                    <span class="input-hint">Transcript</span>
+                </div>
                 <span asp-validation-for="Transcript" class="text-danger"></span>
             </div>
 
-            <div class="form-group mb-3">
-                @* <label asp-for="Meaning" class="control-label">Meaning of the word:</label> *@
-                <input asp-for="Meaning" class="form-control" style="border-radius: 50px;" />
+            <div class="form-group mb-3 position-relative">
+                <div class="input-wrapper">
+                    <input asp-for="Meaning" class="form-control custom-input" placeholder=" " style="border-radius: 50px;" />
+                    <span class="input-hint">Meaning of the word</span>
+                </div>
                 <span asp-validation-for="Meaning" class="text-danger"></span>
             </div>
 
             <!-- Examples -->
             <div class="form-group mb-3">
-                <label>Examples:</label>
+                <div class="input-wrapper">
+                    <input type="text" id="newExample" class="form-control custom-input" placeholder=" " style="border-radius: 50px;" />
+                    <span class="input-hint">Example of use in a sentence</span>
+                </div>
+                <button type="button" class="btn rounded-pill w-60 mt-2"
+                        style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
+                        onmouseover="this.style.backgroundColor='#f1f1f1';"
+                        onmouseout="this.style.backgroundColor='#ffffff';"
+                        onclick="addExample()">
+                    Add example
+                </button>
+                <input type="hidden" asp-for="ExamplesString" id="examplesInput" />
                 <ul id="examplesList">
                     @foreach (var example in Model.Examples)
                     {
-                        <li>@example <button type="button" onclick="removeExample('@example')">x</button></li>
+                        <li>@example <button type="button" onclick="removeExample('@example')" class="remove-btn"></button></li>
                     }
                 </ul>
-                <input type="text" id="newExample" class="form-control" placeholder="Add an example" style="border-radius: 50px;" />
-                <button type="button" class="btn btn-secondary mt-2" onclick="addExample()">Add</button>
-                <input type="hidden" asp-for="ExamplesString" id="examplesInput" />
             </div>
+
 
             <!-- Synonyms -->
             <div class="form-group mb-3">
-                <label>Synonyms:</label>
+                <div class="input-wrapper">
+                    <input type="text" id="newSynonym" class="form-control custom-input" placeholder=" " style="border-radius: 50px;" />
+                    <span class="input-hint">Type a synonym</span>
+                </div>
+                <button type="button" class="btn rounded-pill w-60 mt-2"
+                        style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
+                        onmouseover="this.style.backgroundColor='#f1f1f1';"
+                        onmouseout="this.style.backgroundColor='#ffffff';"
+                        onclick="addSynonym()">
+                    Add synonym
+                </button>
+                <input type="hidden" asp-for="SynonymsString" id="synonymsInput" />
                 <ul id="synonymsList">
                     @foreach (var synonym in Model.Synonyms)
                     {
-                        <li>@synonym <button type="button" onclick="removeSynonym('@synonym')">x</button></li>
+                        <li>@synonym <button type="button" onclick="removeSynonym('@synonym')" class="remove-btn"></button></li>
                     }
                 </ul>
-                <input type="text" id="newSynonym" class="form-control" placeholder="Add a synonym" style="border-radius: 50px;" />
-                <button type="button" class="btn btn-secondary mt-2" onclick="addSynonym()">Add</button>
-                <input type="hidden" asp-for="SynonymsString" id="synonymsInput" />
             </div>
 
-            <!-- Antonyms -->
+            <!-- Antonyms Section -->
             <div class="form-group mb-3">
-                <label>Antonyms:</label>
-                <ul id="antonymsList">
+                <div class="input-wrapper">
+                    <input type="text" id="newAntonym" class="form-control custom-input" style="border-radius: 50px;" />
+                    <span class="input-hint">Type an antonym</span>
+                </div>
+                <button type="button" class="btn rounded-pill w-60 mt-2"
+                        style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
+                        onmouseover="this.style.backgroundColor='#f1f1f1';"
+                        onmouseout="this.style.backgroundColor='#ffffff';"
+                        onclick="addAntonym()">
+                    Add antonym
+                </button>
+                <input type="hidden" asp-for="AntonymsString" id="antonymsInput" />
+
+                <ul id="antonymsList" class="custom-list">
                     @foreach (var antonym in Model.Antonyms)
                     {
-                        <li>@antonym <button type="button" onclick="removeAntonym('@antonym')">x</button></li>
+                        <li class="custom-list-item">
+                            <span class="list-text">@antonym</span>
+                            <button type="button" onclick="removeAntonym('@antonym')" class="remove-btn"></button>
+                        </li>
                     }
                 </ul>
-                <input type="text" id="newAntonym" class="form-control" placeholder="Add an antonym" style="border-radius: 50px;" />
-                <button type="button" class="btn btn-secondary mt-2" onclick="addAntonym()">Add</button>
-                <input type="hidden" asp-for="AntonymsString" id="antonymsInput" />
             </div>
 
-            <div class="form-group mt-3">
-                <input type="submit" value="Save" class="btn btn-success" />
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <div class="form-group mt-3 text-center">
+                <button type="submit" class="btn rounded-pill btn-custom"
+                        style="background-color: #555555; color: white; border: none; font-weight: 500;"
+                        onmouseover="this.style.backgroundColor='#777777';"
+                        onmouseout="this.style.backgroundColor='#555555';">
+                    <i class="fas fa-bookmark"></i> Save
+                </button>
+
+                <a asp-action="Index" class="btn rounded-pill w-60 btn-custom"
+                   style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; text-align: center; text-decoration: none;"
+                   onmouseover="this.style.backgroundColor='#f1f1f1';"
+                   onmouseout="this.style.backgroundColor='#ffffff';">
+                    <i class="fas fa-columns" style="color: grey; margin-right: 8px;"></i> Back to List
+                </a>
+
             </div>
         </form>
     </div>
@@ -115,7 +164,7 @@
 
         function updateExamplesList() {
             document.getElementById("examplesList").innerHTML = examples.map(item =>
-                `<li>${item} <button type="button" onclick="removeExample('${item}')">x</button></li>`
+                `<li>${item} <button type="button" onclick="removeExample('${item}')" class="remove-btn"></button></li>`
             ).join("");
             document.getElementById("examplesInput").value = examples.join(";");
         }
@@ -136,10 +185,11 @@
 
         function updateSynonymsList() {
             document.getElementById("synonymsList").innerHTML = synonyms.map(item =>
-                `<li>${item} <button type="button" onclick="removeSynonym('${item}')">x</button></li>`
+                `<li>${item} <button type="button" onclick="removeSynonym('${item}')" class="remove-btn"></button></li>`
             ).join("");
             document.getElementById("synonymsInput").value = synonyms.join(", ");
         }
+
 
         function addAntonym() {
             let value = document.getElementById("newAntonym").value;
@@ -156,11 +206,36 @@
         }
 
         function updateAntonymsList() {
-            document.getElementById("antonymsList").innerHTML = antonyms.map(item =>
-                `<li>${item} <button type="button" onclick="removeAntonym('${item}')">x</button></li>`
-            ).join("");
+            // Clear existing list items and create new ones with correct classes
+            let listContainer = document.getElementById("antonymsList");
+            listContainer.innerHTML = '';  // Clear the existing list
+
+            antonyms.forEach(item => {
+                // Create list item with classes
+                let listItem = document.createElement("li");
+                listItem.classList.add("custom-list-item");
+
+                // Add the item text
+                let span = document.createElement("span");
+                span.classList.add("list-text");
+                span.textContent = item;
+                listItem.appendChild(span);
+
+                // Create the remove button with proper classes
+                let removeBtn = document.createElement("button");
+                removeBtn.classList.add("remove-btn");
+                removeBtn.setAttribute("type", "button");
+                removeBtn.setAttribute("onclick", `removeAntonym('${item}')`);
+                listItem.appendChild(removeBtn);
+
+                // Append the created list item to the list
+                listContainer.appendChild(listItem);
+            });
+
+            // Update the hidden input
             document.getElementById("antonymsInput").value = antonyms.join(", ");
         }
+
 
         function updateHiddenFields() {
             document.getElementById("examplesInput").value = examples.join(";");
@@ -169,3 +244,85 @@
         }
     </script>
 }
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+<style>
+    .btn-custom {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 25px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        gap: 8px;
+    }
+    .remove-btn {
+        background: none;
+        border: none;
+        color: darkgrey;
+        font-size: 22px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+        .remove-btn:hover {
+            color: black;
+        }
+        .remove-btn:before {
+            content: '×';
+            font-size: 22px;
+            text-align: center;
+            line-height: 15px;
+        }
+
+    .input-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+    .custom-input {
+        width: 100%;
+        padding-right: 210px; /* adjust padding to avoid overlapping with the hint */
+        border-radius: 50px;
+        border: 1px solid #ccc;
+        height: 40px;
+        box-sizing: border-box;
+    }
+    .input-hint {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: grey;
+        pointer-events: none; /* ensures the hint doesn't block input focus */
+        font-size: 14px;
+    }
+
+    .custom-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .custom-list-item {
+        background-color: #f5f5f5;
+        padding: 2px 14px; /* Reduced padding to make the items shorter */
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Adjusted gap between items */
+        border: 1px solid #ddd;
+    }
+    .list-text {
+        font-size: 15px;
+        color: #333;
+        line-height: 15px; /* Optionally adjust line-height to make text more compact */
+    }
+
+</style>
