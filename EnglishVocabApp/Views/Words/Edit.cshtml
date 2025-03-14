@@ -1,11 +1,15 @@
-﻿@model EnglishVocabApp.ViewModels.WordViewModel
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+@model EnglishVocabApp.ViewModels.WordViewModel
+
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Edit word";
+    ViewData["Title"] = @Localizer["lblTitle"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 style="text-transform: uppercase; text-align: center; margin-bottom: 30px;">Word Editor</h1>
+<h1 style="text-transform: uppercase; text-align: center; margin-bottom: 30px;">@Localizer["lblWordEditor"]</h1>
 <div class="row justify-content-center">
     <div class="col-md-6">
         <form asp-action="Edit" onsubmit="updateHiddenFields()">
@@ -16,7 +20,7 @@
             <div class="form-group mb-3 position-relative">
                 <div class="input-wrapper">
                     <input asp-for="Name" class="form-control custom-input" placeholder=" " style="border-radius: 50px;" />
-                    <span class="input-hint">Name of the word</span>
+                    <span class="input-hint">@Localizer["lblNameOfTheWord"]</span>
                 </div>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
@@ -30,7 +34,7 @@
                             <option value="@type">@type</option>
                         }
                     </select>
-                    <span class="input-hint">Word type</span>
+                    <span class="input-hint">@Localizer["lblWordType"]</span>
                 </div>
                 <span asp-validation-for="TypeName" class="text-danger"></span>
             </div>
@@ -38,7 +42,7 @@
             <div class="form-group mb-3 position-relative">
                 <div class="input-wrapper">
                     <input asp-for="Transcript" class="form-control custom-input" placeholder=" " style="border-radius: 50px;" />
-                    <span class="input-hint">Transcript</span>
+                    <span class="input-hint">@Localizer["lblTranscript"]</span>
                 </div>
                 <span asp-validation-for="Transcript" class="text-danger"></span>
             </div>
@@ -46,7 +50,7 @@
             <div class="form-group mb-3 position-relative">
                 <div class="input-wrapper">
                     <input asp-for="Meaning" class="form-control custom-input" placeholder=" " style="border-radius: 50px;" />
-                    <span class="input-hint">Meaning of the word</span>
+                    <span class="input-hint">@Localizer["lblMeaningOfTheWord"]</span>
                 </div>
                 <span asp-validation-for="Meaning" class="text-danger"></span>
             </div>
@@ -55,14 +59,14 @@
             <div class="form-group mb-3">
                 <div class="input-wrapper">
                     <input type="text" id="newExample" class="form-control custom-input" placeholder=" " style="border-radius: 50px;" />
-                    <span class="input-hint">Example of use in a sentence</span>
+                    <span class="input-hint">@Localizer["lblExampleOfUseInASentence"]</span>
                 </div>
                 <button type="button" class="btn rounded-pill w-60 mt-2"
                         style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
                         onmouseover="this.style.backgroundColor='#f1f1f1';"
                         onmouseout="this.style.backgroundColor='#ffffff';"
                         onclick="addExample()">
-                    Add example
+                    @Localizer["lblAddExample"]
                 </button>
                 <input type="hidden" asp-for="ExamplesString" id="examplesInput" />
                 
@@ -80,16 +84,16 @@
 
             <!-- Synonyms -->
             <div class="form-group mb-3">
-                <div class="input-wrapper">
-                    <input type="text" id="newSynonym" class="form-control custom-input" placeholder=" " style="border-radius: 50px;" />
-                    <span class="input-hint">Type a synonym</span>
+                <div class="input-wrapper" style="margin-top: 10px;">
+                    <input type="text" id="newSynonym" class="form-control custom-input" placeholder=" " style="border-radius: 50px; " />
+                    <span class="input-hint">@Localizer["lblTypeASynonym"]</span>
                 </div>
                 <button type="button" class="btn rounded-pill w-60 mt-2"
                         style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
                         onmouseover="this.style.backgroundColor='#f1f1f1';"
                         onmouseout="this.style.backgroundColor='#ffffff';"
                         onclick="addSynonym()">
-                    Add synonym
+                    @Localizer["lblAddSynonym"]
                 </button>
                 <input type="hidden" asp-for="SynonymsString" id="synonymsInput" />
 
@@ -106,16 +110,16 @@
 
             <!-- Antonyms Section -->
             <div class="form-group mb-3">
-                <div class="input-wrapper">
+                <div class="input-wrapper" style="margin-top: 10px;">
                     <input type="text" id="newAntonym" class="form-control custom-input" style="border-radius: 50px;" />
-                    <span class="input-hint">Type an antonym</span>
+                    <span class="input-hint">@Localizer["lblTypeAnAntonym"]</span>
                 </div>
                 <button type="button" class="btn rounded-pill w-60 mt-2"
                         style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
                         onmouseover="this.style.backgroundColor='#f1f1f1';"
                         onmouseout="this.style.backgroundColor='#ffffff';"
                         onclick="addAntonym()">
-                    Add antonym
+                    @Localizer["lblAddAntonym"]
                 </button>
                 <input type="hidden" asp-for="AntonymsString" id="antonymsInput" />
 
@@ -135,14 +139,14 @@
                         style="background-color: #555555; color: white; border: none; font-weight: 500;"
                         onmouseover="this.style.backgroundColor='#777777';"
                         onmouseout="this.style.backgroundColor='#555555';">
-                    <i class="fas fa-bookmark"></i> Save
+                    <i class="fas fa-bookmark"></i>@Localizer["lblSave"]
                 </button>
 
                 <a asp-action="Index" class="btn rounded-pill w-60 btn-custom"
-                   style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; text-align: center; text-decoration: none;"
+                   style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; text-align: center; text-decoration: none; margin-left: 15px;"
                    onmouseover="this.style.backgroundColor='#f1f1f1';"
                    onmouseout="this.style.backgroundColor='#ffffff';">
-                    <i class="fas fa-columns" style="color: grey; margin-right: 8px;"></i> Back to List
+                    <i class="fas fa-columns" style="color: grey; margin-right: 8px;"></i>@Localizer["lblBackToList"]
                 </a>
 
             </div>
@@ -294,7 +298,7 @@
     }
     .custom-input {
         width: 100%;
-        padding-right: 210px; /* adjust padding to avoid overlapping with the hint */
+        padding-right: 240px; /* adjust padding to avoid overlapping with the hint */
         border-radius: 50px;
         border: 1px solid #ccc;
         height: 40px;
