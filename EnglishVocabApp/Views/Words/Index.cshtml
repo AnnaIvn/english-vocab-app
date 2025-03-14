@@ -1,36 +1,45 @@
+@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
 @model IEnumerable<EnglishVocabApp.ViewModels.WordViewModel>
 
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = @Localizer["lblTitle"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 style="text-transform: uppercase; text-align: center;">List of all words:</h1>
+<h1 style="text-transform: uppercase; text-align: center;">@Localizer["lblTitle"]:</h1>
 
 <p style="text-align: center;">
-    <a asp-action="Create" style="text-decoration: none; color: #5daade; font-weight: bold; text-transform: uppercase;">+ Add new word</a>
+    <a asp-action="Create" style="text-decoration: none; color: #5daade; font-weight: bold; text-transform: uppercase; transition: color 0.3s ease;"
+       onmouseover="this.style.color='#555555';" onmouseout="this.style.color='#5daade';">
+        + @Localizer["lblAddNewWord"]
+    </a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSortParam" style="text-decoration: none; color: #5daade;">
-                    Word
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSortParam" style="text-decoration: none; color: #5daade; transition: color 0.3s ease;"
+                   onmouseover="this.style.color='#555555';" onmouseout="this.style.color='#5daade';">
+                    @Localizer["lblWord"]
                 </a>
             </th>
             <th>
-                Transcript
+                @Localizer["lblTranscript"]
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.TypeSortParam" style="text-decoration: none; color: #5daade;">
-                    Type
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.TypeSortParam" style="text-decoration: none; color: #5daade; transition: color 0.3s ease;"
+                   onmouseover="this.style.color='#555555';" onmouseout="this.style.color='#5daade';">
+                    @Localizer["lblType"]
                 </a>
             </th>
-            <th>Meaning</th>
-            <th>Examples</th>
-            <th>Synonyms</th>
-            <th>Antonyms</th>
-            <th>Actions</th>
+            <th>@Localizer["lblMeaning"]</th>
+            <th>@Localizer["lblExamples"]</th>
+            <th>@Localizer["lblSynonyms"]</th>
+            <th>@Localizer["lblAntonyms"]</th>
+            <th>@Localizer["lblActions"]</th>
         </tr>
     </thead>
     <tbody>
@@ -71,21 +80,21 @@
                        style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
                        onmouseover="this.style.backgroundColor='#f1f1f1';"
                        onmouseout="this.style.backgroundColor='#ffffff';">
-                        <i class="fa fa-pen-alt" aria-hidden="true" style="color: #808080;"></i> Edit
+                        <i class="fa fa-feather" aria-hidden="true" style="color: #808080;"></i> @Localizer["lblEdit"]
                     </a>
 
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn rounded-pill w-60 mb-2"
                        style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
                        onmouseover="this.style.backgroundColor='#f1f1f1';"
                        onmouseout="this.style.backgroundColor='#ffffff';">
-                        <i class="fa fa-scroll" aria-hidden="true" style="color: #808080;"></i> Details
+                        <i class="fa fa-scroll" aria-hidden="true" style="color: #808080;"></i> @Localizer["lblDetails"]
                     </a>
 
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn rounded-pill w-60 "
                        style="background-color: #555555; color: white; border: none; font-weight: 500;"
                        onmouseover="this.style.backgroundColor='#777777';"
                        onmouseout="this.style.backgroundColor='#555555';">
-                        <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                        <i class="fa fa-trash" aria-hidden="true"></i> @Localizer["lblDelete"]
                     </a>
                 </td>
             </tr>
