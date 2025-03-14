@@ -120,4 +120,7 @@
   <data name="lblName" xml:space="preserve">
     <value>Назва</value>
   </data>
+  <data name="lblTypeNameMustBeUnique" xml:space="preserve">
+    <value>Назва типу повинна бути унікальна.</value>
+  </data>
 </root>

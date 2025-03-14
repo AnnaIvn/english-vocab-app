@@ -120,4 +120,7 @@
   <data name="lblName" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="lblTypeNameMustBeUnique" xml:space="preserve">
+    <value>Type name must be unique.</value>
+  </data>
 </root>
