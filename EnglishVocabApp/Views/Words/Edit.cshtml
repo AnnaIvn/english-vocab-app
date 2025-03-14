@@ -65,10 +65,14 @@
                     Add example
                 </button>
                 <input type="hidden" asp-for="ExamplesString" id="examplesInput" />
-                <ul id="examplesList">
+                
+                <ul id="examplesList" class="custom-list">
                     @foreach (var example in Model.Examples)
                     {
-                        <li>@example <button type="button" onclick="removeExample('@example')" class="remove-btn"></button></li>
+                        <li class="custom-list-item">
+                            <span class="list-text">@example</span>
+                            <button type="button" onclick="removeExample('@example')" class="remove-btn"></button>
+                        </li>
                     }
                 </ul>
             </div>
@@ -88,10 +92,14 @@
                     Add synonym
                 </button>
                 <input type="hidden" asp-for="SynonymsString" id="synonymsInput" />
-                <ul id="synonymsList">
+
+                <ul id="synonymsList" class="custom-list">
                     @foreach (var synonym in Model.Synonyms)
                     {
-                        <li>@synonym <button type="button" onclick="removeSynonym('@synonym')" class="remove-btn"></button></li>
+                        <li class="custom-list-item">
+                            <span class="list-text">@synonym</span>
+                            <button type="button" onclick="removeSynonym('@synonym')" class="remove-btn"></button>
+                        </li>
                     }
                 </ul>
             </div>
@@ -264,7 +272,7 @@
         background: none;
         border: none;
         color: darkgrey;
-        font-size: 22px;
+        font-size: 20px;
         cursor: pointer;
         font-weight: bold;
         transition: color 0.3s ease;
@@ -274,7 +282,7 @@
         }
         .remove-btn:before {
             content: '×';
-            font-size: 22px;
+            font-size: 20px;
             text-align: center;
             line-height: 15px;
         }
@@ -305,24 +313,26 @@
     .custom-list {
         list-style: none;
         padding: 0;
-        margin-top: 10px;
+        margin-top: 5px;
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 0px 30px; /* Reduce vertical gap while keeping horizontal spacing */
+        align-items: center;
     }
     .custom-list-item {
-        background-color: #f5f5f5;
-        padding: 2px 14px; /* Reduced padding to make the items shorter */
-        border-radius: 50px;
-        display: flex;
+        background-color: transparent;
+        padding: 2px 0;
+        border-radius: 0;
+        display: inline-flex; /* Keeps items in one line */
         align-items: center;
-        gap: 10px; /* Adjusted gap between items */
-        border: 1px solid #ddd;
+        gap: 0px 5px;
+        border: none;
+        white-space: nowrap;
     }
     .list-text {
         font-size: 15px;
         color: #333;
-        line-height: 15px; /* Optionally adjust line-height to make text more compact */
+        line-height: 15px;
     }
 
 </style>
