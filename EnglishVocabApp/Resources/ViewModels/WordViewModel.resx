@@ -117,46 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblAddAntonym" xml:space="preserve">
-    <value>Додати антонім</value>
+  <data name="lblMeaningOfTheWordIsRequired" xml:space="preserve">
+    <value>Meaning of the word is required.</value>
   </data>
-  <data name="lblAddExample" xml:space="preserve">
-    <value>Додати приклад</value>
+  <data name="lblNameLengthMessage" xml:space="preserve">
+    <value>The word name must contain 1 to 45 characters.</value>
   </data>
-  <data name="lblAddSynonym" xml:space="preserve">
-    <value>Додати синонім</value>
+  <data name="lblNameOfTheWordIsRequired" xml:space="preserve">
+    <value>Name of the word in required.</value>
   </data>
-  <data name="lblBackToList" xml:space="preserve">
-    <value>Назад до списку</value>
+  <data name="lblTranscriptOfTheWordIsRequired" xml:space="preserve">
+    <value>Transcript of the word is required.</value>
   </data>
-  <data name="lblExampleOfUseInASentence" xml:space="preserve">
-    <value>Приклад застосування у реченні</value>
-  </data>
-  <data name="lblMeaningOfTheWord" xml:space="preserve">
-    <value>Значення слова</value>
-  </data>
-  <data name="lblNameOfTheWord" xml:space="preserve">
-    <value>Назва слова</value>
-  </data>
-  <data name="lblSave" xml:space="preserve">
-    <value>Зберегти</value>
-  </data>
-  <data name="lblTitle" xml:space="preserve">
-    <value>Редагувати слово</value>
-  </data>
-  <data name="lblTranscript" xml:space="preserve">
-    <value>Транскрипція</value>
-  </data>
-  <data name="lblTypeAnAntonym" xml:space="preserve">
-    <value>Вкажіть антонім</value>
-  </data>
-  <data name="lblTypeASynonym" xml:space="preserve">
-    <value>Вкажіть синонім</value>
-  </data>
-  <data name="lblWordEditor" xml:space="preserve">
-    <value>Редактор слова</value>
-  </data>
-  <data name="lblWordType" xml:space="preserve">
-    <value>Тип слова</value>
+  <data name="lblTypeOfTheWordIsRequired" xml:space="preserve">
+    <value>Type of the word is required.</value>
   </data>
 </root>
