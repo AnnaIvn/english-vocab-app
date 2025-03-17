@@ -1,77 +1,102 @@
-﻿@model EnglishVocabApp.ViewModels.WordViewModel
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+@model EnglishVocabApp.ViewModels.WordViewModel
+
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Word Details";
+    ViewData["Title"] = @Localizer["lblWordDetails"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>@Model.Name</h1>
+<h1 style="text-transform: uppercase; text-align: center; margin-bottom: 30px; font-size: 36px;">@Localizer["lblWordInformation"]: @Model.Name</h1>
 
-<div>
-    <h4>Word Information</h4>
-    <dl class="row">
-        <dt class="col-sm-2">Transcript</dt>
-        <dd class="col-sm-10">@Model.Transcript</dd>
+<div class="container">
+    <div class="row justify-content-center">
+        <dl class="row text-center w-100">
+            <!-- Transcript -->
+            <dt class="col-sm-5 text-end mb-3" style="padding-right: 30px;">@Localizer["lblTranscript"]</dt>
+            <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">@Model.Transcript</dd>
 
-        <dt class="col-sm-2">Meaning</dt>
-        <dd class="col-sm-10">@Model.Meaning</dd>
+            <!-- Meaning -->
+            <dt class="col-sm-5 text-end mb-3" style="padding-right: 30px;">@Localizer["lblMeaning"]</dt>
+            <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">@Model.Meaning</dd>
 
-        <dt class="col-sm-2">Type</dt>
-        <dd class="col-sm-10">@Model.TypeName</dd>
+            <!-- Type -->
+            <dt class="col-sm-5 text-end mb-3" style="padding-right: 30px;">@Localizer["lblType"]</dt>
+            <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">@Model.TypeName</dd>
 
-        <dt class="col-sm-2">Examples</dt>
-        <dd class="col-sm-10">
-            @if (Model.Examples.Any())
-            {
-                <ul>
-                    @foreach (var example in Model.Examples)
-                    {
-                        <li>@example</li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <p>No examples available.</p>
-            }
-        </dd>
+            <!-- Examples -->
+            <dt class="col-sm-5 text-end mb-3" style="padding-right: 30px;">@Localizer["lblExamples"]</dt>
+            <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">
+                @if (Model.Examples.Any())
+                {
+                    <ul class="custom-list">
+                        @foreach (var example in Model.Examples)
+                        {
+                            <li>@example</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No examples available.</p>
+                }
+            </dd>
 
-        <dt class="col-sm-2">Synonyms</dt>
-        <dd class="col-sm-10">
-            @if (Model.Synonyms.Any())
-            {
-                <ul>
-                    @foreach (var synonym in Model.Synonyms)
-                    {
-                        <li>@synonym</li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <p>No synonyms available.</p>
-            }
-        </dd>
+            <!-- Synonyms -->
+            <dt class="col-sm-5 text-end mb-3" style="padding-right: 30px;">@Localizer["lblSynonyms"]</dt>
+            <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">
+                @if (Model.Synonyms.Any())
+                {
+                    <ul class="custom-list">
+                        @foreach (var synonym in Model.Synonyms)
+                        {
+                            <li>@synonym</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No synonyms available.</p>
+                }
+            </dd>
 
-        <dt class="col-sm-2">Antonyms</dt>
-        <dd class="col-sm-10">
-            @if (Model.Antonyms.Any())
-            {
-                <ul>
-                    @foreach (var antonym in Model.Antonyms)
-                    {
-                        <li>@antonym</li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <p>No antonyms available.</p>
-            }
-        </dd>
-    </dl>
+            <!-- Antonyms -->
+            <dt class="col-sm-5 text-end mb-3" style="padding-right: 30px;">@Localizer["lblAntonyms"]</dt>
+            <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">
+                @if (Model.Antonyms.Any())
+                {
+                    <ul class="custom-list">
+                        @foreach (var antonym in Model.Antonyms)
+                        {
+                            <li>@antonym</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No antonyms available.</p>
+                }
+            </dd>
+        </dl>
+    </div>
+
+    <!-- Back button centered -->
+    <div class="text-center">
+        <a href="@Url.Action("Index")" class="btn btn-primary">@Localizer["lblBackToList"]</a>
+    </div>
 </div>
 
-<div>
-    <a href="@Url.Action("Index")" class="btn btn-primary">Back to List</a>
-</div>
+<style>
+    /* Customizing the list symbol */
+    .custom-list {
+        list-style-type: none; /* Removes default bullets */
+        padding-left: 0; /* Removes default left padding */
+    }
+
+        .custom-list li::before {
+            content: "> "; /* Adds '>' before each item */
+            font-size: 18px;
+        }
+</style>
