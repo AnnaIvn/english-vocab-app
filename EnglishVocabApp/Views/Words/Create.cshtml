@@ -1,94 +1,151 @@
-﻿@model EnglishVocabApp.ViewModels.WordViewModel
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+@model EnglishVocabApp.ViewModels.WordViewModel
+
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Create new word";
+    ViewData["Title"] = @Localizer["lblCreateNewWord"];
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 style="text-transform: uppercase; text-align: center; margin-bottom: 30px;">Fill in word information</h1>
+<h1 style="text-transform: uppercase; text-align: center; margin-bottom: 30px;">@Localizer["lblFillInWordInformation"]</h1>
 <div class="row justify-content-center">
     <div class="col-md-6">
         <form asp-action="Create" onsubmit="updateHiddenFields()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group mb-3">
-                <input asp-for="Name" class="form-control" style="border-radius: 50px;" placeholder="Name of the word" />
+            <div class="form-group mb-3 position-relative">
+                <div class="input-wrapper">
+                    <input asp-for="Name" class="form-control custom-input" style="border-radius: 50px;" />
+                    <span class="input-hint">@Localizer["lblNameOfTheWord"]</span>
+                </div>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
-                <select asp-for="TypeName" class="form-control" style="border-radius: 50px;">
-                    <option value="">Select type</option>
-                    @foreach (var type in ViewBag.WordTypes as List<string>)
-                    {
-                        <option value="@type">@type</option>
-                    }
-                </select>
+                <div class="input-wrapper">
+                    <select asp-for="TypeName" class="form-control custom-select" style="border-radius: 50px;">
+                        <option value=""></option>
+                        @foreach (var type in ViewBag.WordTypes as List<string>)
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </select>
+                    <span class="input-hint">@Localizer["lblWordType"]</span>
+                </div>
                 <span asp-validation-for="TypeName" class="text-danger"></span>
             </div>
 
-            <div class="form-group mb-3">
-                 <input asp-for="Transcript" class="form-control" placeholder="Transcript" style="border-radius: 50px;" />
-                 <span asp-validation-for="Transcript" class="text-danger"></span>
+            <div class="form-group mb-3 position-relative">
+                <div class="input-wrapper">
+                    <input asp-for="Transcript" class="form-control custom-input" style="border-radius: 50px;" />
+                    <span class="input-hint">@Localizer["lblTranscript"]</span>
+                </div>
+                <span asp-validation-for="Transcript" class="text-danger"></span>
             </div>
 
-            <div class="form-group mb-3">
-                <input asp-for="Meaning" class="form-control" placeholder="Meaning" style="border-radius: 50px;" />
+            <div class="form-group mb-3 position-relative">
+                <div class="input-wrapper">
+					<input asp-for="Meaning" class="form-control custom-input" style="border-radius: 50px;" />
+                    <span class="input-hint">@Localizer["lblMeaningOfTheWord"]</span>
+                </div>
                 <span asp-validation-for="Meaning" class="text-danger"></span>
             </div>
 
-            <div class="form-group mb-2">
-                <label>Examples:</label>
-                <ul id="examplesList"></ul>
-                <input type="text" id="newExample" class="form-control" placeholder="Add an example" style="border-radius: 50px;" />
+            <!-- Examples -->
+            <div class="form-group mb-3">
+                <div class="input-wrapper">
+                    <input type="text" id="newExample" class="form-control custom-input" style="border-radius: 50px;" />
+                    <span class="input-hint">@Localizer["lblExampleOfUseInASentence"]</span>
+                </div>
                 <button type="button" class="btn rounded-pill w-60 mt-2"
                         style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
                         onmouseover="this.style.backgroundColor='#f1f1f1';"
                         onmouseout="this.style.backgroundColor='#ffffff';"
                         onclick="addExample()">
-                    Add
+                    @Localizer["lblAddExample"]
                 </button>
-
                 <input type="hidden" asp-for="ExamplesString" id="examplesInput" />
+
+                <ul id="examplesList" class="custom-list">
+                    @foreach (var example in Model.Examples)
+                    {
+                        <li class="custom-list-item">
+                            <span class="list-text">@example</span>
+                            <button type="button" onclick="removeExample('@example')" class="remove-btn"></button>
+                        </li>
+                    }
+                </ul>
             </div>
 
-            <div class="form-group mb-2">
-                <label>Synonyms:</label>
-                <ul id="synonymsList"></ul>
-                <input type="text" id="newSynonym" class="form-control" placeholder="Add a synonym" style="border-radius: 50px;" />
+            <!-- Synonyms -->
+            <div class="form-group mb-3">
+                <div class="input-wrapper" style="margin-top: 10px;">
+                    <input type="text" id="newSynonym" class="form-control custom-input" style="border-radius: 50px; " />
+                    <span class="input-hint">@Localizer["lblTypeASynonym"]</span>
+                </div>
                 <button type="button" class="btn rounded-pill w-60 mt-2"
                         style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
                         onmouseover="this.style.backgroundColor='#f1f1f1';"
                         onmouseout="this.style.backgroundColor='#ffffff';"
                         onclick="addSynonym()">
-                    Add
+                    @Localizer["lblAddSynonym"]
                 </button>
-
                 <input type="hidden" asp-for="SynonymsString" id="synonymsInput" />
+
+                <ul id="synonymsList" class="custom-list">
+                    @foreach (var synonym in Model.Synonyms)
+                    {
+                        <li class="custom-list-item">
+                            <span class="list-text">@synonym</span>
+                            <button type="button" onclick="removeSynonym('@synonym')" class="remove-btn"></button>
+                        </li>
+                    }
+                </ul>
             </div>
 
-            <div class="form-group mb-2">
-                <label>Antonyms:</label>
-                <ul id="antonymsList"></ul>
-                <input type="text" id="newAntonym" class="form-control" placeholder="Add an antonym" style="border-radius: 50px;" />
+            <!-- Antonyms Section -->
+            <div class="form-group mb-3">
+                <div class="input-wrapper" style="margin-top: 10px;">
+                    <input type="text" id="newAntonym" class="form-control custom-input" style="border-radius: 50px;" />
+                    <span class="input-hint">@Localizer["lblTypeAnAntonym"]</span>
+                </div>
                 <button type="button" class="btn rounded-pill w-60 mt-2"
                         style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
                         onmouseover="this.style.backgroundColor='#f1f1f1';"
                         onmouseout="this.style.backgroundColor='#ffffff';"
                         onclick="addAntonym()">
-                    Add
+                    @Localizer["lblAddAntonym"]
                 </button>
-
                 <input type="hidden" asp-for="AntonymsString" id="antonymsInput" />
+
+                <ul id="antonymsList" class="custom-list">
+                    @foreach (var antonym in Model.Antonyms)
+                    {
+                        <li class="custom-list-item">
+                            <span class="list-text">@antonym</span>
+                            <button type="button" onclick="removeAntonym('@antonym')" class="remove-btn"></button>
+                        </li>
+                    }
+                </ul>
             </div>
 
             <div class="form-group mt-3 text-center">
-                <input type="submit" value="Create" class="btn rounded-pill btn-custom"
-                    style="background-color: #555555; color: white; border: none; font-weight: 500; padding-left: 25px; padding-right: 25px;"
-                    onmouseover="this.style.backgroundColor='#777777';"
-                    onmouseout="this.style.backgroundColor='#555555';" />
-            </div>
+                <button type="submit" class="btn rounded-pill btn-custom"
+                        style="background-color: #555555; color: white; border: none; font-weight: 500; padding-left: 25px; padding-right: 25px;"
+                        onmouseover="this.style.backgroundColor='#777777';"
+                        onmouseout="this.style.backgroundColor='#555555';">
+                    <i class="fas fa-book" style="margin-right: 8px;"></i> @Localizer["lblCreateAWord"]
+                </button>
 
+                <a asp-action="Index" class="btn rounded-pill w-60 btn-custom"
+                   style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; text-align: center; text-decoration: none; margin-left: 15px;"
+                   onmouseover="this.style.backgroundColor='#f1f1f1';"
+                   onmouseout="this.style.backgroundColor='#ffffff';">
+                    <i class="fas fa-columns" style="color: grey; margin-right: 8px;"></i>@Localizer["lblBackToList"]
+                </a>
+            </div>
 
         </form>
     </div>
@@ -182,31 +239,69 @@
         gap: 8px;
     }
     .remove-btn {
-        background-color: black;
+        background: none;
         border: none;
-        border-radius: 50%;
-        width: 4px;
-        height: 4px;
+        color: darkgrey;
+        font-size: 20px;
         cursor: pointer;
-        display: inline-block;
-        vertical-align: middle;
-        transition: all 0.3s ease;
+        font-weight: bold;
+        transition: color 0.3s ease;
     }
         .remove-btn:hover {
-            width: 25px;
-            height: 25px;
-            background-color: black;
+            color: black;
         }
         .remove-btn:before {
-            content: '\f00d';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            color: white;
-            font-size: 16px;
+            content: '×';
+            font-size: 20px;
             text-align: center;
-            line-height: 25px;
+            line-height: 15px;
         }
-        .remove-btn:focus {
-            outline: none;
-        }
+
+    .input-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+    .custom-input {
+        width: 100%;
+        padding-right: 240px; /* adjust padding to avoid overlapping with the hint */
+        border-radius: 50px;
+        border: 1px solid #ccc;
+        height: 40px;
+        box-sizing: border-box;
+    }
+    .input-hint {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: grey;
+        pointer-events: none; /* ensures the hint doesn't block input focus */
+        font-size: 14px;
+    }
+
+    .custom-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 5px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0px 30px; /* Reduce vertical gap while keeping horizontal spacing */
+        align-items: center;
+    }
+    .custom-list-item {
+        background-color: transparent;
+        padding: 2px 0;
+        border-radius: 0;
+        display: inline-flex; /* Keeps items in one line */
+        align-items: center;
+        gap: 0px 5px;
+        border: none;
+        white-space: nowrap;
+    }
+    .list-text {
+        font-size: 15px;
+        color: #333;
+        line-height: 15px;
+    }
 </style>
