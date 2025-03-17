@@ -25,14 +25,19 @@
 
             <div class="form-group mb-3">
                 <div class="input-wrapper">
-                    <select asp-for="TypeName" class="form-control custom-select" style="border-radius: 50px;">
-                        <option value=""></option>
-                        @foreach (var type in ViewBag.WordTypes as List<string>)
-                        {
-                            <option value="@type">@type</option>
-                        }
-                    </select>
-                    <span class="input-hint">@Localizer["lblWordType"]</span>
+                    <div class="dropdown-container">
+                        <select asp-for="TypeName" class="form-control custom-select dropdown-select" style="border-radius: 50px;">
+                            <option value=""></option>
+                            @foreach (var type in ViewBag.WordTypes as List<string>)
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        </select>
+                        <span class="input-hint2">@Localizer["lblWordType"]</span>
+                        <div class="dropdown-caret">
+                            <i class="fa fa-chevron-up"></i> <!-- Font Awesome chevron-up -->
+                        </div>
+                    </div>
                 </div>
                 <span asp-validation-for="TypeName" class="text-danger"></span>
             </div>
@@ -222,10 +227,13 @@
             document.getElementById("synonymsInput").value = synonyms.join(", ");
             document.getElementById("antonymsInput").value = antonyms.join(", ");
         }
+
     </script>
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 
 <style>
     .btn-custom {
@@ -264,20 +272,34 @@
     }
     .custom-input {
         width: 100%;
-        padding-right: 240px; /* adjust padding to avoid overlapping with the hint */
+        padding-right: 240px; /* Adjusted padding to avoid overlap */
         border-radius: 50px;
         border: 1px solid #ccc;
         height: 40px;
         box-sizing: border-box;
+        padding-left: 15px;
     }
     .input-hint {
         position: absolute;
-        right: 15px;
+        right: 15px; /* usual hints */
         top: 50%;
         transform: translateY(-50%);
-        color: grey;
-        pointer-events: none; /* ensures the hint doesn't block input focus */
+        color: #888;
+        pointer-events: none; /* Ensures the hint doesn't block input focus */
         font-size: 14px;
+        font-weight: 400;
+        transition: transform 0.3s ease-in-out;
+    }
+    .input-hint2 {
+        position: absolute;
+        right: 40px; /* unusual hint */
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none; /* Ensures the hint doesn't block input focus */
+        font-size: 14px;
+        font-weight: 400;
+        transition: transform 0.3s ease-in-out;
     }
 
     .custom-list {
@@ -293,7 +315,7 @@
         background-color: transparent;
         padding: 2px 0;
         border-radius: 0;
-        display: inline-flex; /* Keeps items in one line */
+        display: inline-flex;
         align-items: center;
         gap: 0px 5px;
         border: none;
@@ -304,4 +326,35 @@
         color: #333;
         line-height: 15px;
     }
+
+    .dropdown-container { /* Wrapper for the dropdown */
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .dropdown-select { /* Select dropdown */
+        width: 100%;
+        padding-right: 40px;
+        border-radius: 50px;
+        appearance: none;
+        cursor: pointer;
+    }
+    .dropdown-caret { /* Positioning the caret icon */
+        position: absolute;
+        right: 12px;
+        font-size: 18px;
+        color: grey;
+        transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+    .dropdown-container:hover .dropdown-caret { /* Rotate caret on hover */
+        transform: rotate(180deg);
+        color: #555;
+    }
+    .dropdown-container:hover .input-hint2 { /* move hint on hover */
+        transform: translateY(-50%) scale(1.07);
+        color: #555;
+    }
+
+
+
 </style>
