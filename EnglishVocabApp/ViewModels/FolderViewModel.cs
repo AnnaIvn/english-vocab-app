@@ -1,4 +1,5 @@
 ﻿using EnglishVocabApp.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace EnglishVocabApp.ViewModels
@@ -6,28 +7,36 @@ namespace EnglishVocabApp.ViewModels
     public class FolderViewModel
     {
         public int Id { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "lblEnterSomethingFolder")]
         [Display(Name = "lblNameFolder")]
+        [StringLength(45, MinimumLength = 2, ErrorMessage = "lblNameLengthFolder")]
         public string Name { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "lblEnterSomethingFolder")]
         [Display(Name = "lblDescriptionFolder")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "lblDescriptionLengthFolder")]
         public string Description { get; set; }
-        public string UserId { get; set; }
-        [Required]
+
+        [BindNever]
+        public string? UserId { get; set; }
+
+        [BindNever]
         [Display(Name = "lblUserNameFolder")]
-        public User User { get; set; }
-        [Required]
+        public User? User { get; set; }
+
         [Display(Name = "lblCreatedAtFolder")]
         public DateTime CreatedAt { get; set; }
-        [Required]
+
         [Display(Name = "lblUpdatedAtFolder")]
         public DateTime UpdatedAt { get; set; }
-        [Required]
+
         [Display(Name = "lblIsPrivateFolder")]
         public bool IsPrivate { get; set; }
 
-        public IEnumerable<FoldersUsers> FoldersUsers { get; set; }
-        public IEnumerable<WordsFolders> WordsFolders { get; set; }
+        public IEnumerable<FoldersUsers>? FoldersUsers { get; set; }
+
+        public IEnumerable<WordsFolders>? WordsFolders { get; set; }
 
         public FolderViewModel() { }
 

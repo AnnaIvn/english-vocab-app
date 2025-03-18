@@ -139,12 +139,13 @@ namespace EnglishVocabApp.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(FolderViewModel folder)
+        public async Task<IActionResult> Create([Bind("Name,Description,IsPrivate")]FolderViewModel folder)
         {
-            //if (ModelState.IsValid)              // commented for now
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+            if (ModelState.IsValid)             
             {
-                string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
                 var folderEntity = new Folder
                 {
@@ -214,7 +215,7 @@ namespace EnglishVocabApp.Controllers
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            //if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var folder = await _context.Folders.Include(f => f.User).FirstOrDefaultAsync(f => f.Id == id);
                 if (folder == null) return NotFound();

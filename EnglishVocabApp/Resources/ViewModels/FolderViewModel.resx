@@ -123,11 +123,20 @@
   <data name="lblDescriptionFolder" xml:space="preserve">
     <value>Discription</value>
   </data>
+  <data name="lblDescriptionLengthFolder" xml:space="preserve">
+    <value>The Description field must be between 2 and 50 characters long.</value>
+  </data>
+  <data name="lblEnterSomethingFolder" xml:space="preserve">
+    <value>You need to enter a value here!</value>
+  </data>
   <data name="lblIsPrivateFolder" xml:space="preserve">
     <value>Is Private?</value>
   </data>
   <data name="lblNameFolder" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="lblNameLengthFolder" xml:space="preserve">
+    <value>The Name field must be between 2 and 50 characters long.</value>
   </data>
   <data name="lblUpdatedAtFolder" xml:space="preserve">
     <value>Updated At</value>
