@@ -12,7 +12,10 @@
 <h1>@Localizer["lblTitleFold"]</h1>
 
 <p>
-    <a asp-action="Create">@Localizer["lblCreateNewFolder"]</a>
+    @* <a asp-action="Create">@Localizer["lblCreateNewFolder"]</a> *@
+    <button class="btn btn-primary" onclick="addEntity('/Folders/Create')">
+        @Localizer["lblCreateNewFolder"]
+    </button>
 </p>
 <table class="table">
     <thead>
@@ -40,6 +43,10 @@
     </thead>
     <tbody>
         @foreach (var item in Model) {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            bool isOwner = item.UserId == userId;
+
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
@@ -60,16 +67,29 @@
                     @Html.DisplayFor(modelItem => item.UpdatedAt)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">@Localizer["lblEditFolder"]</a> |
+                    @* <a asp-action="Edit" asp-route-id="@item.Id">@Localizer["lblEditFolder"]</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">@Localizer["lblDetailsAboutFolder"]</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">@Localizer["lblDeleteThisFolder"]</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">@Localizer["lblDeleteThisFolder"]</a> *@
+                    <button class="btn btn-info btn-sm" onclick="addEntity('/Folders/Details/@item.Id')">
+                        @Localizer["lblDetailsAboutFolder"]
+                    </button> |
+                    @if (isOwner)
+                    {
+                        <button class="btn btn-warning btn-sm" onclick="addEntity('/Folders/Edit/@item.Id')">
+                            @Localizer["lblEditFolder"]
+                        </button>
+                        <span> | </span>
+                        <button class="btn btn-danger btn-sm" onclick="addEntity('/Folders/Delete/@item.Id')">
+                             @Localizer["lblDeleteThisFolder"]
+                        </button>
+                    }
 
                     @if (User?.Identity?.IsAuthenticated == true)
                     {
-                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                         // Check if the user owns the folder or has already saved it
-                        bool isOwner = item.UserId == userId;
+                        //bool isOwner = item.UserId == userId;
                         bool isSaved = item.FoldersUsers?.Any(fu => fu.UserId == userId) ?? false;
 
                         if (!isOwner)

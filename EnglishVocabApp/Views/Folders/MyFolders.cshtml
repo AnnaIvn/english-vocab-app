@@ -61,11 +61,15 @@
                     @Html.DisplayFor(modelItem => folder.UpdatedAt)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@folder.Id">@Localizer["lblDetailsAboutFolder"]</a> |
+                    <button class="btn btn-info btn-sm" onclick="addEntity('/Folders/Details/@folder.Id')">
+                        @Localizer["lblDetailsAboutFolder"]
+                    </button> |
 
                     @if (isOwner)
                     {
-                        <a asp-action="Edit" asp-route-id="@folder.Id">@Localizer["lblEditFolder"]</a>
+                        <button class="btn btn-warning btn-sm" onclick="addEntity('/Folders/Edit/@folder.Id')">
+                            @Localizer["lblEditFolder"]
+                        </button>
                     }
 
                     <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;">

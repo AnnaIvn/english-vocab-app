@@ -106,7 +106,8 @@ namespace EnglishVocabApp.Controllers
                 FoldersUsers = folder.FoldersUsers
             };
 
-            return View(folderVm);
+            return PartialView("~/Views/Folders/_Details.cshtml", folderVm);
+            //return View(folderVm);
         }
         // GET: Folders/UserFolders
         //public async Task<IActionResult> UserFolders()
@@ -130,7 +131,8 @@ namespace EnglishVocabApp.Controllers
         public IActionResult Create()
         {
             //ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");
-            return View(new FolderViewModel());
+            return PartialView("~/Views/Folders/_Create.cshtml", new FolderViewModel());
+            //return View(new FolderViewModel());
         }
 
         // POST: Folders/Create
@@ -199,7 +201,8 @@ namespace EnglishVocabApp.Controllers
                 IsPrivate = folder.IsPrivate
             };
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", folder.UserId);        // changed Id to UserName
-            return View(folderVm);
+            return PartialView("~/Views/Folders/_Edit.cshtml", folderVm);
+            //return View(folderVm);
         }
 
         // POST: Folders/Edit/5
@@ -264,10 +267,16 @@ namespace EnglishVocabApp.Controllers
                 Id = folder.Id,
                 Name = folder.Name,
                 Description = folder.Description,
-                IsPrivate = folder.IsPrivate
+                UserId = folder.UserId,
+                User = folder.User,
+                CreatedAt = folder.CreatedAt,
+                UpdatedAt = folder.UpdatedAt,
+                IsPrivate = folder.IsPrivate,
+                FoldersUsers = folder.FoldersUsers
             };
 
-            return View(folderVm);
+            //return View(folderVm);
+            return PartialView("~/Views/Folders/_Delete.cshtml", folderVm);
         }
 
         // POST: Folders/Delete/5

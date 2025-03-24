@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblEditFold" xml:space="preserve">
-    <value>Edit</value>
+  <data name="lblCloseFolder" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="lblDeleteQuestionFolder" xml:space="preserve">
+    <value>Are you sure you want to delete this?</value>
+  </data>
+  <data name="lblDeleteThisFolder" xml:space="preserve">
+    <value>Delete</value>
   </data>
   <data name="lblFolderFold" xml:space="preserve">
     <value>Folder</value>
@@ -126,7 +132,7 @@
   <data name="lblReturnToFold" xml:space="preserve">
     <value>Return to the general list</value>
   </data>
-  <data name="lblSaveFold" xml:space="preserve">
-    <value>Save</value>
+  <data name="lblTitleDeleteFolder" xml:space="preserve">
+    <value>Deletion</value>
   </data>
 </root>
