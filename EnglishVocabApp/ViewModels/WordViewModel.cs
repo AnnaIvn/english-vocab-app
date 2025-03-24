@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using EnglishVocabApp.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EnglishVocabApp.ViewModels
 {
@@ -19,6 +21,7 @@ namespace EnglishVocabApp.ViewModels
 
         [Required(ErrorMessage = "lblMeaningOfTheWordIsRequired")]
         [StringLength(200, MinimumLength = 5)]
+        [Remote("CheckNewMeaning", "ModelValidation", ErrorMessage = "lblMeaningMustBeUnique")]
         public string Meaning { get; set; }
         public string ExamplesString { get; set; }
         public string SynonymsString { get; set; }
