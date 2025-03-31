@@ -126,6 +126,9 @@
   <data name="lblDescriptionLengthFolder" xml:space="preserve">
     <value>Поле "Опис" має мати від 2 до 50 символів</value>
   </data>
+  <data name="lblDescriptionMustBeUnique" xml:space="preserve">
+    <value>Опис повинен бути унікальним</value>
+  </data>
   <data name="lblEnterSomethingFolder" xml:space="preserve">
     <value>Тут потрібно ввести значення!</value>
   </data>

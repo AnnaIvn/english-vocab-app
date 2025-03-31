@@ -1,4 +1,5 @@
 ﻿using EnglishVocabApp.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,6 +17,7 @@ namespace EnglishVocabApp.ViewModels
         [Required(ErrorMessage = "lblEnterSomethingFolder")]
         [Display(Name = "lblDescriptionFolder")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "lblDescriptionLengthFolder")]
+        [Remote("CheckNewDescription", "ModelValidation", ErrorMessage = "lblDescriptionMustBeUnique")]
         public string Description { get; set; }
 
         [BindNever]

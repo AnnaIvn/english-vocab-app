@@ -22,5 +22,11 @@ namespace EnglishVocabApp.Controllers
             var result = _context.Words.Any(w => w.Meaning == meaning);
             return Json(!result);
         }
+
+        public IActionResult CheckNewDescription(string description)
+        {
+            var result = _context.Folders.Any(f => f.Description == description);
+            return Json(!result);
+        }
     }
 }
