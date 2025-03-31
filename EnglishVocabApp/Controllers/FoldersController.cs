@@ -24,19 +24,21 @@ namespace EnglishVocabApp.Controllers
         }
 
         // GET: Folders
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageIndex, int? pageSize)
         {
             var userId = (User.Identity != null && User.Identity.IsAuthenticated)
                 ? User.FindFirstValue(ClaimTypes.NameIdentifier)
                 : null;
 
-            var foldersQuery = await _context.Folders
+            var foldersQuery = _context.Folders
                 .Include(f => f.User)
-                .Include(f => f.FoldersUsers) // Include saved folder-user relations
+                /*.Include(f => f.FoldersUsers)*/ 
                 .Where(f => !f.IsPrivate || (userId != null && f.UserId == userId))
-            .ToListAsync();
+            .AsQueryable();
 
-            var folderViewModels = foldersQuery.Select(f => new FolderViewModel
+            var paginatedFolders = await PaginateList<Folder, FolderViewModel>.CreateAsync( 
+                foldersQuery,
+                f => new FolderViewModel
             {
                 Id = f.Id,
                 Name = f.Name,
@@ -46,10 +48,22 @@ namespace EnglishVocabApp.Controllers
                 CreatedAt = f.CreatedAt,
                 UpdatedAt = f.UpdatedAt,
                 IsPrivate = f.IsPrivate,
-                FoldersUsers = f.FoldersUsers
-            });
+            },
+                pageIndex ?? 1,
+                pageSize ?? 1
+                );
 
-            return View(folderViewModels);
+            var folderIds = paginatedFolders.Select(f => f.Id).ToList();
+            var folderUsers = await _context.FoldersUsers
+                .Where(fu => folderIds.Contains(fu.FolderId))
+                .ToListAsync();
+
+            foreach (var folder in paginatedFolders)
+            {
+                folder.FoldersUsers = folderUsers.Where(fu => fu.FolderId == folder.Id).ToList();
+            }
+
+            return View(paginatedFolders);
         }
 
         public async Task<IActionResult> MyFolders()

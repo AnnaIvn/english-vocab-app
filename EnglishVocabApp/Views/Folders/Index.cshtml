@@ -1,6 +1,9 @@
 ﻿@using Humanizer.Localisation
 @using Microsoft.AspNetCore.Mvc.Localization
-@model IEnumerable<EnglishVocabApp.ViewModels.FolderViewModel>
+
+@* @model IEnumerable<EnglishVocabApp.ViewModels.FolderViewModel> *@
+@model EnglishVocabApp.Models.PaginateList<Folder, EnglishVocabApp.ViewModels.FolderViewModel>
+
 @using System.Security.Claims
 
 @inject IViewLocalizer Localizer
@@ -9,6 +12,7 @@
     ViewData["Title"] = @Localizer["lblTitleFold"];
 }
 
+<h1>Folders (@Model.ShowedItemsCount of @Model.TotalItemsCount items)</h1>
 <h1>@Localizer["lblTitleFold"]</h1>
 
 <p>
@@ -21,22 +25,22 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsPrivate)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().IsPrivate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().User)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().CreatedAt)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().UpdatedAt)
             </th>
             <th></th>
         </tr>
@@ -80,7 +84,7 @@
                         </button>
                         <span> | </span>
                         <button class="btn btn-danger btn-sm" onclick="addEntity('/Folders/Delete/@item.Id')">
-                             @Localizer["lblDeleteThisFolder"]
+                            @Localizer["lblDeleteThisFolder"]
                         </button>
                     }
 
@@ -113,7 +117,20 @@
                         }
                     }
                 </td>
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>
+
+<label for="FolderPages">Current: @Model.PageIndex page of the @Model.TotalPages page(s).</label>
+<div id="FolderPages">
+    <a class="btn btn-success @(Model.HasPreviousPage ? "" : "disabled")"
+       href="/folders/index?pageIndex=@(Model.PageIndex - 1)">
+        Previous
+    </a>
+
+    <a class="btn btn-success @(Model.HasNextPage ? "" : "disabled")"
+       href="/folders/index?pageIndex=@(Model.PageIndex + 1)">
+        Next
+    </a>
+</div>
