@@ -27,8 +27,14 @@ namespace EnglishVocabApp.ViewModels
         public string SynonymsString { get; set; }
         public string AntonymsString { get; set; }
 
+
+        [Remote("CheckDuplicateExamples", "ModelValidation", ErrorMessage = "lblExamplesMustBeUnique")]
         public List<string> Examples { get; set; } = new List<string>();
+
+        [Remote("CheckDuplicateSynonyms", "ModelValidation", ErrorMessage = "lblSynonymsMustBeUnique")]
         public List<string> Synonyms { get; set; } = new List<string>();
+
+        [Remote("CheckDuplicateAntonyms", "ModelValidation", ErrorMessage = "lblAntonymsMustBeUnique")]
         public List<string> Antonyms { get; set; } = new List<string>();
 
         [Required(ErrorMessage = "lblTypeOfTheWordIsRequired")]

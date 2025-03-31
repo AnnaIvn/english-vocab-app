@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblAntonymsMustBeUnique" xml:space="preserve">
+    <value>Антоніми повинні бути унікальними в межах слова.</value>
+  </data>
+  <data name="lblExamplesMustBeUnique" xml:space="preserve">
+    <value>Приклади застосування повинні бути унікальними в межах слова.</value>
+  </data>
   <data name="lblMeaningMustBeUnique" xml:space="preserve">
     <value>Значення слова повинно бути унікальним</value>
   </data>
@@ -128,6 +134,9 @@
   </data>
   <data name="lblNameOfTheWordIsRequired" xml:space="preserve">
     <value>Назва слова обов'язкова.</value>
+  </data>
+  <data name="lblSynonymsMustBeUnique" xml:space="preserve">
+    <value>Синоніми повинні бути унікальними в межах слова.</value>
   </data>
   <data name="lblTranscriptOfTheWordIsRequired" xml:space="preserve">
     <value>Транскрипція слова обов’язкова.</value>
