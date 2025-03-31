@@ -123,11 +123,19 @@ namespace EnglishVocabApp.Controllers
             return View(wordVm);
         }
 
+        public IActionResult GetWordTypes()
+        {
+            var wordTypes = _context.Types.Select(t => t.Name).ToList();
+            return Json(wordTypes);
+        }
+
+
         // GET: Words/Create
         public IActionResult Create()
         {
-            ViewBag.WordTypes = _context.Types.Select(t => t.Name).ToList();
-            return View(new WordViewModel());
+            //ViewBag.WordTypes = _context.Types.Select(t => t.Name).ToList();
+            //return View(new WordViewModel());
+            return PartialView("~/Views/Words/_Create.cshtml", new WordViewModel());
         }
 
         // POST: Words/Create

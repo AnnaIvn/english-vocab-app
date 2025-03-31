@@ -1,0 +1,303 @@
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+@model EnglishVocabApp.ViewModels.WordViewModel
+
+@inject IViewLocalizer Localizer
+
+<partial name="_ValidationScriptsPartial" />
+
+<div class="modal-dialog">
+    <div class="modal-content" style="border-radius: 40px; ">
+
+        <div class="modal-header">
+            <h4 class="modal-title" style="text-transform: uppercase; text-align: center; width: 100%;">@Localizer["lblFillInWordInformation"]</h4>
+        </div>
+
+        <div class="modal-body">
+            <div class="">
+                <div class="">
+                    <form asp-action="Create" onsubmit="updateHiddenFields()">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group mb-3 position-relative">
+                            <div class="input-wrapper">
+                                <input asp-for="Name" class="form-control custom-input" style="border-radius: 50px;" />
+                                <span class="input-hint">@Localizer["lblNameOfTheWord"]</span>
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3 position-relative">
+                            <div class="input-wrapper">
+                                <div class="dropdown-container">
+                                    <select id="TypeName" asp-for="TypeName" class="form-control custom-select dropdown-select custom-input" style="border-radius: 50px;">
+                                        <option value=""></option> <!-- Initially empty, populated by JS -->
+                                    </select>
+                                    <span class="input-hint2">@Localizer["lblWordType"]</span>
+                                    <div class="dropdown-caret">
+                                        <i class="fa fa-chevron-up"></i> <!-- Font Awesome chevron-up -->
+                                    </div>
+                                </div>
+                            </div>
+                            <span asp-validation-for="Transcript" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group mb-3 position-relative">
+                            <div class="input-wrapper">
+                                <input asp-for="Transcript" class="form-control custom-input" style="border-radius: 50px;" />
+                                <span class="input-hint">@Localizer["lblTranscript"]</span>
+                            </div>
+                            <span asp-validation-for="Transcript" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3 position-relative">
+                            <div class="input-wrapper">
+                                <input asp-for="Meaning" class="form-control custom-input" style="border-radius: 50px;" />
+                                <span class="input-hint">@Localizer["lblMeaningOfTheWord"]</span>
+                            </div>
+                            <span asp-validation-for="Meaning" class="text-danger"></span>
+                        </div>
+
+                        <!-- Examples -->
+                        <div class="form-group mb-3">
+                            <div class="input-wrapper">
+                                <input type="text" id="newExample" class="form-control custom-input" style="border-radius: 50px;" />
+                                <span class="input-hint">@Localizer["lblExampleOfUseInASentence"]</span>
+                            </div>
+                            <button type="button" class="btn rounded-pill w-60 mt-2"
+                                    style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
+                                    onmouseover="this.style.backgroundColor='#f1f1f1';"
+                                    onmouseout="this.style.backgroundColor='#ffffff';"
+                                    onclick="addExample()">
+                                @Localizer["lblAddExample"]
+                            </button>
+                            <input type="hidden" asp-for="ExamplesString" id="examplesInput" />
+
+                            <ul id="examplesList" class="custom-list">
+                                @foreach (var example in Model.Examples)
+                                {
+                                    <li class="custom-list-item">
+                                        <span class="list-text">@example</span>
+                                        <button type="button" onclick="removeExample('@example')" class="remove-btn"></button>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <!-- Synonyms -->
+                        <div class="form-group mb-3">
+                            <div class="input-wrapper" style="margin-top: 10px;">
+                                <input type="text" id="newSynonym" class="form-control custom-input" style="border-radius: 50px; " />
+                                <span class="input-hint">@Localizer["lblTypeASynonym"]</span>
+                            </div>
+                            <button type="button" class="btn rounded-pill w-60 mt-2"
+                                    style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
+                                    onmouseover="this.style.backgroundColor='#f1f1f1';"
+                                    onmouseout="this.style.backgroundColor='#ffffff';"
+                                    onclick="addSynonym()">
+                                @Localizer["lblAddSynonym"]
+                            </button>
+                            <input type="hidden" asp-for="SynonymsString" id="synonymsInput" />
+
+                            <ul id="synonymsList" class="custom-list">
+                                @foreach (var synonym in Model.Synonyms)
+                                {
+                                    <li class="custom-list-item">
+                                        <span class="list-text">@synonym</span>
+                                        <button type="button" onclick="removeSynonym('@synonym')" class="remove-btn"></button>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <!-- Antonyms Section -->
+                        <div class="form-group mb-3">
+                            <div class="input-wrapper" style="margin-top: 10px;">
+                                <input type="text" id="newAntonym" class="form-control custom-input" style="border-radius: 50px;" />
+                                <span class="input-hint">@Localizer["lblTypeAnAntonym"]</span>
+                            </div>
+                            <button type="button" class="btn rounded-pill w-60 mt-2"
+                                    style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; padding-left: 15px; padding-right: 15px;"
+                                    onmouseover="this.style.backgroundColor='#f1f1f1';"
+                                    onmouseout="this.style.backgroundColor='#ffffff';"
+                                    onclick="addAntonym()">
+                                @Localizer["lblAddAntonym"]
+                            </button>
+                            <input type="hidden" asp-for="AntonymsString" id="antonymsInput" />
+
+                            <ul id="antonymsList" class="custom-list">
+                                @foreach (var antonym in Model.Antonyms)
+                                {
+                                    <li class="custom-list-item">
+                                        <span class="list-text">@antonym</span>
+                                        <button type="button" onclick="removeAntonym('@antonym')" class="remove-btn"></button>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <div class="form-group mt-3 text-center">
+                            <button type="submit" class="btn rounded-pill btn-custom"
+                                    style="background-color: #555555; color: white; border: none; font-weight: 500; padding-left: 25px; padding-right: 25px;"
+                                    onmouseover="this.style.backgroundColor='#777777';"
+                                    onmouseout="this.style.backgroundColor='#555555';">
+                                <i class="fas fa-book" style="margin-right: 8px;"></i> @Localizer["lblCreateAWord"]
+                            </button>
+
+                            <a asp-action="Index" class="btn rounded-pill w-60 btn-custom"
+                               data-bs-dismiss="modal"
+                               style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; text-align: center; text-decoration: none; margin-left: 15px;"
+                               onmouseover="this.style.backgroundColor='#f1f1f1';"
+                               onmouseout="this.style.backgroundColor='#ffffff';">
+                                <i class="fas fa-arrow-left" style="color: grey; margin-right: 8px;"></i>@Localizer["lblBackToList"]
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="~/js/create-word.js" asp-append-version="true"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+<style>
+    .btn-custom {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 25px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        gap: 8px;
+    }
+
+    .remove-btn {
+        background: none;
+        border: none;
+        color: darkgrey;
+        font-size: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+        .remove-btn:hover {
+            color: black;
+        }
+
+        .remove-btn:before {
+            content: '×';
+            font-size: 20px;
+            text-align: center;
+            line-height: 15px;
+        }
+
+    .input-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding-right: 240px; /* Adjusted padding to avoid overlap */
+        border-radius: 50px;
+        border: 1px solid #ccc;
+        height: 40px;
+        box-sizing: border-box;
+        padding-left: 15px;
+    }
+
+    .input-hint {
+        position: absolute;
+        right: 15px; /* usual hints */
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none; /* Ensures the hint doesn't block input focus */
+        font-size: 14px;
+        font-weight: 400;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .input-hint2 {
+        position: absolute;
+        right: 40px; /* unusual hint */
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none; /* Ensures the hint doesn't block input focus */
+        font-size: 14px;
+        font-weight: 400;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .custom-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 5px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0px 30px; /* Reduce vertical gap while keeping horizontal spacing */
+        align-items: center;
+    }
+
+    .custom-list-item {
+        background-color: transparent;
+        padding: 2px 0;
+        border-radius: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 0px 5px;
+        border: none;
+        white-space: nowrap;
+    }
+
+    .list-text {
+        font-size: 15px;
+        color: #333;
+        line-height: 15px;
+    }
+
+    .dropdown-container { /* Wrapper for the dropdown */
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .dropdown-select { /* Select dropdown */
+        width: 100%;
+        padding-right: 40px;
+        border-radius: 50px;
+        appearance: none;
+        cursor: pointer;
+    }
+
+    .dropdown-caret { /* Positioning the caret icon */
+        position: absolute;
+        right: 12px;
+        font-size: 18px;
+        color: grey;
+        transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+
+    .dropdown-container:hover .dropdown-caret { /* Rotate caret on hover */
+        transform: rotate(180deg);
+        color: #555;
+    }
+
+    .dropdown-container:hover .input-hint2 { /* move hint on hover */
+        transform: translateY(-50%) scale(1.07);
+        color: #555;
+    }
+</style>

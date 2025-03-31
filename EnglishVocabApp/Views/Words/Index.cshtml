@@ -1,6 +1,7 @@
 @using Humanizer.Localisation
 @using Microsoft.AspNetCore.Mvc.Localization
 @model IEnumerable<EnglishVocabApp.ViewModels.WordViewModel>
+@using System.Security.Claims
 
 @inject IViewLocalizer Localizer
 
@@ -12,10 +13,17 @@
 <h1 style="text-transform: uppercase; text-align: center;">@Localizer["lblTitle"]:</h1>
 
 <p style="text-align: center;">
-    <a asp-action="Create" style="text-decoration: none; color: #5daade; font-weight: bold; text-transform: uppercase; transition: color 0.3s ease;"
+    @* <a asp-action="Create" style="text-decoration: none; color: #5daade; font-weight: bold; text-transform: uppercase; transition: color 0.3s ease;" *@
+    @*    onmouseover="this.style.color='#555555';" onmouseout="this.style.color='#5daade';"> *@
+    @*     + @Localizer["lblAddNewWord"] *@
+    @* </a> *@
+    <a onclick="addEntityWord('/Words/Create')" style="text-decoration: none; color: #5daade; font-weight: bold; text-transform: uppercase; transition: color 0.3s ease;"
        onmouseover="this.style.color='#555555';" onmouseout="this.style.color='#5daade';">
         + @Localizer["lblAddNewWord"]
     </a>
+    @* <button class="btn btn-primary" onclick="addEntityWord('/Words/Create')"> *@
+    @*     @Localizer["lblAddNewWord"] *@
+    @* </button> *@
 </p>
 <table class="table">
     <thead>
