@@ -25,7 +25,7 @@ namespace EnglishVocabApp.ViewModels
 
         [Required(ErrorMessage = "lblMeaningOfTheWordIsRequired")]
         [StringLength(200, MinimumLength = 5)]
-        [Remote("CheckNewMeaning", "ModelValidation", ErrorMessage = "lblMeaningMustBeUnique")]
+        [Remote("CheckNewMeaning", "ModelValidation", AdditionalFields = "Id", ErrorMessage = "lblMeaningMustBeUnique")]
         [RegularExpression(@"^[a-zA-Z0-9\s.,!?'"":;_-]+$", ErrorMessage = "Only English letters, numbers, and common punctuation are allowed.")]
 
         public string Meaning { get; set; }

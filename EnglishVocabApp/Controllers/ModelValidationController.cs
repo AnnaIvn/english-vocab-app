@@ -12,21 +12,23 @@ namespace EnglishVocabApp.Controllers
             _context = context;
         }
 
-        public IActionResult CheckNewTypeName(string name)
+        public IActionResult CheckNewTypeName(string name, int id)
         {
-            var result = _context.Types.Any(t => t.Name == name);   
+            var result = _context.Types.Any(t => t.Name == name && t.Id != id);
             return Json(!result);
         }
 
-        public IActionResult CheckNewMeaning(string meaning)
+
+        public IActionResult CheckNewMeaning(string meaning, int id)
         {
-            var result = _context.Words.Any(w => w.Meaning == meaning);
-            return Json(!result);
+            var exists = _context.Words.Any(w => w.Meaning == meaning && w.Id != id);
+            return Json(!exists);
         }
 
-        public IActionResult CheckNewDescription(string description)
+
+        public IActionResult CheckNewDescription(string description, int id)
         {
-            var result = _context.Folders.Any(f => f.Description == description);
+            var result = _context.Folders.Any(f => f.Description == description && f.Id != id);
             return Json(!result);
         }
 

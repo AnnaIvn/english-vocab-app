@@ -17,7 +17,7 @@ namespace EnglishVocabApp.ViewModels
         [Required(ErrorMessage = "lblEnterSomethingFolder")]
         [Display(Name = "lblDescriptionFolder")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "lblDescriptionLengthFolder")]
-        [Remote("CheckNewDescription", "ModelValidation", ErrorMessage = "lblDescriptionMustBeUnique")]
+        [Remote("CheckNewDescription", "ModelValidation", AdditionalFields = "Id", ErrorMessage = "lblDescriptionMustBeUnique")]
         public string Description { get; set; }
 
         [BindNever]

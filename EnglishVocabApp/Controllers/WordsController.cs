@@ -184,7 +184,7 @@ namespace EnglishVocabApp.Controllers
             }
 
             var wordEntity = await _context.Words
-                .Include(w => w.Type) 
+                .Include(w => w.Type)
                 .FirstOrDefaultAsync(w => w.Id == id);
 
             if (wordEntity == null)
@@ -195,7 +195,8 @@ namespace EnglishVocabApp.Controllers
             var wordVm = new WordViewModel(wordEntity);       // uses constructor written in WordViewModel.cs file
 
             ViewBag.WordTypes = await _context.Types.Select(t => t.Name).ToListAsync();
-            return View(wordVm);
+            //return View(wordVm);
+            return PartialView("~/Views/Words/_Edit.cshtml", wordVm);
         }
 
         // POST: Words/Edit/5
@@ -208,12 +209,25 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
+            // Validate ModelState before querying database
             if (!ModelState.IsValid)
             {
                 ViewBag.WordTypes = await _context.Types.Select(t => t.Name).ToListAsync();
                 return View(wordVm);
             }
 
+            // Check uniqueness of Meaning, excluding the current word
+            var existingMeaning = await _context.Words
+                .AnyAsync(w => w.Meaning == wordVm.Meaning && w.Id != id);
+
+            if (existingMeaning)
+            {
+                ModelState.AddModelError("Meaning", "This meaning already exists.");
+                ViewBag.WordTypes = await _context.Types.Select(t => t.Name).ToListAsync();
+                return View(wordVm);
+            }
+
+            // Validate TypeName exists
             var wordType = await _context.Types.FirstOrDefaultAsync(t => t.Name == wordVm.TypeName);
             if (wordType == null)
             {
@@ -228,7 +242,7 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            // Update properties
+            // Update word properties
             wordEntity.Name = wordVm.Name;
             wordEntity.Transcript = wordVm.Transcript;
             wordEntity.Meaning = wordVm.Meaning;
@@ -237,14 +251,11 @@ namespace EnglishVocabApp.Controllers
             wordEntity.AntonymsString = wordVm.AntonymsString;
             wordEntity.TypeId = wordType.Id;
 
-            // No need for _context.Words.Update(wordEntity);
+            // Save changes
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
-
-
-
 
 
 
@@ -276,7 +287,8 @@ namespace EnglishVocabApp.Controllers
                 TypeName = word.Type?.Name
             };
 
-            return View(wordVm);
+            //return View(wordVm);
+            return PartialView("~/Views/Words/_Delete.cshtml", wordVm);
         }
 
         // POST: Words/Delete/5
