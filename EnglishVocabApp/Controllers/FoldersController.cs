@@ -50,7 +50,7 @@ namespace EnglishVocabApp.Controllers
                 IsPrivate = f.IsPrivate,
             },
                 pageIndex ?? 1,
-                pageSize ?? 1
+                pageSize ?? 3
                 );
 
             var folderIds = paginatedFolders.Select(f => f.Id).ToList();
@@ -66,21 +66,23 @@ namespace EnglishVocabApp.Controllers
             return View(paginatedFolders);
         }
 
-        public async Task<IActionResult> MyFolders()
+        public async Task<IActionResult> MyFolders(int? pageIndex, int? pageSize)
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
             if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
-            var userFolders = await _context.Folders
+            var userFolders = _context.Folders
                 .Where(f => f.UserId == currentUserId)  // Folders the user created
                 .Union( // Include folders the user saved
                     _context.Folders
                         .Where(f => f.FoldersUsers.Any(fu => fu.UserId == currentUserId))
                 )
                 .Include(f => f.User)
-                .ToListAsync();
+                .AsQueryable();
 
-            var folderViewModels = userFolders.Select(f => new FolderViewModel
+            var paginatedFolders = await PaginateList<Folder, FolderViewModel>.CreateAsync(
+                userFolders,
+                f => new FolderViewModel
             {
                 Id = f.Id,
                 Name = f.Name,
@@ -90,9 +92,12 @@ namespace EnglishVocabApp.Controllers
                 CreatedAt = f.CreatedAt,
                 UpdatedAt = f.UpdatedAt,
                 IsPrivate = f.IsPrivate
-            }).ToList();
+            },
+                pageIndex ?? 1,
+                pageSize ?? 3
+                );
 
-            return View(folderViewModels);
+            return View(paginatedFolders);
         }
 
         // GET: Folders/Details/5

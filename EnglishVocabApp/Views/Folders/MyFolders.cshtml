@@ -1,6 +1,8 @@
 ﻿@using Humanizer.Localisation
 @using Microsoft.AspNetCore.Mvc.Localization
-@model IEnumerable<EnglishVocabApp.ViewModels.FolderViewModel>
+
+@model EnglishVocabApp.Models.PaginateList<Folder, EnglishVocabApp.ViewModels.FolderViewModel>
+
 @using System.Security.Claims
 
 @inject IViewLocalizer Localizer
@@ -15,22 +17,22 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsPrivate)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().IsPrivate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().User)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().CreatedAt)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().UpdatedAt)
             </th>
             <th></th>
         </tr>
@@ -83,3 +85,18 @@
         }
     </tbody>
 </table>
+
+<label for="FolderPages">
+    @Localizer["lblCurrentPageFolder", Model.PageIndex, Model.TotalPages]
+</label>
+<div id="FolderPages">
+    <a class="btn btn-success @(Model.HasPreviousPage ? "" : "disabled")"
+       href="/Folders/MyFolders?pageIndex=@(Model.PageIndex - 1)">
+        @Localizer["lblPreviousFolder"]
+    </a>
+
+    <a class="btn btn-success @(Model.HasNextPage ? "" : "disabled")"
+       href="/Folders/MyFolders?pageIndex=@(Model.PageIndex + 1)">
+        @Localizer["lblNextFolder"]
+    </a>
+</div>

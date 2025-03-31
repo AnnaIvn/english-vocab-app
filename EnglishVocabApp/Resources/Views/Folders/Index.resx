@@ -138,4 +138,16 @@
   <data name="lblRemoveFromTheListFolder" xml:space="preserve">
     <value>Remove from the list</value>
   </data>
+  <data name="lblCurrentPageFolder" xml:space="preserve">
+    <value>Current: {0} page of {1} page(s).</value>
+  </data>
+  <data name="lblPreviousFolder" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="lblNextFolder" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="lblMyFolders" xml:space="preserve">
+    <value>My Folders</value>
+  </data>
 </root>

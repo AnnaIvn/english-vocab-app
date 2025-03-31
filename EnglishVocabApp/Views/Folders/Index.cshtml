@@ -1,7 +1,6 @@
 ﻿@using Humanizer.Localisation
 @using Microsoft.AspNetCore.Mvc.Localization
 
-@* @model IEnumerable<EnglishVocabApp.ViewModels.FolderViewModel> *@
 @model EnglishVocabApp.Models.PaginateList<Folder, EnglishVocabApp.ViewModels.FolderViewModel>
 
 @using System.Security.Claims
@@ -12,15 +11,17 @@
     ViewData["Title"] = @Localizer["lblTitleFold"];
 }
 
-<h1>Folders (@Model.ShowedItemsCount of @Model.TotalItemsCount items)</h1>
 <h1>@Localizer["lblTitleFold"]</h1>
 
-<p>
-    @* <a asp-action="Create">@Localizer["lblCreateNewFolder"]</a> *@
+<div class="d-flex justify-content-between">
     <button class="btn btn-primary" onclick="addEntity('/Folders/Create')">
         @Localizer["lblCreateNewFolder"]
     </button>
-</p>
+
+    <a class="btn btn-primary" href="/Folders/MyFolders">
+        @Localizer["lblMyFolders"]
+    </a>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -71,9 +72,6 @@
                     @Html.DisplayFor(modelItem => item.UpdatedAt)
                 </td>
                 <td>
-                    @* <a asp-action="Edit" asp-route-id="@item.Id">@Localizer["lblEditFolder"]</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">@Localizer["lblDetailsAboutFolder"]</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">@Localizer["lblDeleteThisFolder"]</a> *@
                     <button class="btn btn-info btn-sm" onclick="addEntity('/Folders/Details/@item.Id')">
                         @Localizer["lblDetailsAboutFolder"]
                     </button> |
@@ -122,15 +120,17 @@
     </tbody>
 </table>
 
-<label for="FolderPages">Current: @Model.PageIndex page of the @Model.TotalPages page(s).</label>
+<label for="FolderPages">
+    @Localizer["lblCurrentPageFolder", Model.PageIndex, Model.TotalPages]
+</label>
 <div id="FolderPages">
     <a class="btn btn-success @(Model.HasPreviousPage ? "" : "disabled")"
        href="/folders/index?pageIndex=@(Model.PageIndex - 1)">
-        Previous
+        @Localizer["lblPreviousFolder"]
     </a>
 
     <a class="btn btn-success @(Model.HasNextPage ? "" : "disabled")"
        href="/folders/index?pageIndex=@(Model.PageIndex + 1)">
-        Next
+        @Localizer["lblNextFolder"]
     </a>
 </div>
