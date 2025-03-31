@@ -13,28 +13,35 @@ namespace EnglishVocabApp.ViewModels
 
         [Required(ErrorMessage = "lblNameOfTheWordIsRequired")]
         [StringLength(45, MinimumLength = 1, ErrorMessage = "lblNameLengthMessage")]
+        [RegularExpression(@"^[a-zA-Z0-9\s.,!?'"":;_-]+$", ErrorMessage = "Only English letters, numbers, and common punctuation are allowed.")]
+
         public string Name { get; set; }
 
         [Required(ErrorMessage = "lblTranscriptOfTheWordIsRequired")]
         [StringLength(50, MinimumLength = 1)]
+        [RegularExpression(@"^[a-zA-Z0-9\s.,!?'"":;_-]+$", ErrorMessage = "Only English letters, numbers, and common punctuation are allowed.")]
+
         public string Transcript { get; set; }
 
         [Required(ErrorMessage = "lblMeaningOfTheWordIsRequired")]
         [StringLength(200, MinimumLength = 5)]
         [Remote("CheckNewMeaning", "ModelValidation", ErrorMessage = "lblMeaningMustBeUnique")]
+        [RegularExpression(@"^[a-zA-Z0-9\s.,!?'"":;_-]+$", ErrorMessage = "Only English letters, numbers, and common punctuation are allowed.")]
+
         public string Meaning { get; set; }
+
         public string ExamplesString { get; set; }
         public string SynonymsString { get; set; }
         public string AntonymsString { get; set; }
 
 
-        [Remote("CheckDuplicateExamples", "ModelValidation", ErrorMessage = "lblExamplesMustBeUnique")]
+        [Remote("Validate", "ModelValidation")]
         public List<string> Examples { get; set; } = new List<string>();
 
-        [Remote("CheckDuplicateSynonyms", "ModelValidation", ErrorMessage = "lblSynonymsMustBeUnique")]
+        [Remote("Validate", "ModelValidation")]
         public List<string> Synonyms { get; set; } = new List<string>();
 
-        [Remote("CheckDuplicateAntonyms", "ModelValidation", ErrorMessage = "lblAntonymsMustBeUnique")]
+        [Remote("Validate", "ModelValidation")]
         public List<string> Antonyms { get; set; } = new List<string>();
 
         [Required(ErrorMessage = "lblTypeOfTheWordIsRequired")]

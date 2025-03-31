@@ -1,4 +1,5 @@
-﻿using EnglishVocabApp.Data;
+﻿using System.Text.RegularExpressions;
+using EnglishVocabApp.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnglishVocabApp.Controllers
@@ -29,34 +30,25 @@ namespace EnglishVocabApp.Controllers
             return Json(!result);
         }
 
-        public IActionResult CheckDuplicateExamples(List<string> examples)
+        public IActionResult Validate(List<string> examples)
         {
             if (examples == null || examples.Count == 0) return Json(true);
 
-            bool hasDuplicates = examples.GroupBy(e => e)
-                                         .Any(g => g.Count() > 1);
+            // Check for duplicates
+            bool hasDuplicates = examples.GroupBy(e => e).Any(g => g.Count() > 1);
 
-            return Json(!hasDuplicates);
+            // Check for valid characters (letters, numbers, punctuation)
+            string pattern = @"^[a-zA-Z0-9\s.,!?'"":;_-]+$";
+            bool hasInvalidCharacters = examples.Any(e => !Regex.IsMatch(e, pattern));
+
+            if (hasDuplicates)
+                return Json("lblExamplesMustBeUnique");
+
+            if (hasInvalidCharacters)
+                return Json("Only English letters, numbers, and common punctuation are allowed.");
+
+            return Json(true);
         }
 
-        public IActionResult CheckDuplicateSynonyms(List<string> synonyms)
-        {
-            if (synonyms == null || synonyms.Count == 0) return Json(true);
-
-            bool hasDuplicates = synonyms.GroupBy(e => e)
-                                         .Any(g => g.Count() > 1);
-
-            return Json(!hasDuplicates);
-        }
-
-        public IActionResult CheckDuplicateAntonyms(List<string> antonyms)
-        {
-            if (antonyms == null || antonyms.Count == 0) return Json(true);
-
-            bool hasDuplicates = antonyms.GroupBy(e => e)
-                                         .Any(g => g.Count() > 1);
-
-            return Json(!hasDuplicates);
-        }
     }
 }
