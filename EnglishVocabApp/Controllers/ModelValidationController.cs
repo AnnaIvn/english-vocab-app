@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using EnglishVocabApp.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ namespace EnglishVocabApp.Controllers
             bool hasDuplicates = examples.GroupBy(e => e).Any(g => g.Count() > 1);
 
             // Check for valid characters (letters, numbers, punctuation)
-            string pattern = @"^[a-zA-Z0-9\s.,!?'"":;_-]+$";
+            string pattern = @"^[a-zA-Z0-9\s.,!?'"":;_()-]+$";
             bool hasInvalidCharacters = examples.Any(e => !Regex.IsMatch(e, pattern));
 
             if (hasDuplicates)
@@ -52,5 +53,34 @@ namespace EnglishVocabApp.Controllers
             return Json(true);
         }
 
+        public IActionResult ValidateTranscript(List<string> examples)
+        {
+            if (examples == null || examples.Count == 0) return Json(true);
+
+            // Check for duplicates
+            bool hasDuplicates = examples.GroupBy(e => e).Any(g => g.Count() > 1);
+
+            // Check for valid characters (letters, numbers, punctuation, and transcription symbols)
+            string pattern = @"^[a-zA-Z0-9\s.,!?'"":;_()\-ˈˌːɑæɔəɪʊʌθðŋ]+$";
+            bool hasInvalidCharacters = examples.Any(e => !Regex.IsMatch(e, pattern));
+
+            if (hasDuplicates)
+                return Json("lblExamplesMustBeUnique");
+
+            if (hasInvalidCharacters)
+                return Json("Only English letters, numbers, common punctuation, and transcription symbols are allowed.");
+
+            return Json(true);
+        }
+
     }
+
+    //public class RequiredListAttribute : ValidationAttribute
+    //{
+    //    public override bool IsValid(object value)
+    //    {
+    //        var list = value as IList<string>;
+    //        return list != null && list.Any(); // Ensure the list is not null and contains at least one item
+    //    }
+    //}
 }

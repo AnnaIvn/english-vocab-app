@@ -73,7 +73,7 @@
                                 @Localizer["lblAddExample"]
                             </button>
                             <input type="hidden" asp-for="ExamplesString" id="examplesInput" />
-
+                            
                             <ul id="examplesList" class="custom-list">
                                 @foreach (var example in Model.Examples)
                                 {
@@ -82,6 +82,7 @@
                                         <button type="button" onclick="removeExample('@example')" class="remove-btn"></button>
                                     </li>
                                 }
+                                @* <span asp-validation-for="Examples" class="text-danger"></span> *@
                             </ul>
                         </div>
 
