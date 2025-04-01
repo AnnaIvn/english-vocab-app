@@ -6,48 +6,206 @@
 
 <partial name="_ValidationScriptsPartial" />
 
-<div class="modal-dialog">
-    <div class="modal-content">
+<div class="modal-dialog" style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+    <div class="modal-content" style="border-radius: 40px;">
 
         <div class="modal-header">
-            <h4 class="modal-title">@Localizer["lblEditFold"]</h4>
-            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <h4 class="modal-title" style="text-transform: uppercase; text-align: center; width: 100%;">@Localizer["lblEditFold"]</h4>
         </div>
 
         <div class="modal-body">
-            <div class="row">
-                <div class="col-md-4">
+            <div class="">
+                <div class="">
                     <form asp-action="Edit">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="Id" />
-                        <div class="form-group">
-                            <label asp-for="Name" class="control-label"></label>
-                            <input asp-for="Name" class="form-control" />
+
+                        <div class="form-group mb-3 position-relative">
+                            <div class="input-wrapper">
+                                <input asp-for="Name" class="form-control custom-input" style="border-radius: 50px;" />
+                                <span class="input-hint">@Localizer["lblNameOfTheFolder"]</span>
+                            </div>
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="Description" class="control-label"></label>
-                            <input asp-for="Description" class="form-control" />
+
+                        <div class="form-group mb-3 position-relative">
+                            <div class="input-wrapper">
+                                <input asp-for="Description" class="form-control custom-input" style="border-radius: 50px;" />
+                                <span class="input-hint">@Localizer["lblDescription"]</span>
+                            </div>
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
-                        <div class="form-group form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" asp-for="IsPrivate" /> @Html.DisplayNameFor(model => model.IsPrivate)
+
+                        <div class="form-group form-check" style="text-align: center; display: flex; justify-content: center; align-items: center;">
+                            <label class="form-check-label" style="display: flex; align-items: center;">
+                                <input class="form-check-input" asp-for="IsPrivate" style="margin-right: 5px;" />
+                                @Localizer["lblIsPrivate"]
                             </label>
                         </div>
-                        <div class="form-group">
-                            <input type="submit" value="@Localizer["lblSaveFold"]" class="btn btn-primary" />
+
+                        <div class="form-group mt-3 text-center">
+                            <button type="submit" class="btn rounded-pill btn-custom"
+                                    style="background-color: #555555; color: white; border: none; font-weight: 500; padding-left: 25px; padding-right: 25px; margin-right: 10px;"
+                                    onmouseover="this.style.backgroundColor='#777777';"
+                                    onmouseout="this.style.backgroundColor='#555555';">
+                                <i class="fas fa-book" style="margin-right: 8px;"></i> @Localizer["lblSaveFold"]
+                            </button>
+
+                            <a asp-action="Index" class="btn rounded-pill w-60 btn-custom"
+                               data-bs-dismiss="modal"
+                               style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; text-align: center; text-decoration: none; margin-left: 15px;"
+                               onmouseover="this.style.backgroundColor='#f1f1f1';"
+                               onmouseout="this.style.backgroundColor='#ffffff';">
+                                <i class="fas fa-arrow-left" style="color: grey; margin-right: 8px;"></i>@Localizer["lblBackToList"]
+                            </a>
                         </div>
+
                     </form>
                 </div>
             </div>
         </div>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["lblCloseFolder"]</button>
-        </div>
-
     </div>
 </div>
+
+<style>
+    .btn-custom {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 25px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        gap: 8px;
+    }
+
+    .remove-btn {
+        background: none;
+        border: none;
+        color: darkgrey;
+        font-size: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+        .remove-btn:hover {
+            color: black;
+        }
+
+        .remove-btn:before {
+            content: '×';
+            font-size: 20px;
+            text-align: center;
+            line-height: 15px;
+        }
+
+    .input-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding-right: 240px; /* Adjusted padding to avoid overlap */
+        border-radius: 50px;
+        border: 1px solid #ccc;
+        height: 40px;
+        box-sizing: border-box;
+        padding-left: 15px;
+    }
+
+    .input-hint {
+        position: absolute;
+        right: 15px; /* usual hints */
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none; /* Ensures the hint doesn't block input focus */
+        font-size: 14px;
+        font-weight: 400;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .input-hint2 {
+        position: absolute;
+        right: 40px; /* unusual hint */
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none; /* Ensures the hint doesn't block input focus */
+        font-size: 14px;
+        font-weight: 400;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .custom-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 5px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0px 30px; /* Reduce vertical gap while keeping horizontal spacing */
+        align-items: center;
+    }
+
+    .custom-list-item {
+        background-color: transparent;
+        padding: 2px 0;
+        border-radius: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 0px 5px;
+        border: none;
+        white-space: nowrap;
+    }
+
+    .list-text {
+        font-size: 15px;
+        color: #333;
+        line-height: 15px;
+    }
+
+    .dropdown-container { /* Wrapper for the dropdown */
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .dropdown-select { /* Select dropdown */
+        width: 100%;
+        padding-right: 40px;
+        border-radius: 50px;
+        appearance: none;
+        cursor: pointer;
+    }
+
+    .dropdown-caret { /* Positioning the caret icon */
+        position: absolute;
+        right: 12px;
+        font-size: 18px;
+        color: grey;
+        transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+
+    .dropdown-container:hover .dropdown-caret { /* Rotate caret on hover */
+        transform: rotate(180deg);
+        color: #555;
+    }
+
+    .dropdown-container:hover .input-hint2 { /* move hint on hover */
+        transform: translateY(-50%) scale(1.07);
+        color: #555;
+    }
+
+    .modal-dialog {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin-top: -100px;
+    }
+
+</style>

@@ -7,54 +7,32 @@
 
 <partial name="_ValidationScriptsPartial" />
 
-<div class="modal-dialog">
-    <div class="modal-content">
+<div class="modal-dialog" style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+    <div class="modal-content" style="border-radius: 40px;">
 
         <div class="modal-header">
-            <h4 class="modal-title">@Localizer["lblTitleDetailsFold"]</h4>
-            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <h4 class="modal-title" style="text-transform: uppercase; text-align: center; width: 100%;">@Localizer["lblTitleDetailsFold"]</h4>
         </div>
 
         <div class="modal-body">
             <dl class="row">
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Name)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Name)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Description)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Description)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.CreatedAt)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.CreatedAt)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.UpdatedAt)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.UpdatedAt)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.IsPrivate)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.IsPrivate)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.User)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.User.UserName)
-                </dd>
+                <dt class="col-sm-5 text-end mb-3 " style="padding-right: 30px;">@Localizer["lblName"]</dt>
+                <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">@Model.Name</dd>
+
+                <dt class="col-sm-5 text-end mb-3 " style="padding-right: 30px;">@Localizer["lblDescription"]</dt>
+                <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">@Model.Description</dd>
+
+                <dt class="col-sm-5 text-end mb-3 " style="padding-right: 30px;">@Localizer["lblCreatedAt"]</dt>
+                <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">@Model.CreatedAt</dd>
+
+                <dt class="col-sm-5 text-end mb-3 " style="padding-right: 30px;">@Localizer["lblUpdatedAt"]</dt>
+                <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">@Model.UpdatedAt</dd>
+
+                <dt class="col-sm-5 text-end mb-3 " style="padding-right: 30px;">@Localizer["lblIsPrivate"]</dt>
+                <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">@Model.IsPrivate</dd>
+
+                <dt class="col-sm-5 text-end" style="padding-right: 30px;">@Localizer["lblUser"]</dt>
+                <dd class="col-sm-6 text-start custom-font-size" style="padding-left: 30px;">@Model.User.UserName</dd>
             </dl>
 
             @if (User?.Identity?.IsAuthenticated == true)
@@ -85,20 +63,169 @@
             }
         </div>
 
-        <div class="modal-footer">
-            @if (User?.Identity?.IsAuthenticated == true)
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                bool isOwner = Model.UserId == userId;
-                @if (isOwner)
-                {
-                    <button class="btn btn-warning btn-sm" onclick="addEntity('/Folders/Edit/@Model.Id')">
-                        @Localizer["lblEditFolder"]
-                    </button>
-                }
-            }
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["lblCloseFolder"]</button>
+        <div class="form-group mt-3 text-center" style="margin-bottom: 20px">
+            @* @if (User?.Identity?.IsAuthenticated == true) *@
+            @* { *@
+            @*     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); *@
+            @*     bool isOwner = Model.UserId == userId; *@
+            @*     @if (isOwner) *@
+            @*     { *@
+            @*         <button class="btn btn-warning btn-sm" onclick="addEntity('/Folders/Edit/@Model.Id')"> *@
+            @*             @Localizer["lblEditFolder"] *@
+            @*         </button> *@
+            @*     } *@
+            @* } *@
+
+            <a asp-action="Index" class="btn rounded-pill w-60 btn-custom"
+               data-bs-dismiss="modal"
+               style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; text-align: center; text-decoration: none; margin-left: 15px;"
+               onmouseover="this.style.backgroundColor='#f1f1f1';"
+               onmouseout="this.style.backgroundColor='#ffffff';">
+                <i class="fas fa-arrow-left" style="color: grey; margin-right: 8px;"></i>@Localizer["lblBackToList"]
+            </a>
         </div>
 
 	</div>
 </div>
+
+<style>
+    .btn-custom {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 25px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        gap: 8px;
+    }
+
+    .remove-btn {
+        background: none;
+        border: none;
+        color: darkgrey;
+        font-size: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+        .remove-btn:hover {
+            color: black;
+        }
+
+        .remove-btn:before {
+            content: '×';
+            font-size: 20px;
+            text-align: center;
+            line-height: 15px;
+        }
+
+    .input-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding-right: 240px; /* Adjusted padding to avoid overlap */
+        border-radius: 50px;
+        border: 1px solid #ccc;
+        height: 40px;
+        box-sizing: border-box;
+        padding-left: 15px;
+    }
+
+    .input-hint {
+        position: absolute;
+        right: 15px; /* usual hints */
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none; /* Ensures the hint doesn't block input focus */
+        font-size: 14px;
+        font-weight: 400;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .input-hint2 {
+        position: absolute;
+        right: 40px; /* unusual hint */
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        pointer-events: none; /* Ensures the hint doesn't block input focus */
+        font-size: 14px;
+        font-weight: 400;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .custom-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 5px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0px 30px; /* Reduce vertical gap while keeping horizontal spacing */
+        align-items: center;
+    }
+
+    .custom-list-item {
+        background-color: transparent;
+        padding: 2px 0;
+        border-radius: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 0px 5px;
+        border: none;
+        white-space: nowrap;
+    }
+
+    .list-text {
+        font-size: 15px;
+        color: #333;
+        line-height: 15px;
+    }
+
+    .dropdown-container { /* Wrapper for the dropdown */
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .dropdown-select { /* Select dropdown */
+        width: 100%;
+        padding-right: 40px;
+        border-radius: 50px;
+        appearance: none;
+        cursor: pointer;
+    }
+
+    .dropdown-caret { /* Positioning the caret icon */
+        position: absolute;
+        right: 12px;
+        font-size: 18px;
+        color: grey;
+        transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+
+    .dropdown-container:hover .dropdown-caret { /* Rotate caret on hover */
+        transform: rotate(180deg);
+        color: #555;
+    }
+
+    .dropdown-container:hover .input-hint2 { /* move hint on hover */
+        transform: translateY(-50%) scale(1.07);
+        color: #555;
+    }
+
+    .modal-dialog {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin-top: -100px;
+    }
+
+</style>

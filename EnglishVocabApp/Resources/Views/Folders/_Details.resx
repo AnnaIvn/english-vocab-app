@@ -117,14 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblBackToList" xml:space="preserve">
+    <value>Back to List</value>
+  </data>
   <data name="lblCloseFolder" xml:space="preserve">
     <value>Close</value>
+  </data>
+  <data name="lblCreatedAt" xml:space="preserve">
+    <value>Created at</value>
+  </data>
+  <data name="lblDescription" xml:space="preserve">
+    <value>Description</value>
   </data>
   <data name="lblEditFolder" xml:space="preserve">
     <value>Edit</value>
   </data>
   <data name="lblFolderFold" xml:space="preserve">
     <value>Folder</value>
+  </data>
+  <data name="lblIsPrivate" xml:space="preserve">
+    <value>If this folder is Private</value>
+  </data>
+  <data name="lblName" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="lblRemoveFromTheListFolder" xml:space="preserve">
     <value>Remove from the list</value>
@@ -136,6 +151,12 @@
     <value>Save to the list</value>
   </data>
   <data name="lblTitleDetailsFold" xml:space="preserve">
-    <value>Details</value>
+    <value>Folder Details</value>
+  </data>
+  <data name="lblUpdatedAt" xml:space="preserve">
+    <value>Updated at</value>
+  </data>
+  <data name="lblUser" xml:space="preserve">
+    <value>Author / Owner of the folder</value>
   </data>
 </root>

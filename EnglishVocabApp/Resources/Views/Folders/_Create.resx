@@ -117,14 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblBackToList" xml:space="preserve">
+    <value>Back to List</value>
+  </data>
   <data name="lblCloseFolder" xml:space="preserve">
     <value>Close</value>
   </data>
   <data name="lblCreateFold" xml:space="preserve">
-    <value>Create</value>
+    <value>Create folder</value>
+  </data>
+  <data name="lblDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="lblFillInFolderInformation" xml:space="preserve">
+    <value>Fill in Folder Information</value>
   </data>
   <data name="lblFolderFold" xml:space="preserve">
     <value>Folder</value>
+  </data>
+  <data name="lblIsPrivate" xml:space="preserve">
+    <value>Want to Make this folder Private?</value>
+  </data>
+  <data name="lblNameOfTheFolder" xml:space="preserve">
+    <value>Name of the Folder</value>
   </data>
   <data name="lblReturnToFold" xml:space="preserve">
     <value>Return to the general list</value>
