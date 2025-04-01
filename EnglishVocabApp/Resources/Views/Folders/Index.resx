@@ -148,6 +148,9 @@
     <value>Next</value>
   </data>
   <data name="lblMyFolders" xml:space="preserve">
-    <value>My Folders</value>
+    <value>Go to My Folders</value>
+  </data>
+  <data name="lblAllFolders" xml:space="preserve">
+    <value>Go to All available folders</value>
   </data>
 </root>

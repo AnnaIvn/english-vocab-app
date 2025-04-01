@@ -11,7 +11,23 @@
     ViewData["Title"] = @Localizer["lblTitleMyFoldersFold"];
 }
 
-<h2>@Localizer["lblTitleMyFoldersFold"]</h2>
+<h2 style="text-transform: uppercase; text-align: center; margin-top: 30px;">@Localizer["lblTitleMyFoldersFold"]:</h2>
+
+<div class="d-flex justify-content-between">
+    <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Create')"
+            style="background-color: #7fb6db; color: white; border: 1px solid #7fb6db; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+            onmouseover="this.style.backgroundColor='#87b5d4';"
+            onmouseout="this.style.backgroundColor='#5daade';">
+        <i class="fa fa-folder" aria-hidden="true" style="color: white; margin-right: 8px;"></i>+ @Localizer["lblCreateNewFolder"]
+    </button>
+
+    <a class="btn rounded-pill w-60 mb-2" href="/Folders"
+       style="background-color: #7fb6db; color: white; border: 1px solid #7fb6db; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+       onmouseover="this.style.backgroundColor='#87b5d4';"
+       onmouseout="this.style.backgroundColor='#5daade';">
+        @Localizer["lblAllFolders"] <i class="fa fa-paperclip" aria-hidden="true" style="color: white; margin-left: 8px;"></i>
+    </a>
+</div>
 
 <table class="table">
     <thead>
@@ -63,20 +79,36 @@
                     @Html.DisplayFor(modelItem => folder.UpdatedAt)
                 </td>
                 <td>
-                    <button class="btn btn-info btn-sm" onclick="addEntity('/Folders/Details/@folder.Id')">
-                        @Localizer["lblDetailsAboutFolder"]
-                    </button> |
+
+                    <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Details/@folder.Id')"
+                            style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                            onmouseover="this.style.backgroundColor='#f1f1f1';"
+                            onmouseout="this.style.backgroundColor='#ffffff';">
+                        <i class="fa fa-scroll" aria-hidden="true" style="color: #808080; margin-right: 8px;"></i> @Localizer["lblDetailsAboutFolder"]
+                    </button>
 
                     @if (isOwner)
                     {
-                        <button class="btn btn-warning btn-sm" onclick="addEntity('/Folders/Edit/@folder.Id')">
-                            @Localizer["lblEditFolder"]
+
+                        <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Edit/@folder.Id')"
+                                style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                                onmouseover="this.style.backgroundColor='#f1f1f1';"
+                                onmouseout="this.style.backgroundColor='#ffffff';">
+                            <i class="fa fa-feather" aria-hidden="true" style="color: #808080; margin-right: 8px;"></i> @Localizer["lblEditFolder"]
                         </button>
                     }
 
                     <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;">
                         <input type="hidden" name="folderId" value="@folder.Id" />
-                        <button type="submit" class="btn btn-sm @(isOwner ? "btn-danger" : "btn-warning")">
+                        @* <button type="submit" class="btn btn-sm @(isOwner ? "btn-danger" : "btn-warning")"> *@
+                        @*     @(isOwner ? @Localizer["lblDeleteThisFolder"] : @Localizer["lblRemoveFromTheListFolder"]) *@
+                        @* </button> *@
+
+                        <button type="submit" class="btn rounded-pill w-60 mb-2 @(isOwner ? "btn-danger" : "btn-warning")"
+                                style="background-color: #555555; color: white; border: none; font-weight: 500;"
+                                onmouseover="this.style.backgroundColor='#777777';"
+                                onmouseout="this.style.backgroundColor='#555555';">
+                            <i class="fa fa-trash" aria-hidden="true" style="margin-right: 8px;"></i> 
                             @(isOwner ? @Localizer["lblDeleteThisFolder"] : @Localizer["lblRemoveFromTheListFolder"])
                         </button>
                     </form>
@@ -86,17 +118,30 @@
     </tbody>
 </table>
 
-<label for="FolderPages">
-    @Localizer["lblCurrentPageFolder", Model.PageIndex, Model.TotalPages]
-</label>
-<div id="FolderPages">
-    <a class="btn btn-success @(Model.HasPreviousPage ? "" : "disabled")"
-       href="/Folders/MyFolders?pageIndex=@(Model.PageIndex - 1)">
-        @Localizer["lblPreviousFolder"]
-    </a>
 
-    <a class="btn btn-success @(Model.HasNextPage ? "" : "disabled")"
-       href="/Folders/MyFolders?pageIndex=@(Model.PageIndex + 1)">
-        @Localizer["lblNextFolder"]
-    </a>
+<div style="text-align: center; margin-top: 40px;">
+    <div id="FolderPages">
+        <a class="btn @(Model.HasPreviousPage ? "" : "disabled") rounded-pill w-60 mb-2"
+           style="background-color: #555555; color: white; border: none; font-weight: 500;"
+           onmouseover="this.style.backgroundColor='#777777';"
+           onmouseout="this.style.backgroundColor='#555555';"
+           href="/Folders/MyFolders?pageIndex=@(Model.PageIndex - 1)">
+            <i class="fas fa-arrow-left" style="color: white; margin-right: 8px;"></i>@Localizer["lblPreviousFolder"]
+        </a>
+
+        <a class="btn @(Model.HasNextPage ? "" : "disabled") rounded-pill w-60 mb-2"
+           style="background-color: #555555; color: white; border: none; font-weight: 500;"
+           onmouseover="this.style.backgroundColor='#777777';"
+           onmouseout="this.style.backgroundColor='#555555';"
+           href="/Folders/MyFolders?pageIndex=@(Model.PageIndex + 1)">
+            @Localizer["lblNextFolder"]<i class="fas fa-arrow-right" style="color: white; margin-left: 8px;"></i>
+        </a>
+    </div>
+    <label for="FolderPages">
+        @Localizer["lblCurrentPageFolder", Model.PageIndex, Model.TotalPages]
+    </label>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+}

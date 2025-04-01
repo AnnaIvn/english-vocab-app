@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblAllFolders" xml:space="preserve">
+    <value>Go to All available folders</value>
+  </data>
+  <data name="lblCreateNewFolder" xml:space="preserve">
+    <value>Create a new Folder</value>
+  </data>
   <data name="lblCurrentPageFolder" xml:space="preserve">
     <value>Current: {0} page of {1} page(s).</value>
   </data>

@@ -11,17 +11,24 @@
     ViewData["Title"] = @Localizer["lblTitleFold"];
 }
 
-<h1>@Localizer["lblTitleFold"]</h1>
+<h2 style="text-transform: uppercase; text-align: center; margin-top: 30px;">@Localizer["lblTitleFold"]:</h2>
 
 <div class="d-flex justify-content-between">
-    <button class="btn btn-primary" onclick="addEntity('/Folders/Create')">
-        @Localizer["lblCreateNewFolder"]
+    <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Create')"
+            style="background-color: #7fb6db; color: white; border: 1px solid #7fb6db; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+            onmouseover="this.style.backgroundColor='#87b5d4';"
+            onmouseout="this.style.backgroundColor='#5daade';">
+        <i class="fa fa-folder" aria-hidden="true" style="color: white; margin-right: 8px;"></i>+ @Localizer["lblCreateNewFolder"]
     </button>
 
-    <a class="btn btn-primary" href="/Folders/MyFolders">
-        @Localizer["lblMyFolders"]
+    <a class="btn rounded-pill w-60 mb-2" href="/Folders/MyFolders"
+            style="background-color: #7fb6db; color: white; border: 1px solid #7fb6db; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+            onmouseover="this.style.backgroundColor='#87b5d4';"
+            onmouseout="this.style.backgroundColor='#5daade';">
+        @Localizer["lblMyFolders"] <i class="fa fa-folder-open" aria-hidden="true" style="color: white; margin-left: 8px;"></i>
     </a>
 </div>
+
 <table class="table">
     <thead>
         <tr>
@@ -72,17 +79,25 @@
                     @Html.DisplayFor(modelItem => item.UpdatedAt)
                 </td>
                 <td>
-                    <button class="btn btn-info btn-sm" onclick="addEntity('/Folders/Details/@item.Id')">
-                        @Localizer["lblDetailsAboutFolder"]
-                    </button> |
+                    <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Details/@item.Id')"
+                            style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                            onmouseover="this.style.backgroundColor='#f1f1f1';"
+                            onmouseout="this.style.backgroundColor='#ffffff';">
+                        <i class="fa fa-scroll" aria-hidden="true" style="color: #808080; margin-right: 8px;"></i> @Localizer["lblDetailsAboutFolder"]
+                    </button>
                     @if (isOwner)
                     {
-                        <button class="btn btn-warning btn-sm" onclick="addEntity('/Folders/Edit/@item.Id')">
-                            @Localizer["lblEditFolder"]
+                        <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Edit/@item.Id')"
+                                style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                                onmouseover="this.style.backgroundColor='#f1f1f1';"
+                                onmouseout="this.style.backgroundColor='#ffffff';">
+                            <i class="fa fa-feather" aria-hidden="true" style="color: #808080; margin-right: 8px;"></i> @Localizer["lblEditFolder"]
                         </button>
-                        <span> | </span>
-                        <button class="btn btn-danger btn-sm" onclick="addEntity('/Folders/Delete/@item.Id')">
-                            @Localizer["lblDeleteThisFolder"]
+                        <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Delete/@item.Id')"
+                                style="background-color: #555555; color: white; border: none; font-weight: 500;"
+                                onmouseover="this.style.backgroundColor='#777777';"
+                                onmouseout="this.style.backgroundColor='#555555';">
+                            <i class="fa fa-trash" aria-hidden="true" style="margin-right: 8px;"></i> @Localizer["lblDeleteThisFolder"]
                         </button>
                     }
 
@@ -120,17 +135,29 @@
     </tbody>
 </table>
 
-<label for="FolderPages">
-    @Localizer["lblCurrentPageFolder", Model.PageIndex, Model.TotalPages]
-</label>
-<div id="FolderPages">
-    <a class="btn btn-success @(Model.HasPreviousPage ? "" : "disabled")"
-       href="/folders/index?pageIndex=@(Model.PageIndex - 1)">
-        @Localizer["lblPreviousFolder"]
-    </a>
+<div style="text-align: center; margin-top: 40px;">
+    <div id="FolderPages">
+        <a class="btn @(Model.HasPreviousPage ? "" : "disabled") rounded-pill w-60 mb-2"
+           style="background-color: #555555; color: white; border: none; font-weight: 500;"
+           onmouseover="this.style.backgroundColor='#777777';"
+           onmouseout="this.style.backgroundColor='#555555';"
+           href="/folders/index?pageIndex=@(Model.PageIndex - 1)">
+            <i class="fas fa-arrow-left" style="color: white; margin-right: 8px;"></i>@Localizer["lblPreviousFolder"]
+        </a>
 
-    <a class="btn btn-success @(Model.HasNextPage ? "" : "disabled")"
-       href="/folders/index?pageIndex=@(Model.PageIndex + 1)">
-        @Localizer["lblNextFolder"]
-    </a>
+        <a class="btn @(Model.HasNextPage ? "" : "disabled") rounded-pill w-60 mb-2"
+           style="background-color: #555555; color: white; border: none; font-weight: 500;"
+           onmouseover="this.style.backgroundColor='#777777';"
+           onmouseout="this.style.backgroundColor='#555555';"
+           href="/folders/index?pageIndex=@(Model.PageIndex + 1)">
+            @Localizer["lblNextFolder"]<i class="fas fa-arrow-right" style="color: white; margin-left: 8px;"></i>
+        </a>
+    </div>
+    <label for="FolderPages">
+        @Localizer["lblCurrentPageFolder", Model.PageIndex, Model.TotalPages]
+    </label>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+}

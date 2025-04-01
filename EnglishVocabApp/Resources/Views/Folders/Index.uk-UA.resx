@@ -148,6 +148,9 @@
     <value>Наступна</value>
   </data>
   <data name="lblMyFolders" xml:space="preserve">
-    <value>Мої папки</value>
+    <value>Перейти до Моїx папок</value>
+  </data>
+  <data name="lblAllFolders" xml:space="preserve">
+    <value>Перейти до Усіх доступних папок</value>
   </data>
 </root>
