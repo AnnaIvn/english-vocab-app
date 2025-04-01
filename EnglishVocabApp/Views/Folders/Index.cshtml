@@ -116,7 +116,13 @@
                             {
                                 <form asp-action="SaveFolder" asp-controller="Folders" method="post" style="display:inline;">
                                     <input type="hidden" name="folderId" value="@item.Id" />
-                                    <button type="submit" class="btn btn-sm btn-primary">@Localizer["lblSaveToTheListFolder"]</button>
+                                    @* <button type="submit" class="btn btn-sm btn-primary">@Localizer["lblSaveToTheListFolder"]</button> *@
+                                    <button type="submit" class="btn rounded-pill w-60 mb-2"
+                                            style="background-color: #858585; color: white; border: none; font-weight: 500;"
+                                            onmouseover="this.style.backgroundColor='#a3a3a3';"
+                                            onmouseout="this.style.backgroundColor='#858585';">
+                                        <i class="fa fa-paperclip" aria-hidden="true" style="margin-right: 8px;"></i>@Localizer["lblSaveToTheListFolder"]
+                                    </button>
                                 </form>
                             }
                             // Show Remove from My Folders button if the user has saved the folder
@@ -124,7 +130,13 @@
                             {
                                 <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;">
                                     <input type="hidden" name="folderId" value="@item.Id" />
-                                    <button type="submit" class="btn btn-sm btn-danger">@Localizer["lblRemoveFromTheListFolder"]</button>
+                                    <button type="submit" class="btn rounded-pill w-60 mb-2"
+                                            style="background-color: #555555; color: white; border: none; font-weight: 500;"
+                                            onmouseover="this.style.backgroundColor='#777777';"
+                                            onmouseout="this.style.backgroundColor='#555555';">
+                                        <i class="fa fa-trash" aria-hidden="true" style="margin-right: 8px;"></i>@Localizer["lblRemoveFromTheListFolder"]
+                                    </button>
+                                    @* <button type="submit" class="btn btn-sm btn-danger">@Localizer["lblRemoveFromTheListFolder"]</button> *@
                                 </form>
                             }
                         }
