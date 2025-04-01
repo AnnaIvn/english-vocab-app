@@ -126,6 +126,9 @@
   <data name="lblAntonyms" xml:space="preserve">
     <value>Антоніми</value>
   </data>
+  <data name="lblCurrentPageWord" xml:space="preserve">
+    <value>Поточна: {0} сторінка з {1} сторінок(и).</value>
+  </data>
   <data name="lblDelete" xml:space="preserve">
     <value>Видалити</value>
   </data>
@@ -140,6 +143,12 @@
   </data>
   <data name="lblMeaning" xml:space="preserve">
     <value>Значення</value>
+  </data>
+  <data name="lblNextWord" xml:space="preserve">
+    <value>Наступна</value>
+  </data>
+  <data name="lblPreviousWord" xml:space="preserve">
+    <value>Попередня</value>
   </data>
   <data name="lblSynonyms" xml:space="preserve">
     <value>Синоніми</value>

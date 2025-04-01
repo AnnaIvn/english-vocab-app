@@ -126,6 +126,9 @@
   <data name="lblAntonyms" xml:space="preserve">
     <value>Antonyms</value>
   </data>
+  <data name="lblCurrentPageWord" xml:space="preserve">
+    <value>Current: {0} page of {1} page(s).</value>
+  </data>
   <data name="lblDelete" xml:space="preserve">
     <value>Delete</value>
   </data>
@@ -140,6 +143,12 @@
   </data>
   <data name="lblMeaning" xml:space="preserve">
     <value>Meaning</value>
+  </data>
+  <data name="lblNextWord" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="lblPreviousWord" xml:space="preserve">
+    <value>Previous</value>
   </data>
   <data name="lblSynonyms" xml:space="preserve">
     <value>Synonyms</value>

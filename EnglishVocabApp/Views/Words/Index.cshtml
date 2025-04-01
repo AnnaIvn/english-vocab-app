@@ -1,6 +1,7 @@
 @using Humanizer.Localisation
 @using Microsoft.AspNetCore.Mvc.Localization
-@model IEnumerable<EnglishVocabApp.ViewModels.WordViewModel>
+@* @model IEnumerable<EnglishVocabApp.ViewModels.WordViewModel> *@
+@model EnglishVocabApp.Models.PaginateList<Word, EnglishVocabApp.ViewModels.WordViewModel>
 @using System.Security.Claims
 
 @inject IViewLocalizer Localizer
@@ -102,6 +103,21 @@
         }
     </tbody>
 </table>
+
+<label for="WordPages">
+    @Localizer["lblCurrentPageWord", Model.PageIndex, Model.TotalPages]
+</label>
+<div id="WordPages">
+    <a class="btn btn-success @(Model.HasPreviousPage ? "" : "disabled")"
+       href="/words/index?pageIndex=@(Model.PageIndex - 1)">
+        @Localizer["lblPreviousWord"]
+    </a>
+
+    <a class="btn btn-success @(Model.HasNextPage ? "" : "disabled")"
+       href="/words/index?pageIndex=@(Model.PageIndex + 1)">
+        @Localizer["lblNextWord"]
+    </a>
+</div>
 
 <!-- Add FontAwesome CDN link in the <head> section of your layout file (_Layout.cshtml) -->
 @section Scripts {

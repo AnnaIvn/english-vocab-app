@@ -21,15 +21,28 @@ namespace EnglishVocabApp.Controllers
         }
 
         // GET: Words
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, int? pageIndex, int? pageSize)
         {
             // Set sort order parameters
             ViewBag.NameSortParam = sortOrder == "name_asc" ? "name_desc" : "name_asc";
             ViewBag.TypeSortParam = sortOrder == "type_asc" ? "type_desc" : "type_asc";
 
             // Select only necessary fields and project into WordViewModel
-            var wordsQuery = _context.Words
-                .Select(w => new WordViewModel
+            var wordsQuery = _context.Words.AsQueryable();
+
+            // Apply sorting
+            wordsQuery = sortOrder switch
+            {
+                "name_desc" => wordsQuery.OrderByDescending(w => w.Name),
+                "name_asc" => wordsQuery.OrderBy(w => w.Name),
+                "type_desc" => wordsQuery.OrderByDescending(w => w.Type.Name),
+                "type_asc" => wordsQuery.OrderBy(w => w.Type.Name),
+                _ => wordsQuery.OrderBy(w => w.Name) // Default sort by Name
+            };
+
+            var paginatedWordList = await PaginateList<Word, WordViewModel>.CreateAsync(
+                wordsQuery,
+                w => new WordViewModel
                 {
                     Id = w.Id,
                     Name = w.Name,
@@ -39,20 +52,13 @@ namespace EnglishVocabApp.Controllers
                     SynonymsString = w.SynonymsString,
                     AntonymsString = w.AntonymsString,
                     TypeName = w.Type.Name
-                });
-
-            // Apply sorting
-            wordsQuery = sortOrder switch
-            {
-                "name_desc" => wordsQuery.OrderByDescending(w => w.Name),
-                "name_asc" => wordsQuery.OrderBy(w => w.Name),
-                "type_desc" => wordsQuery.OrderByDescending(w => w.TypeName),
-                "type_asc" => wordsQuery.OrderBy(w => w.TypeName),
-                _ => wordsQuery.OrderBy(w => w.Name) // Default sort by Name
-            };
+                },
+                pageIndex ?? 1,
+                pageSize ?? 3
+                );
 
             // Execute the query and return results
-            return View(await wordsQuery.ToListAsync());
+            return View(paginatedWordList);
         }
 
         // Simpler Index that works, let it be for now, just in case
