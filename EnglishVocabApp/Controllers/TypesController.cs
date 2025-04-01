@@ -9,6 +9,7 @@ using EnglishVocabApp.Data;
 using EnglishVocabApp.ViewModels;
 using EnglishVocabApp.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace EnglishVocabApp.Controllers
 {
@@ -53,13 +54,13 @@ namespace EnglishVocabApp.Controllers
                 Name = types.Name
             };
 
-            return View(typeVm);
+            return PartialView("~/Views/Types/_Details.cshtml", typeVm);
         }
 
         // GET: Type/Create
         public IActionResult Create()
         {
-            return View();
+            return PartialView("~/Views/Types/_Create.cshtml", new TypeViewModel());
         }
 
         // POST: Type/Create
@@ -69,7 +70,7 @@ namespace EnglishVocabApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] TypeViewModel types)
         {
-            //if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var typeEntity = new Models.Type
                 {
@@ -103,7 +104,7 @@ namespace EnglishVocabApp.Controllers
                 Name = types.Name
             };
 
-            return View(typeVm);
+            return PartialView("~/Views/Types/_Edit.cshtml", typeVm);
         }
 
         // POST: Type/Edit/5
@@ -118,7 +119,7 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            //if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -129,7 +130,6 @@ namespace EnglishVocabApp.Controllers
                     }
 
                     typeEntity.Name = types.Name; // Copy properties manually
-
 
                     _context.Update(typeEntity);
                     await _context.SaveChangesAsync();
@@ -171,7 +171,7 @@ namespace EnglishVocabApp.Controllers
                 Name = types.Name
             };
 
-            return View(typeVm);
+            return PartialView("~/Views/Types/_Delete.cshtml", typeVm);
         }
 
         // POST: Type/Delete/5

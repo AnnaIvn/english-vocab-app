@@ -117,19 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblCreateNewType" xml:space="preserve">
-    <value>Додати новий тип</value>
+  <data name="lblCloseType" xml:space="preserve">
+    <value>Close</value>
   </data>
-  <data name="lblDeleteType" xml:space="preserve">
-    <value>Видалити</value>
+  <data name="lblCreateType" xml:space="preserve">
+    <value>Create</value>
   </data>
-  <data name="lblDetailsType" xml:space="preserve">
-    <value>Деталі</value>
-  </data>
-  <data name="lblEditType" xml:space="preserve">
-    <value>Редагувати</value>
-  </data>
-  <data name="lblTitle" xml:space="preserve">
-    <value>Усі типи слів</value>
+  <data name="lblTitleCreate" xml:space="preserve">
+    <value>Creation of a new type</value>
   </data>
 </root>

@@ -1,0 +1,42 @@
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+@model EnglishVocabApp.ViewModels.TypeViewModel
+
+@inject IViewLocalizer Localizer
+
+<partial name="_ValidationScriptsPartial" />
+
+<div class="modal-dialog">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h4 class="modal-title">@Localizer["lblTitleCreate"]</h4>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="@Localizer["lblCreateType"]" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["lblCloseType"]</button>
+        </div>
+
+    </div>
+</div>

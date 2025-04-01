@@ -13,7 +13,9 @@
 <h1>@Localizer["lblTitle"]</h1>
 
 <p>
-    <a asp-action="Create">@Localizer["lblCreateNewType"]</a>
+    <button class="btn btn-primary" onclick="addEntity('/Types/Create')">
+        @Localizer["lblCreateNewType"]
+    </button>
 </p>
 <table class="table">
     <thead>
@@ -31,9 +33,15 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <button class="btn btn-info btn-sm" onclick="addEntity('/Types/Details/@item.Id')">
+                        @Localizer["lblDetailsType"]
+                    </button>  |
+                    <button class="btn btn-warning btn-sm" onclick="addEntity('/Types/Edit/@item.Id')">
+                        @Localizer["lblEditType"]
+                    </button> |
+                    <button class="btn btn-danger btn-sm" onclick="addEntity('/Types/Delete/@item.Id')">
+                        @Localizer["lblDeleteType"]
+                    </button>
             </td>
         </tr>
 }

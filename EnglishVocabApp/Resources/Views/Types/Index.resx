@@ -120,6 +120,15 @@
   <data name="lblCreateNewType" xml:space="preserve">
     <value>Create new type</value>
   </data>
+  <data name="lblDeleteType" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="lblDetailsType" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="lblEditType" xml:space="preserve">
+    <value>Edit</value>
+  </data>
   <data name="lblTitle" xml:space="preserve">
     <value>All word types</value>
   </data>
