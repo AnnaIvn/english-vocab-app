@@ -120,7 +120,8 @@ namespace EnglishVocabApp.Controllers
                 TypeName = word.Type?.Name
             };
 
-            return View(wordVm);
+            //return View(wordVm);
+            return PartialView("~/Views/Words/_Details.cshtml", wordVm);
         }
 
         public IActionResult GetWordTypes()

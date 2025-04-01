@@ -1,0 +1,134 @@
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+@model EnglishVocabApp.ViewModels.WordViewModel
+
+@inject IViewLocalizer Localizer
+
+<partial name="_ValidationScriptsPartial" />
+
+<div class="modal-dialog">
+    <div class="modal-content" style="border-radius: 40px; margin-bottom: 30px">
+
+        <div class="modal-header">
+            <h4 class="modal-title text-danger" style="text-transform: uppercase; text-align: center; width: 100%; font-size: 25px;">@Localizer["lblAreYouSure"]: @Model.Name</h4>
+        </div>
+        
+        <dl class="row text-center custom-font-size">
+            <!-- Transcript -->
+            <dt class="col-sm-5 text-end mb-3 " style="padding-right: 30px;">@Localizer["lblTranscript"]</dt>
+            <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">@Model.Transcript</dd>
+
+            <!-- Meaning -->
+            <dt class="col-sm-5 text-end mb-3" style="padding-right: 30px;">@Localizer["lblMeaning"]</dt>
+            <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">@Model.Meaning</dd>
+
+            <!-- Type -->
+            <dt class="col-sm-5 text-end mb-3" style="padding-right: 30px;">@Localizer["lblType"]</dt>
+            <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">@Model.TypeName</dd>
+
+            <!-- Examples -->
+            <dt class="col-sm-5 text-end mb-3" style="padding-right: 30px;">@Localizer["lblExamples"]</dt>
+            <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">
+                @if (Model.Examples.Any())
+                {
+                    <ul class="custom-list">
+                        @foreach (var example in Model.Examples)
+                        {
+                            <li>@example</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No examples available.</p>
+                }
+            </dd>
+
+            <!-- Synonyms -->
+            <dt class="col-sm-5 text-end mb-3" style="padding-right: 30px;">@Localizer["lblSynonyms"]</dt>
+            <dd class="col-sm-6 text-start mb-3 custom-font-size" style="padding-left: 30px;">
+                @if (Model.Synonyms.Any())
+                {
+                    <ul class="custom-list">
+                        @foreach (var synonym in Model.Synonyms)
+                        {
+                            <li>@synonym</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No synonyms available.</p>
+                }
+            </dd>
+
+            <!-- Antonyms -->
+            <dt class="col-sm-5 text-end mb-1" style="padding-right: 30px;">@Localizer["lblAntonyms"]</dt>
+            <dd class="col-sm-6 text-start mb-1 custom-font-size" style="padding-left: 30px;">
+                @if (Model.Antonyms.Any())
+                {
+                    <ul class="custom-list">
+                        @foreach (var antonym in Model.Antonyms)
+                        {
+                            <li>@antonym</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No antonyms available.</p>
+                }
+            </dd>
+
+        </dl>
+
+        <div class="form-group text-center">
+        <form asp-action="Delete" method="post" style="display: inline;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+
+            <button type="submit" class="btn rounded-pill w-auto text-center custom-font-size"
+                    style="background-color: #555555; color: white; border: none; font-weight: 500; text-decoration: none; padding: 8px 16px; margin-left: 15px;"
+                    onmouseover="this.style.backgroundColor='#777777';"
+                    onmouseout="this.style.backgroundColor='#555555';">
+                <i class="fa fa-trash" aria-hidden="true" style="margin-right: 8px;"></i> @Localizer["lblDeleteWord"]
+            </button>
+
+            <a asp-action="Index" class="btn rounded-pill w-auto text-center custom-font-size"
+               data-bs-dismiss="modal"
+               style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; font-weight: 500; text-decoration: none; padding: 8px 16px; margin-left: 15px;"
+               onmouseover="this.style.backgroundColor='#f1f1f1';"
+               onmouseout="this.style.backgroundColor='#ffffff';">
+                <i class="fas fa-arrow-left" style="color: grey; margin-right: 8px;"></i> @Localizer["lblCancel"]
+            </a>
+        </form>
+            <div class="form-group text-center" style="margin-bottom: 25px;">
+        </div>
+
+
+    </div>
+</div>
+
+<script src="~/js/create-word.js" asp-append-version="true"></script>
+
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+    /* Customizing the list symbol */
+    .custom-list {
+        list-style-type: none; /* Removes default bullets */
+        padding-left: 0; /* Removes default left padding */
+    }
+
+        .custom-list li::before {
+            content: "> "; /* Adds '>' before each item */
+            font-size: 18px;
+        }
+
+    .custom-font-size {
+        font-size: 18px;
+    }
+
+</style>

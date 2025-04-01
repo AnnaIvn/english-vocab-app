@@ -98,7 +98,6 @@ function editEntityWord(url) {
     });
 }
 
-
 function deleteEntityWord(url) {
     $.ajax({
         url: url,
