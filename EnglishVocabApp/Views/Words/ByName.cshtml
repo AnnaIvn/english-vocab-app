@@ -1,59 +1,59 @@
-﻿<input type="text" id="searchInput" class="form-control" placeholder="Enter word..." />
+﻿@* <input type="text" id="searchInput" class="form-control" placeholder="Enter word..." /> *@
 
-<table class="table mt-3">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Transcript</th>
-            <th>Meaning</th>
-            <th>Examples</th>
-            <th>Synonyms</th>
-            <th>Antonyms</th>
-        </tr>
-    </thead>
-    <tbody id="wordsTableBody">
-        <!-- AJAX-запит вставлятиме сюди результати -->
-    </tbody>
-</table>
+@* <table class="table mt-3"> *@
+@*     <thead> *@
+@*         <tr> *@
+@*             <th>Name</th> *@
+@*             <th>Type</th> *@
+@*             <th>Transcript</th> *@
+@*             <th>Meaning</th> *@
+@*             <th>Examples</th> *@
+@*             <th>Synonyms</th> *@
+@*             <th>Antonyms</th> *@
+@*         </tr> *@
+@*     </thead> *@
+@*     <tbody id="wordsTableBody"> *@
+@*         <!-- AJAX-запит вставлятиме сюди результати --> *@
+@*     </tbody> *@
+@* </table> *@
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#searchInput").on("input", function () {
-            let query = $(this).val().trim();
-            if (query.length === 0) {
-                $("#wordsTableBody").html(""); // Очистити таблицю, якщо поле пусте
-                return;
-            }
+@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+@* <script> *@
+@*     $(document).ready(function () { *@
+@*         $("#searchInput").on("input", function () { *@
+@*             let query = $(this).val().trim(); *@
+@*             if (query.length === 0) { *@
+@*                 $("#wordsTableBody").html(""); // Очистити таблицю, якщо поле пусте *@
+@*                 return; *@
+@*             } *@
 
-            $.ajax({
-                url: "/Words/ByName",
-                type: "GET",
-                data: { name: query },
-                success: function (response) {
-                    let words = response.words;
-                    let tableContent = "";
+@*             $.ajax({ *@
+@*                 url: "/Words/ByName", *@
+@*                 type: "GET", *@
+@*                 data: { name: query }, *@
+@*                 success: function (response) { *@
+@*                     let words = response.words; *@
+@*                     let tableContent = ""; *@
 
-                    if (words.length === 0) {
-                        tableContent = "<tr><td colspan='7'>No words found</td></tr>";
-                    } else {
-                        words.forEach(word => {
-                            tableContent += `
-                                <tr>
-                                    <td>${word.name}</td>
-                                    <td>${word.type ? word.type.name : ""}</td>
-                                    <td>${word.transcript}</td>
-                                    <td>${word.meaning}</td>
-                                    <td>${word.examplesString || ""}</td>
-                                    <td>${word.synonymsString || ""}</td>
-                                    <td>${word.antonymsString || ""}</td>
-                                </tr>`;
-                        });
-                    }
-                    $("#wordsTableBody").html(tableContent);
-                }
-            });
-        });
-    });
-</script>
+@*                     if (words.length === 0) { *@
+@*                         tableContent = "<tr><td colspan='7'>No words found</td></tr>"; *@
+@*                     } else { *@
+@*                         words.forEach(word => { *@
+@*                             tableContent += ` *@
+@*                                 <tr> *@
+@*                                     <td>${word.name}</td> *@
+@*                                     <td>${word.type ? word.type.name : ""}</td> *@
+@*                                     <td>${word.transcript}</td> *@
+@*                                     <td>${word.meaning}</td> *@
+@*                                     <td>${word.examplesString || ""}</td> *@
+@*                                     <td>${word.synonymsString || ""}</td> *@
+@*                                     <td>${word.antonymsString || ""}</td> *@
+@*                                 </tr>`; *@
+@*                         }); *@
+@*                     } *@
+@*                     $("#wordsTableBody").html(tableContent); *@
+@*                 } *@
+@*             }); *@
+@*         }); *@
+@*     }); *@
+@* </script> *@

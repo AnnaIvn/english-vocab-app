@@ -54,7 +54,7 @@ namespace EnglishVocabApp.Controllers
                     TypeName = w.Type.Name
                 },
                 pageIndex ?? 1,
-                pageSize ?? 3
+                pageSize ?? 5
                 );
 
             // Execute the query and return results

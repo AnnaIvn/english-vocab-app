@@ -1,7 +1,7 @@
 ﻿<h1 style="text-transform: uppercase; text-align: center; margin-top: 50px; margin-bottom: 30px;">Search for a word:</h1>
 
 <div class="input-group mb-3">
-    <input type="text" id="searchInput" class="form-control rounded-pill" placeholder="Search for the word..." style="width: 300px;" />
+    <input type="text" id="searchInput" class="form-control rounded-pill" placeholder="Search for the word..." style="width: 250px;" />
     <span class="input-group-text bg-white border-0">
         <i class="fa fa-search" style="color: #5daade;"></i> <!-- Search icon -->
     </span>
@@ -17,11 +17,11 @@
             <th>Examples</th>
             <th>Synonyms</th>
             <th>Antonyms</th>
-            <th>Actions</th> <!-- Add a column for actions -->
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody id="wordsTableBody">
-        <!-- AJAX results will be inserted here -->
+        <!--AJAX results will be inserted here-->
     </tbody>
 </table>
 
@@ -62,9 +62,29 @@
                                     <td>${word.synonymsString || ""}</td>
                                     <td>${word.antonymsString || ""}</td>
                                     <td>
-                                        <a href="${editUrl}" class="btn btn-secondary rounded-pill w-60 mb-2" style="background-color: #6fa0bb; color: white; border: none;" onmouseover="this.style.backgroundColor='#55778e';" onmouseout="this.style.backgroundColor='#6fa0bb';">Edit</a>
-                                        <a href="${detailsUrl}" class="btn btn-secondary rounded-pill w-60 mb-2" style="background-color: #6f8bbb; color: white; border: none;" onmouseover="this.style.backgroundColor='#55778e';" onmouseout="this.style.backgroundColor='#6f8bbb';">Details</a>
-                                        <a href="${deleteUrl}" class="btn btn-danger rounded-pill w-60" style="background-color: #b53650; color: white; border: none;" onmouseover="this.style.backgroundColor='#9c3147';" onmouseout="this.style.backgroundColor='#b53650';">Delete</a>
+                                        <!-- Edit Button -->
+                                        <button class="btn rounded-pill w-60 mb-2" onclick="editEntityWord('${editUrl}')"
+                                                style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                                                onmouseover="this.style.backgroundColor='#f1f1f1';"
+                                                onmouseout="this.style.backgroundColor='#ffffff';">
+                                            <i class="fa fa-feather" aria-hidden="true" style="color: #808080;"></i> Edit
+                                        </button>
+
+                                        <!-- Details Button -->
+                                        <button class="btn rounded-pill w-60 mb-2" onclick="addEntityWord('${detailsUrl}')"
+                                                style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                                                onmouseover="this.style.backgroundColor='#f1f1f1';"
+                                                onmouseout="this.style.backgroundColor='#ffffff';">
+                                            <i class="fa fa-scroll" aria-hidden="true" style="color: #808080;"></i> Details
+                                        </button>
+
+                                        <!-- Delete Button -->
+                                        <button class="btn rounded-pill w-60 mb-2" onclick="addEntityWord('${deleteUrl}')"
+                                                style="background-color: #555555; color: white; border: none; font-weight: 500;"
+                                                onmouseover="this.style.backgroundColor='#777777';"
+                                                onmouseout="this.style.backgroundColor='#555555';">
+                                            <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                        </button>
                                     </td>
                                 </tr>`;
                         });
@@ -72,10 +92,13 @@
                     $("#wordsTableBody").html(tableContent);
                 },
                 error: function (err) {
-                    console.error("Error:", err); // In case of error
+                    console.error("Error:", err);
                 }
             });
         });
     });
 </script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 
