@@ -1,0 +1,66 @@
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@using EnglishVocabApp.ViewModels
+@model EnglishVocabApp.Models.PaginateList<Word, EnglishVocabApp.ViewModels.WordViewModel>
+
+@inject IViewLocalizer Localizer
+
+<h2 style="text-transform: uppercase; text-align: center; margin-top: 30px;">@Localizer["lblWordsinFolder", ViewBag.FolderName]:</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th> @Localizer["lblWord"]</th>
+            <th>@Localizer["lblTranscript"]</th>
+            <th>@Localizer["lblType"]</th>
+            <th>@Localizer["lblMeaning"]</th>
+            <th>@Localizer["lblExamples"]</th>
+            <th>@Localizer["lblSynonyms"]</th>
+            <th>@Localizer["lblAntonyms"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var word in Model)
+        {
+            <tr>
+                <td>@word.Name</td>
+                <td>@word.Transcript</td>
+                <td>@word.TypeName</td>
+                <td>@word.Meaning</td>
+                <td>@word.ExamplesString</td>
+                <td>@word.SynonymsString</td>
+                <td>@word.AntonymsString</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div style="text-align: center; margin-top: 40px;">
+    <div id="FolderPages">
+        <a class="btn @(Model.HasPreviousPage ? "" : "disabled") rounded-pill w-60 mb-2"
+           style="background-color: #555555; color: white; border: none; font-weight: 500;"
+           onmouseover="this.style.backgroundColor='#777777';"
+           onmouseout="this.style.backgroundColor='#555555';"
+           href="@Url.Action("WordsInFolder", "Folders", new { folderId = ViewBag.FolderId, pageIndex = Model.PageIndex - 1 })">
+            <i class="fas fa-arrow-left" style="color: white; margin-right: 8px;"></i>@Localizer["lblPreviousFolder"]
+        </a>
+
+        <a class="btn btn-secondary rounded-pill w-60 mb-2"
+           style="background-color: #555555; color: white; border: none; font-weight: 500;"
+           onmouseover="this.style.backgroundColor='#777777';"
+           onmouseout="this.style.backgroundColor='#555555';" 
+           asp-action="Index">@Localizer["lblReturnToFold"]</a>
+
+        <a class="btn @(Model.HasNextPage ? "" : "disabled") rounded-pill w-60 mb-2"
+           style="background-color: #555555; color: white; border: none; font-weight: 500;"
+           onmouseover="this.style.backgroundColor='#777777';"
+           onmouseout="this.style.backgroundColor='#555555';"
+           href="@Url.Action("WordsInFolder", "Folders", new { folderId = ViewBag.FolderId, pageIndex = Model.PageIndex + 1 })">
+            @Localizer["lblNextFolder"]<i class="fas fa-arrow-right" style="color: white; margin-left: 8px;"></i>
+        </a>
+    </div>
+    <label for="FolderPages">
+        @Localizer["lblCurrentPageFolder", Model.PageIndex, Model.TotalPages]
+    </label>
+</div>

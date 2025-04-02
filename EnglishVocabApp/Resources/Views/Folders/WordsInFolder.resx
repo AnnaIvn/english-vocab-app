@@ -117,43 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblTitleFold" xml:space="preserve">
-    <value>Усі доступні папки</value>
-  </data>
-  <data name="lblCreateNewFolder" xml:space="preserve">
-    <value>Створити нову папку</value>
-  </data>
-  <data name="lblEditFolder" xml:space="preserve">
-    <value>Редагувати</value>
-  </data>
-  <data name="lblDetailsAboutFolder" xml:space="preserve">
-    <value>Деталі</value>
-  </data>
-  <data name="lblDeleteThisFolder" xml:space="preserve">
-    <value>Видалити</value>
-  </data>
-  <data name="lblSaveToTheListFolder" xml:space="preserve">
-    <value>Зберегти до списку</value>
-  </data>
-  <data name="lblRemoveFromTheListFolder" xml:space="preserve">
-    <value>Видалити зі списку</value>
+  <data name="lblAntonyms" xml:space="preserve">
+    <value>Antonyms</value>
   </data>
   <data name="lblCurrentPageFolder" xml:space="preserve">
-    <value>Поточна: {0} сторінка з {1} сторінок(и).</value>
+    <value>Current: {0} page of {1} page(s).</value>
   </data>
-  <data name="lblPreviousFolder" xml:space="preserve">
-    <value>Попередня</value>
+  <data name="lblExamples" xml:space="preserve">
+    <value>Examples</value>
+  </data>
+  <data name="lblMeaning" xml:space="preserve">
+    <value>Meaning</value>
   </data>
   <data name="lblNextFolder" xml:space="preserve">
-    <value>Наступна</value>
+    <value>Next</value>
   </data>
-  <data name="lblMyFolders" xml:space="preserve">
-    <value>Перейти до Моїx папок</value>
+  <data name="lblPreviousFolder" xml:space="preserve">
+    <value>Previous</value>
   </data>
-  <data name="lblAllFolders" xml:space="preserve">
-    <value>Перейти до Усіх доступних папок</value>
+  <data name="lblReturnToFold" xml:space="preserve">
+    <value>Return to the general list</value>
   </data>
-  <data name="lblStudyWordsFolder" xml:space="preserve">
-    <value>Вчитися</value>
+  <data name="lblSynonyms" xml:space="preserve">
+    <value>Synonyms</value>
+  </data>
+  <data name="lblTranscript" xml:space="preserve">
+    <value>Transcript</value>
+  </data>
+  <data name="lblType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="lblWord" xml:space="preserve">
+    <value>Word</value>
+  </data>
+  <data name="lblWordsinFolder" xml:space="preserve">
+    <value>Words in Folder {0}</value>
   </data>
 </root>

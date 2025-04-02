@@ -528,5 +528,39 @@ namespace EnglishVocabApp.Controllers
             return Json(new { success = true, wordId = wordId });
         }
 
+        public async Task<IActionResult> WordsInFolder(int folderId, int? pageIndex, int? pageSize)
+        {
+
+            var wordsQuery = _context.Words
+                .Where(w => w.WordsFolders.Any(wf => wf.FolderId == folderId))
+                .Include(w => w.Type)
+                .AsQueryable();
+
+            var paginatedWords = await PaginateList<Word, WordViewModel>.CreateAsync(
+                wordsQuery,
+                wf => new WordViewModel
+            {
+                Id = wf.Id,
+                Name = wf.Name,
+                TypeName = wf.Type != null ? wf.Type.Name : "No Type",
+                Transcript = wf.Transcript,
+                Meaning = wf.Meaning,
+                ExamplesString = wf.ExamplesString,
+                SynonymsString = wf.SynonymsString,
+                AntonymsString = wf.AntonymsString
+                },
+                pageIndex ?? 1,
+                pageSize ?? 5
+                );
+
+            ViewBag.FolderName = await _context.Folders
+                .Where(f => f.Id == folderId)
+                .Select(f => f.Name)
+                .FirstOrDefaultAsync();
+            ViewBag.FolderId = folderId;
+
+            return View(paginatedWords);
+        }
+
     }
 }

@@ -153,4 +153,7 @@
   <data name="lblAllFolders" xml:space="preserve">
     <value>Go to All available folders</value>
   </data>
+  <data name="lblStudyWordsFolder" xml:space="preserve">
+    <value>Study</value>
+  </data>
 </root>

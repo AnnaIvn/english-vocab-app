@@ -86,6 +86,12 @@
                     @Html.DisplayFor(modelItem => item.UpdatedAt)
                 </td>
                 <td>
+                    <a class="btn rounded-pill w-60 mb-2" asp-action="WordsInFolder" asp-route-folderId="@item.Id"
+                       style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                       onmouseover="this.style.backgroundColor='#f1f1f1';"
+                       onmouseout="this.style.backgroundColor='#ffffff';">
+                        @Localizer["lblStudyWordsFolder"]
+                    </a>
                     <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Details/@item.Id')"
                             style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
                             onmouseover="this.style.backgroundColor='#f1f1f1';"
