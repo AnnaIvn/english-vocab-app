@@ -9,65 +9,78 @@
 
 @{
     ViewData["Title"] = @Localizer["lblSaveWordInTheFolder"];
+    var wordId = ViewBag.WordId;
+    var wordName = ViewBag.WordName;
+    var savedFolderIds = ViewBag.SavedFolderIds as List<int>;
 }
 
-<h2 style="text-transform: uppercase; text-align: center; margin-top: 30px;">@Localizer["lblSaveWordInTheFolder"]</h2>
+<h2 style="text-transform: uppercase; text-align: center; margin-top: 30px;">@Localizer["lblSaveWord"] @wordName @Localizer["lblInTheFolder"]...</h2>
 
-<table class="table custom-table">
-    <thead>
-        <tr>
-            <th></th> <!-- Column for the checkbox -->
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
-            </th>
-            <th>
-                @* @Html.DisplayNameFor(model => model.FirstOrDefault().IsPrivate) *@
-            </th>
-            @* <th> *@
-            @*     @Html.DisplayNameFor(model => model.FirstOrDefault().User) *@
-            @* </th> *@
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var folder in Model)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            bool isOwner = folder.UserId == userId;
+<form asp-action="SaveWordToFolders" method="post">
+    <input type="hidden" name="wordId" value="@wordId" />
+    <table class="table custom-table">
+        <thead>
             <tr>
-                @if (isOwner)
-                {
-                    <td>
-                        <input type="checkbox" class="custom-checkbox" />
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => folder.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => folder.Description)
-                    </td>
-                    <td>
-                        @if (folder.IsPrivate)
-                        {
-                            <span class="material-icons">lock_outline</span> <!-- Closed Lock Outline -->
-                        }
-                        else
-                        {
-                            <span class="material-icons">lock_open</span>   <!-- Opened Lock -->
-                        }
-                    </td>
-                    @* <td> *@
-                    @*     @Html.DisplayFor(modelItem => folder.User.UserName) *@
-                    @* </td> *@
-                }
-
+                <th></th> <!-- Column for the checkbox -->
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+                </th>
+                <th>
+                    @* @Html.DisplayNameFor(model => model.FirstOrDefault().IsPrivate) *@
+                </th>
+                @* <th> *@
+                @*     @Html.DisplayNameFor(model => model.FirstOrDefault().User) *@
+                @* </th> *@
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var folder in Model)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isOwner = folder.UserId == userId;
+                <tr>
+                    @if (isOwner)
+                    {
+                        <td>
+                            <input type="checkbox" name="folderIds" value="@folder.Id" class="custom-checkbox" @(savedFolderIds.Contains(folder.Id) ? "checked" : "") />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => folder.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => folder.Description)
+                        </td>
+                        <td>
+                            @if (folder.IsPrivate)
+                            {
+                                <span class="material-icons">lock_outline</span> <!-- Closed Lock Outline -->
+                            }
+                            else
+                            {
+                                <span class="material-icons">lock_open</span>   <!-- Opened Lock -->
+                            }
+                        </td>
+                        @* <td> *@
+                        @*     @Html.DisplayFor(modelItem => folder.User.UserName) *@
+                        @* </td> *@
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="form-group mt-3 text-center">
+        <button type="submit" class="btn rounded-pill btn-custom"
+                style="background-color: #555555; color: white; border: none; font-weight: 500; padding-left: 25px; padding-right: 25px;"
+                onmouseover="this.style.backgroundColor='#777777';"
+                onmouseout="this.style.backgroundColor='#555555';">
+            <i class="fas fa-save" style="margin-right: 8px;"></i> @Localizer["lblSave"]
+        </button>
+    </div>
+</form>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 

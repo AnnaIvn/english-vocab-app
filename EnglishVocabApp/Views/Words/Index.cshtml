@@ -98,6 +98,28 @@
                             onmouseout="this.style.backgroundColor='#555555';">
                             <i class="fa fa-trash" aria-hidden="true"></i> @Localizer["lblDelete"]
                     </button>
+
+                    @* <button class="btn rounded-pill w-60 mb-2" onclick="addEntityWord('/Words/Save')" *@
+                    @*         style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;" *@
+                    @*         onmouseover="this.style.backgroundColor='#f1f1f1';" *@
+                    @*         onmouseout="this.style.backgroundColor='#ffffff';"> *@
+                    @*     <i class="fa fa-paperclip" aria-hidden="true" style="color: #808080;"></i> @Localizer["lblSaveToFolder"] *@
+                    @* </button> *@
+
+                    @* <a class="btn rounded-pill w-60 mb-2" href="/Words/Save" *@
+                    @*         style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;" *@
+                    @*         onmouseover="this.style.backgroundColor='#f1f1f1';" *@
+                    @*         onmouseout="this.style.backgroundColor='#ffffff';"> *@
+                    @*     <i class="fa fa-paperclip" aria-hidden="true" style="color: #808080;"></i> @Localizer["lblSaveToFolder"] *@
+                    @* </a> *@
+
+                    <a class="btn rounded-pill w-60 mb-2" href="/Words/Save?wordId=@item.Id&wordName=@item.Name"
+                       style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                       onmouseover="this.style.backgroundColor='#f1f1f1';"
+                       onmouseout="this.style.backgroundColor='#ffffff';">
+                        <i class="fa fa-paperclip" aria-hidden="true" style="color: #808080;"></i> @Localizer["lblSaveToFolder"]
+                    </a>
+                    
                 </td>
             </tr>
         }

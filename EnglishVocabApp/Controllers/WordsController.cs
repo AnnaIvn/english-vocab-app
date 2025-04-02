@@ -342,9 +342,36 @@ namespace EnglishVocabApp.Controllers
             return Json(new { words });
         }
 
+        //public async Task<IActionResult> Save(int wordId, string wordName)
+        //{
+        //    string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+        //    if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
-        // GET: Words/Save
-        public async Task<IActionResult> Save()
+        //    var userFolders = await _context.Folders
+        //        .Where(f => f.UserId == currentUserId)  // Folders the user created
+        //        .Union( // Include folders the user saved
+        //            _context.Folders
+        //                .Where(f => f.FoldersUsers.Any(fu => fu.UserId == currentUserId))
+        //        )
+        //        .Include(f => f.User)
+        //        .Select(f => new FolderViewModel
+        //        {
+        //            Id = f.Id,
+        //            Name = f.Name,
+        //            Description = f.Description,
+        //            UserId = f.UserId,
+        //            User = f.User,
+        //            IsPrivate = f.IsPrivate
+        //        })
+        //        .ToListAsync();
+
+        //    ViewBag.WordId = wordId;
+        //    ViewBag.WordName = wordName;
+
+        //    return View(userFolders);
+        //}
+
+        public async Task<IActionResult> Save(int wordId, string wordName)
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
             if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
@@ -367,8 +394,55 @@ namespace EnglishVocabApp.Controllers
                 })
                 .ToListAsync();
 
+            var savedFolderIds = await _context.WordsFolders
+                .Where(wf => wf.WordId == wordId)
+                .Select(wf => wf.FolderId)
+                .ToListAsync();
+
+            ViewBag.WordId = wordId;
+            ViewBag.WordName = wordName;
+            ViewBag.SavedFolderIds = savedFolderIds;
+
             return View(userFolders);
         }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveWordToFolders(int wordId, List<int> folderIds)
+        {
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+            if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
+
+            var word = await _context.Words.FindAsync(wordId);
+            if (word == null) return NotFound();
+
+            var existingFolders = await _context.WordsFolders
+                .Where(wf => wf.WordId == wordId)
+                .ToListAsync();
+
+            // Remove existing folder associations that are not in the new list
+            _context.WordsFolders.RemoveRange(existingFolders.Where(ef => !folderIds.Contains(ef.FolderId)));
+
+            // Add new folder associations
+            foreach (var folderId in folderIds)
+            {
+                if (!existingFolders.Any(ef => ef.FolderId == folderId))
+                {
+                    _context.WordsFolders.Add(new WordsFolders
+                    {
+                        WordId = wordId,
+                        FolderId = folderId
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+
 
 
 

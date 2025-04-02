@@ -150,6 +150,9 @@
   <data name="lblPreviousWord" xml:space="preserve">
     <value>Previous</value>
   </data>
+  <data name="lblSaveToFolder" xml:space="preserve">
+    <value>Save to folder</value>
+  </data>
   <data name="lblSynonyms" xml:space="preserve">
     <value>Synonyms</value>
   </data>
