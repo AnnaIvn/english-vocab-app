@@ -562,5 +562,26 @@ namespace EnglishVocabApp.Controllers
             return View(paginatedWords);
         }
 
+        public async Task<IActionResult> Study(int folderId)
+        {
+            var folder = await _context.Folders
+                .Include(f => f.WordsFolders)
+                .ThenInclude(wf => wf.Word)
+                .ThenInclude(w => w.Type)
+                .FirstOrDefaultAsync(f => f.Id == folderId);
+
+            if (folder == null) return NotFound();
+
+            var wordViewModels = folder.WordsFolders
+                .Select(wf => new WordViewModel
+                {
+                    Id = wf.Word.Id,
+                    Name = wf.Word.Name,
+                    Meaning = wf.Word.Meaning
+                }).ToList();
+
+            return View(wordViewModels);
+        }
+
     }
 }

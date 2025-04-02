@@ -1,0 +1,63 @@
+﻿@using EnglishVocabApp.ViewModels
+@model List<WordViewModel>
+
+<div id="card-container">
+    <button id="word-card" class="card" onclick="flipCard()">
+        @Model[0].Name
+    </button>
+    <div class="navigation">
+        <button id="prev-btn" onclick="prevWord()" disabled> Previous</button>
+        <button id="next-btn" onclick="nextWord()">Next </button>
+    </div>
+</div>
+
+<script>
+    let words = @Html.Raw(Json.Serialize(Model));
+    let currentIndex = 0;
+    let isFlipped = false;
+
+    function flipCard() {
+        let card = document.getElementById("word-card");
+        if (isFlipped) {
+            card.textContent = words[currentIndex].name;
+        } else {
+            card.textContent = words[currentIndex].meaning;
+        }
+        isFlipped = !isFlipped;
+    }
+
+    function prevWord() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateCard();
+        }
+    }
+
+    function nextWord() {
+        if (currentIndex < words.length - 1) {
+            currentIndex++;
+            updateCard();
+        }
+    }
+
+    function updateCard() {
+        isFlipped = false;
+        document.getElementById("word-card").textContent = words[currentIndex].name;
+        document.getElementById("prev-btn").disabled = currentIndex === 0;
+        document.getElementById("next-btn").disabled = currentIndex === words.length - 1;
+    }
+</script>
+
+<style>
+    .card {
+        width: 200px;
+        height: 100px;
+        font-size: 20px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .navigation {
+        margin-top: 10px;
+    }
+</style>

@@ -7,6 +7,9 @@
 @inject IViewLocalizer Localizer
 
 <h2 style="text-transform: uppercase; text-align: center; margin-top: 30px;">@Localizer["lblWordsinFolder", ViewBag.FolderName]:</h2>
+<a href="@Url.Action("Study", "Folders", new { folderId = ViewBag.FolderId })" class="btn btn-primary">
+    Start studying
+</a>
 
 <table class="table">
     <thead>
