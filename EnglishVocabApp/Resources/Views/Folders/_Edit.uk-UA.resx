@@ -141,6 +141,9 @@
   <data name="lblReturnToFold" xml:space="preserve">
     <value>Повернутися до загального списку</value>
   </data>
+  <data name="lblSavedWords" xml:space="preserve">
+    <value>Збережені слова</value>
+  </data>
   <data name="lblSaveFold" xml:space="preserve">
     <value>Зберегти</value>
   </data>

@@ -43,6 +43,28 @@
                             </label>
                         </div>
 
+                        <hr style="width: 100%; border: 1px solid #ccc; margin: 20px 0;" />
+                        <p class="" style="display: flex; align-items: center; justify-content: center; font-weight: bold;">@Localizer["lblSavedWords"]: </p>
+                        <div class="form-group mb-3">
+                            <table class="table">
+                                <tbody>
+                                    @foreach (var word in Model.WordsFolders)
+                                    {
+                                        <tr>
+                                            <td>@word.Word.Name</td>
+                                            <td>@word.Word.Type.Name</td>
+                                            <td>@word.Word.Meaning</td>
+                                            <td>
+                                                @* <button type="button" class="remove-btn" onclick="removeWord('@word.WordId')"></button> *@
+                                                <button onclick="removeWordFromFolder(@Model.Id, @word.WordId)" class="remove-btn"></button>
+
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
                         <div class="form-group mt-3 text-center">
                             <button type="submit" class="btn rounded-pill btn-custom"
                                     style="background-color: #555555; color: white; border: none; font-weight: 500; padding-left: 25px; padding-right: 25px; margin-right: 10px;"
@@ -67,6 +89,28 @@
 
     </div>
 </div>
+
+<script>
+    function removeWordFromFolder(folderId, wordId) {
+        $.ajax({
+            url: `/Folders/RemoveWordFromFolder`,
+            type: "POST",
+            data: { folderId: folderId, wordId: wordId },
+            success: function (response) {
+                if (response.success) {
+                    // Remove the word from the UI
+                    $(`#word-${wordId}`).remove();
+                } else {
+                    alert('Failed to remove word from folder.');
+                }
+            },
+            error: function (jqxhr, textStatus, errorThrown) {
+                console.error('Error', jqxhr);
+                alert('Failed to remove word from folder.');
+            }
+        });
+    }
+</script>
 
 <style>
     .btn-custom {
@@ -200,13 +244,13 @@
         color: #555;
     }
 
-    .modal-dialog {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        margin-top: -100px;
-    }
+    /* .modal-dialog { */
+    /*     display: flex; */
+    /*     align-items: center; */
+    /*     justify-content: center; */
+    /*     min-height: 100vh; */
+    /*     margin-top: -100px; */
+    /* } */
 
     .custom-checkbox-wrapper {
         display: flex;

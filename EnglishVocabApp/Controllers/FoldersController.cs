@@ -100,6 +100,36 @@ namespace EnglishVocabApp.Controllers
             return View(paginatedFolders);
         }
 
+        //// GET: Folders/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null) return NotFound();
+
+        //    var folder = await _context.Folders
+        //        .Include(f => f.User)
+        //        .Include(f => f.FoldersUsers) // Include saved folder-user relations
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+
+        //    if (folder == null) return NotFound();
+
+        //    var folderVm = new FolderViewModel
+        //    {
+        //        Id = folder.Id,
+        //        Name = folder.Name,
+        //        Description = folder.Description,
+        //        UserId = folder.UserId,
+        //        User = folder.User,
+        //        CreatedAt = folder.CreatedAt,
+        //        UpdatedAt = folder.UpdatedAt,
+        //        IsPrivate = folder.IsPrivate,
+        //        FoldersUsers = folder.FoldersUsers
+        //    };
+
+        //    return PartialView("~/Views/Folders/_Details.cshtml", folderVm);
+        //    //return View(folderVm);
+        //}
+
+
         // GET: Folders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -108,9 +138,13 @@ namespace EnglishVocabApp.Controllers
             var folder = await _context.Folders
                 .Include(f => f.User)
                 .Include(f => f.FoldersUsers) // Include saved folder-user relations
+                .Include(f => f.WordsFolders) // Include words-folder relations
+                .ThenInclude(wf => wf.Word) // Include words
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (folder == null) return NotFound();
+
+            var wordNames = folder.WordsFolders.Select(wf => wf.Word.Name).ToList();
 
             var folderVm = new FolderViewModel
             {
@@ -122,12 +156,18 @@ namespace EnglishVocabApp.Controllers
                 CreatedAt = folder.CreatedAt,
                 UpdatedAt = folder.UpdatedAt,
                 IsPrivate = folder.IsPrivate,
-                FoldersUsers = folder.FoldersUsers
+                FoldersUsers = folder.FoldersUsers,
+                WordsFolders = folder.WordsFolders,
+                WordNames = wordNames // Add word names to the view model
             };
 
             return PartialView("~/Views/Folders/_Details.cshtml", folderVm);
             //return View(folderVm);
         }
+
+
+
+
         // GET: Folders/UserFolders
         //public async Task<IActionResult> UserFolders()
         //{
@@ -187,7 +227,43 @@ namespace EnglishVocabApp.Controllers
             return View(folder);
         }
 
-        // GET: Folders/Edit/5
+        //// GET: Folders/Edit/5
+        //[Authorize]
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        //    var folder = await _context.Folders.Include(f => f.User).FirstOrDefaultAsync(f => f.Id == id);
+        //    if (folder == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    if (folder.UserId != userId)
+        //    {
+        //        return Forbid();
+        //    }
+        //    var folderVm = new FolderViewModel
+        //    {
+        //        Id = folder.Id,
+        //        Name = folder.Name,
+        //        Description = folder.Description,
+        //        //UserId = folder.UserId,
+        //        //User = folder.User,
+        //        //CreatedAt = folder.CreatedAt,
+        //        //UpdatedAt = folder.UpdatedAt,
+        //        IsPrivate = folder.IsPrivate
+        //    };
+        //    ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", folder.UserId);        // changed Id to UserName
+        //    return PartialView("~/Views/Folders/_Edit.cshtml", folderVm);
+        //    //return View(folderVm);
+        //}
+
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -199,7 +275,13 @@ namespace EnglishVocabApp.Controllers
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            var folder = await _context.Folders.Include(f => f.User).FirstOrDefaultAsync(f => f.Id == id);
+            var folder = await _context.Folders
+                .Include(f => f.User)
+                .Include(f => f.WordsFolders)
+                .ThenInclude(wf => wf.Word)
+                .ThenInclude(w => w.Type)
+                .FirstOrDefaultAsync(f => f.Id == id);
+
             if (folder == null)
             {
                 return NotFound();
@@ -208,21 +290,28 @@ namespace EnglishVocabApp.Controllers
             {
                 return Forbid();
             }
+
+            var wordDetails = folder.WordsFolders.Select(wf => new
+            {
+                wf.Word.Name,
+                TypeName = wf.Word.Type.Name,
+                wf.Word.Meaning
+            }).ToList();
+
             var folderVm = new FolderViewModel
             {
                 Id = folder.Id,
                 Name = folder.Name,
                 Description = folder.Description,
-                //UserId = folder.UserId,
-                //User = folder.User,
-                //CreatedAt = folder.CreatedAt,
-                //UpdatedAt = folder.UpdatedAt,
-                IsPrivate = folder.IsPrivate
+                IsPrivate = folder.IsPrivate,
+                WordNames = wordDetails.Select(wd => wd.Name).ToList(),
+                WordsFolders = folder.WordsFolders
             };
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", folder.UserId);        // changed Id to UserName
+
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", folder.UserId);
             return PartialView("~/Views/Folders/_Edit.cshtml", folderVm);
-            //return View(folderVm);
         }
+
 
         // POST: Folders/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -412,5 +501,32 @@ namespace EnglishVocabApp.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(MyFolders));
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> RemoveWordFromFolder(int folderId, int wordId)
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+            var folder = await _context.Folders
+                .Include(f => f.WordsFolders)
+                .FirstOrDefaultAsync(f => f.Id == folderId);
+
+            if (folder == null || folder.UserId != userId)
+            {
+                return NotFound();
+            }
+
+            var wordFolder = folder.WordsFolders.FirstOrDefault(wf => wf.WordId == wordId);
+            if (wordFolder != null)
+            {
+                _context.WordsFolders.Remove(wordFolder);
+                await _context.SaveChangesAsync();
+            }
+
+            return Json(new { success = true, wordId = wordId });
+        }
+
     }
 }

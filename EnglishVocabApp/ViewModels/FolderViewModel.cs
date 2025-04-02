@@ -36,6 +36,8 @@ namespace EnglishVocabApp.ViewModels
         [Display(Name = "lblIsPrivateFolder")]
         public bool IsPrivate { get; set; }
 
+        public List<string> WordNames { get; set; } = new List<string>(); // words that are saved in this folder
+
         public IEnumerable<FoldersUsers>? FoldersUsers { get; set; }
 
         public IEnumerable<WordsFolders>? WordsFolders { get; set; }

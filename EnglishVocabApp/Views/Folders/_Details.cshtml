@@ -35,6 +35,18 @@
                 <dd class="col-sm-6 text-start custom-font-size" style="padding-left: 30px;">@Model.User.UserName</dd>
             </dl>
 
+            <hr style="width: 100%; border: 1px solid #ccc; margin: 20px 0;" />
+
+            <p class="" style="display: flex; align-items: center; justify-content: center; font-weight: bold;">@Localizer["lblSavedWords"]: </p>
+            <div class="" style="padding-left: 30px;">
+                <div class="word-list">
+                    @foreach (var word in Model.WordNames)
+                    {
+                        <span class="word-item">@word</span>
+                    }
+                </div>
+            </div>
+
             @if (User?.Identity?.IsAuthenticated == true)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -85,7 +97,7 @@
             </a>
         </div>
 
-	</div>
+    </div>
 </div>
 
 <style>
@@ -228,4 +240,13 @@
         margin-top: -100px;
     }
 
+    .word-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px 40px;
+    }
+
+    .word-item {
+        white-space: nowrap;
+    }
 </style>

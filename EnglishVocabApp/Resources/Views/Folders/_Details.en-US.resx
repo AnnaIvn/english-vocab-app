@@ -147,6 +147,9 @@
   <data name="lblReturnToFold" xml:space="preserve">
     <value>Return to the general list</value>
   </data>
+  <data name="lblSavedWords" xml:space="preserve">
+    <value>Saved words</value>
+  </data>
   <data name="lblSaveToTheListFolder" xml:space="preserve">
     <value>Save to the list</value>
   </data>
