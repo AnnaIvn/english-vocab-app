@@ -67,7 +67,14 @@
                     @Html.DisplayFor(modelItem => folder.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => folder.IsPrivate)
+                    @if (folder.IsPrivate)
+                    {
+                        <span class="material-icons" style="padding-left:25px;">lock_outline</span> <!-- Closed Lock Outline -->
+                    }
+                    else
+                    {
+                        <span class="material-icons" style="padding-left:25px;">lock_open</span>   <!-- Opened Lock -->
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => folder.User.UserName)
@@ -144,4 +151,7 @@
 
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 }
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">

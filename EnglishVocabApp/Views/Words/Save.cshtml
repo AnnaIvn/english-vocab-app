@@ -1,0 +1,123 @@
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@model List<EnglishVocabApp.ViewModels.FolderViewModel>
+
+@using System.Security.Claims
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = @Localizer["lblSaveWordInTheFolder"];
+}
+
+<h2 style="text-transform: uppercase; text-align: center; margin-top: 30px;">@Localizer["lblSaveWordInTheFolder"]</h2>
+
+<table class="table custom-table">
+    <thead>
+        <tr>
+            <th></th> <!-- Column for the checkbox -->
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+            </th>
+            <th>
+                @* @Html.DisplayNameFor(model => model.FirstOrDefault().IsPrivate) *@
+            </th>
+            @* <th> *@
+            @*     @Html.DisplayNameFor(model => model.FirstOrDefault().User) *@
+            @* </th> *@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var folder in Model)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            bool isOwner = folder.UserId == userId;
+            <tr>
+                @if (isOwner)
+                {
+                    <td>
+                        <input type="checkbox" class="custom-checkbox" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => folder.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => folder.Description)
+                    </td>
+                    <td>
+                        @if (folder.IsPrivate)
+                        {
+                            <span class="material-icons">lock_outline</span> <!-- Closed Lock Outline -->
+                        }
+                        else
+                        {
+                            <span class="material-icons">lock_open</span>   <!-- Opened Lock -->
+                        }
+                    </td>
+                    @* <td> *@
+                    @*     @Html.DisplayFor(modelItem => folder.User.UserName) *@
+                    @* </td> *@
+                }
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+}
+
+<style>
+    .custom-table {
+        width: auto;
+        margin: 0 auto;
+        border-collapse: collapse;
+    }
+
+        .custom-table th, .custom-table td {
+            padding: 10px 20px; /* Reduce padding to make items closer */
+            border: none; /* Remove borders */
+        }
+
+    .custom-checkbox {
+        width: 20px;
+        height: 20px;
+        border: 2px solid black;
+        background-color: white;
+        border-radius: 4px; /* Slightly rounded corners */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+        .custom-checkbox:checked {
+            background-color: #007bff; /* Bright blue color */
+            border-color: #007bff; /* Bright blue color */
+            color: white;
+        }
+
+            .custom-checkbox:checked::before {
+                content: '\f00c'; /* Font Awesome check icon */
+                font-family: 'Font Awesome 5 Free';
+                font-weight: 900;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 14px; /* Adjust size as needed */
+                color: white;
+            }
+</style>

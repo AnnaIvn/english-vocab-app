@@ -47,17 +47,17 @@
 
                     if (!isSaved) // Show "Save to My Folders" if not saved
                     {
-                        <form asp-action="SaveFolder" asp-controller="Folders" method="post" style="display:inline;">
-                            <input type="hidden" name="folderId" value="@Model.Id" />
-                            <button type="submit" class="btn btn-sm btn-primary">@Localizer["lblSaveToTheListFolder"]</button>
-                        </form>
+                        @* <form asp-action="SaveFolder" asp-controller="Folders" method="post" style="display:inline;"> *@
+                        @*     <input type="hidden" name="folderId" value="@Model.Id" /> *@
+                        @*     <button type="submit" class="btn btn-sm btn-primary">@Localizer["lblSaveToTheListFolder"]</button> *@
+                        @* </form> *@
                     }
                     else // Show "Remove from My Folders" if already saved
                     {
-                        <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;">
-                            <input type="hidden" name="folderId" value="@Model.Id" />
-                            <button type="submit" class="btn btn-sm btn-danger">@Localizer["lblRemoveFromTheListFolder"]</button>
-                        </form>
+                        @* <form asp-action="RemoveFolder" asp-controller="Folders" method="post" style="display:inline;"> *@
+                        @*     <input type="hidden" name="folderId" value="@Model.Id" /> *@
+                        @*     <button type="submit" class="btn btn-sm btn-danger">@Localizer["lblRemoveFromTheListFolder"]</button> *@
+                        @* </form> *@
                     }
                 }
             }

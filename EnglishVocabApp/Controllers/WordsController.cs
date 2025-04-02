@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EnglishVocabApp.Data;
 using EnglishVocabApp.Models;
-using EnglishVocabApp.ViewModels;  // Importing the ViewModel namespace
+using EnglishVocabApp.ViewModels;
+using System.Security.Claims;  // Importing the ViewModel namespace
 
 namespace EnglishVocabApp.Controllers
 {
@@ -340,5 +341,36 @@ namespace EnglishVocabApp.Controllers
 
             return Json(new { words });
         }
+
+
+        // GET: Words/Save
+        public async Task<IActionResult> Save()
+        {
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+            if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
+
+            var userFolders = await _context.Folders
+                .Where(f => f.UserId == currentUserId)  // Folders the user created
+                .Union( // Include folders the user saved
+                    _context.Folders
+                        .Where(f => f.FoldersUsers.Any(fu => fu.UserId == currentUserId))
+                )
+                .Include(f => f.User)
+                .Select(f => new FolderViewModel
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    Description = f.Description,
+                    UserId = f.UserId,
+                    User = f.User,
+                    IsPrivate = f.IsPrivate
+                })
+                .ToListAsync();
+
+            return View(userFolders);
+        }
+
+
+
     }
 }

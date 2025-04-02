@@ -36,10 +36,10 @@
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
 
-                        <div class="form-group form-check" style="text-align: center; display: flex; justify-content: center; align-items: center;">
+                        <div class="form-group form-check custom-checkbox-wrapper" style="text-align: center; display: flex; justify-content: center; align-items: center;">
                             <label class="form-check-label" style="display: flex; align-items: center;">
-                                <input class="form-check-input" asp-for="IsPrivate" style="margin-right: 5px;" />
-                                @Localizer["lblIsPrivate"]
+                                <input class="form-check-input custom-checkbox" asp-for="IsPrivate" />
+                                <span style="margin-left: 30px;">@Localizer["lblIsPrivate"]</span>
                             </label>
                         </div>
 
@@ -207,5 +207,44 @@
         min-height: 100vh;
         margin-top: -100px;
     }
+
+    .custom-checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .custom-checkbox {
+        width: 20px;
+        height: 20px;
+        border: 2px solid black;
+        background-color: white;
+        border-radius: 4px; /* Slightly rounded corners */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+        .custom-checkbox:checked {
+            background-color: #007bff; /* Bright blue color */
+            border-color: #007bff; /* Bright blue color */
+            color: white;
+        }
+
+            .custom-checkbox:checked::before {
+                content: '\f00c'; /* Font Awesome check icon */
+                font-family: 'Font Awesome 5 Free';
+                font-weight: 900;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 14px; /* Adjust size as needed */
+                color: white;
+            }
 
 </style>
