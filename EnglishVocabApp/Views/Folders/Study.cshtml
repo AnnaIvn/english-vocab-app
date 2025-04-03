@@ -1,4 +1,5 @@
 ﻿@using EnglishVocabApp.ViewModels
+@using Newtonsoft.Json
 @model List<WordViewModel>
 
 <div id="card-container">
@@ -11,41 +12,12 @@
     </div>
 </div>
 
+<script src="~/js/Study.js"></script>
 <script>
-    let words = @Html.Raw(Json.Serialize(Model));
-    let currentIndex = 0;
-    let isFlipped = false;
-
-    function flipCard() {
-        let card = document.getElementById("word-card");
-        if (isFlipped) {
-            card.textContent = words[currentIndex].name;
-        } else {
-            card.textContent = words[currentIndex].meaning;
-        }
-        isFlipped = !isFlipped;
-    }
-
-    function prevWord() {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateCard();
-        }
-    }
-
-    function nextWord() {
-        if (currentIndex < words.length - 1) {
-            currentIndex++;
-            updateCard();
-        }
-    }
-
-    function updateCard() {
-        isFlipped = false;
-        document.getElementById("word-card").textContent = words[currentIndex].name;
-        document.getElementById("prev-btn").disabled = currentIndex === 0;
-        document.getElementById("next-btn").disabled = currentIndex === words.length - 1;
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+        let wordsJson = @Html.Raw(JsonConvert.SerializeObject(Model));
+        initializeWords(wordsJson);
+    });
 </script>
 
 <style>

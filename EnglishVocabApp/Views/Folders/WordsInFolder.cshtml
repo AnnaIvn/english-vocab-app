@@ -7,9 +7,25 @@
 @inject IViewLocalizer Localizer
 
 <h2 style="text-transform: uppercase; text-align: center; margin-top: 30px;">@Localizer["lblWordsinFolder", ViewBag.FolderName]:</h2>
-<a href="@Url.Action("Study", "Folders", new { folderId = ViewBag.FolderId })" class="btn btn-primary">
+@* <a href="@Url.Action("Study", "Folders", new { folderId = ViewBag.FolderId })" class="btn btn-primary">
     Start studying
-</a>
+</a> *@
+@{
+    var wordCount = ViewBag.WordCount;
+}
+
+@if (wordCount > 0)
+{
+    <a href="@Url.Action("Study", "Folders", new { folderId = ViewBag.FolderId })" class="btn btn-primary">
+        Start studying
+    </a>
+}
+else
+{
+    <button class="btn btn-secondary" disabled>
+        Add some words first
+    </button>
+}
 
 <table class="table">
     <thead>

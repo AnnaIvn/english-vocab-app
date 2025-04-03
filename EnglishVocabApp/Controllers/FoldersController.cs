@@ -536,6 +536,8 @@ namespace EnglishVocabApp.Controllers
                 .Include(w => w.Type)
                 .AsQueryable();
 
+            var wordCount = await wordsQuery.CountAsync();
+
             var paginatedWords = await PaginateList<Word, WordViewModel>.CreateAsync(
                 wordsQuery,
                 wf => new WordViewModel
@@ -552,6 +554,8 @@ namespace EnglishVocabApp.Controllers
                 pageIndex ?? 1,
                 pageSize ?? 5
                 );
+
+            ViewBag.WordCount = wordCount;
 
             ViewBag.FolderName = await _context.Folders
                 .Where(f => f.Id == folderId)
