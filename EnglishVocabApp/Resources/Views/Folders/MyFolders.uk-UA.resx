@@ -144,6 +144,9 @@
   <data name="lblRemoveFromTheListFolder" xml:space="preserve">
     <value>Видалити зі списку</value>
   </data>
+  <data name="lblStudyWordsFolder" xml:space="preserve">
+    <value>Вчитися</value>
+  </data>
   <data name="lblTitleMyFoldersFold" xml:space="preserve">
     <value>Мої Папки</value>
   </data>

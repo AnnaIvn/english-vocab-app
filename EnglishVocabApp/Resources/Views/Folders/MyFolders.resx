@@ -144,6 +144,9 @@
   <data name="lblRemoveFromTheListFolder" xml:space="preserve">
     <value>Remove from the list</value>
   </data>
+  <data name="lblStudyWordsFolder" xml:space="preserve">
+    <value>Study</value>
+  </data>
   <data name="lblTitleMyFoldersFold" xml:space="preserve">
     <value>My Folders</value>
   </data>

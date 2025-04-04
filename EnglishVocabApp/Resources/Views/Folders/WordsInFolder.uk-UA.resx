@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblAddSomeWordsFirst" xml:space="preserve">
+    <value>Додайте слова щоб навчатися</value>
+  </data>
   <data name="lblAntonyms" xml:space="preserve">
     <value>Антоніми</value>
   </data>
@@ -137,6 +140,9 @@
   </data>
   <data name="lblReturnToFold" xml:space="preserve">
     <value>Повернутися до загального списку</value>
+  </data>
+  <data name="lblStartStudying" xml:space="preserve">
+    <value>Почати навчання</value>
   </data>
   <data name="lblSynonyms" xml:space="preserve">
     <value>Синоніми</value>

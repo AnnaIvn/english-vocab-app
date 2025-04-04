@@ -15,17 +15,17 @@
 
 <div class="d-flex justify-content-between">
     <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Create')"
-            style="background-color: #7fb6db; color: white; border: 1px solid #7fb6db; padding-left: 15px; padding-right: 15px; font-weight: 500;"
-            onmouseover="this.style.backgroundColor='#87b5d4';"
-            onmouseout="this.style.backgroundColor='#5daade';">
-        <i class="fa fa-folder" aria-hidden="true" style="color: white; margin-right: 8px;"></i>+ @Localizer["lblCreateNewFolder"]
+            style="background-color: #e0f2ff; color: #288bbf; border: 1px solid #cfebff; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+            onmouseover="this.style.backgroundColor='#cae7fc';"
+            onmouseout="this.style.backgroundColor='#e0f2ff';">
+        <i class="fa fa-folder" aria-hidden="true" style="color: #288bbf; margin-right: 8px;"></i>+ @Localizer["lblCreateNewFolder"]
     </button>
 
     <a class="btn rounded-pill w-60 mb-2" href="/Folders/MyFolders"
-            style="background-color: #7fb6db; color: white; border: 1px solid #7fb6db; padding-left: 15px; padding-right: 15px; font-weight: 500;"
-            onmouseover="this.style.backgroundColor='#87b5d4';"
-            onmouseout="this.style.backgroundColor='#5daade';">
-        @Localizer["lblMyFolders"] <i class="fa fa-folder-open" aria-hidden="true" style="color: white; margin-left: 8px;"></i>
+       style="background-color: #e0f2ff; color: #288bbf; border: 1px solid #cfebff; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+       onmouseover="this.style.backgroundColor='#cae7fc';"
+       onmouseout="this.style.backgroundColor='#e0f2ff';">
+        @Localizer["lblMyFolders"] <i class="fa fa-folder-open" aria-hidden="true" style="color: #288bbf; margin-left: 8px;"></i>
     </a>
 </div>
 
@@ -87,11 +87,12 @@
                 </td>
                 <td>
                     <a class="btn rounded-pill w-60 mb-2" asp-action="WordsInFolder" asp-route-folderId="@item.Id"
-                       style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
-                       onmouseover="this.style.backgroundColor='#f1f1f1';"
-                       onmouseout="this.style.backgroundColor='#ffffff';">
-                        @Localizer["lblStudyWordsFolder"]
+                       style="background-color: #ebf6ff; color: #3d92bf; border: 1px solid #cfebff; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                       onmouseover="this.style.backgroundColor='#d9efff';"
+                       onmouseout="this.style.backgroundColor='#ebf6ff';">
+                        <i class="fas fa-graduation-cap" aria-hidden="true" style="color: #3d92bf; margin-right: 8px;"></i>@Localizer["lblStudyWordsFolder"]
                     </a>
+
                     <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Details/@item.Id')"
                             style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
                             onmouseover="this.style.backgroundColor='#f1f1f1';"
