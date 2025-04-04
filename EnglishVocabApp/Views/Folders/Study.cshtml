@@ -3,12 +3,27 @@
 @model List<WordViewModel>
 
 <div id="card-container">
-    <button id="word-card" class="card" onclick="flipCard()">
-        @Model[0].Name
-    </button>
+    <div style="display: flex; justify-content: center; align-items: center; height: 70vh; margin-top: 40px;">
+        <div id="word-card" class="card" onclick="flipCard()">
+            <div class="front">
+                @Model[0].Name
+            </div>
+            <div class="back">
+                @Model[0].Meaning
+            </div>
+        </div>
+    </div>
+
     <div class="navigation">
-        <button id="prev-btn" onclick="prevWord()" disabled> Previous</button>
-        <button id="next-btn" onclick="nextWord()">Next </button>
+        <button id="prev-btn" onclick="prevWord()" disabled class="nav-btn">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+
+        <span id="word-counter">1 / @Model.Count</span>
+
+        <button id="next-btn" onclick="nextWord()" class="nav-btn">
+            <i class="fas fa-arrow-right"></i>
+        </button>
     </div>
 </div>
 
@@ -20,16 +35,102 @@
     });
 </script>
 
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
 <style>
     .card {
-        width: 200px;
-        height: 100px;
-        font-size: 20px;
+        width: 60%;
+        max-width: 800px;
+        height: 500px;
+        font-size: 40px;
         text-align: center;
         cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        border: none;
+        border-radius: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        position: relative;
     }
+
+        .card.flipped {
+            transform: rotateX(180deg);
+        }
+
+        .card .front, .card .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card .back {
+            transform: rotateX(180deg);
+        }
+
+    .nav-btn {
+        background-color: white;
+        color: grey;
+        border: 2px solid #d3d3d3;
+        font-weight: 500;
+        font-size: 27px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+        .nav-btn i {
+            color: #808080;
+            font-size: 27px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background-color: #f2f2f2;
+            border-color: #969696;
+        }
+
+        .nav-btn:disabled {
+            background-color: white;
+            border-color: #e0e0e0;
+            color: #e0e0e0;
+            cursor: default;
+        }
+
+            .nav-btn:disabled i {
+                color: #c0c0c0;
+            }
 
     .navigation {
         margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+
+    #word-counter {
+        font-size: 21px;
+        font-weight: bold;
+        min-width: 80px;
+        text-align: center;
+        display: inline-block;
+        margin-top: 0;
+        color: grey;
     }
 </style>
