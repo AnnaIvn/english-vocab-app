@@ -18,7 +18,21 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(RoleNames.ADMIN, policy =>
+    {
+        policy.RequireRole(RoleNames.ADMIN);
+    });
+
+    options.AddPolicy(RoleNames.USER, policy =>
+    {
+        policy.RequireRole(RoleNames.USER);
+    });
+});
 
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 

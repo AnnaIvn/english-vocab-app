@@ -14,10 +14,13 @@
 <h2 style="text-transform: uppercase; text-align: center; margin-top: 30px;">@Localizer["lblTitle"]:</h2>
 
 <p style="text-align: center;">
-    <a onclick="addEntityWord('/Words/Create')" style="text-decoration: none; color: #5daade; font-weight: bold; text-transform: uppercase; transition: color 0.3s ease;"
+    @if (User.IsInRole("admin"))
+    { 
+      <a onclick="addEntityWord('/Words/Create')" style="text-decoration: none; color: #5daade; font-weight: bold; text-transform: uppercase; transition: color 0.3s ease;"
        onmouseover="this.style.color='#555555';" onmouseout="this.style.color='#5daade';">
         + @Localizer["lblAddNewWord"]
-    </a>
+      </a>
+    }
 </p>
 <table class="table">
     <thead>
@@ -78,12 +81,15 @@
                     @(item.AntonymsString != null ? string.Join(", ", item.AntonymsString) : "None")
                 </td>
                 <td>
-                    <button class="btn rounded-pill w-60 mb-2" onclick="editEntityWord('/Words/Edit/@item.Id')"
+                    @if (User.IsInRole("admin"))
+                    {
+                      <button class="btn rounded-pill w-60 mb-2" onclick="editEntityWord('/Words/Edit/@item.Id')"
                         style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
                         onmouseover="this.style.backgroundColor='#f1f1f1';"
                         onmouseout="this.style.backgroundColor='#ffffff';">
                         <i class="fa fa-feather" aria-hidden="true" style="color: #808080;"></i> @Localizer["lblEdit"]
-                    </button>
+                      </button>
+                    }
 
                     <button class="btn rounded-pill w-60 mb-2" onclick="addEntityWord('/Words/Details/@item.Id')"
                        style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
@@ -92,12 +98,15 @@
                         <i class="fa fa-scroll" aria-hidden="true" style="color: #808080;"></i> @Localizer["lblDetails"]
                     </button>
 
-                    <button class="btn rounded-pill w-60 mb-2" onclick="addEntityWord('/Words/Delete/@item.Id')"
+                    @if (User.IsInRole("admin"))
+                    {
+                      <button class="btn rounded-pill w-60 mb-2" onclick="addEntityWord('/Words/Delete/@item.Id')"
                             style="background-color: #555555; color: white; border: none; font-weight: 500;"
                             onmouseover="this.style.backgroundColor='#777777';"
                             onmouseout="this.style.backgroundColor='#555555';">
                             <i class="fa fa-trash" aria-hidden="true"></i> @Localizer["lblDelete"]
-                    </button>
+                      </button>
+                    }
 
                     @* <button class="btn rounded-pill w-60 mb-2" onclick="addEntityWord('/Words/Save')" *@
                     @*         style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;" *@
@@ -113,12 +122,15 @@
                     @*     <i class="fa fa-paperclip" aria-hidden="true" style="color: #808080;"></i> @Localizer["lblSaveToFolder"] *@
                     @* </a> *@
 
-                    <a class="btn rounded-pill w-60 mb-2" href="/Words/Save?wordId=@item.Id&wordName=@item.Name"
+                    @if (User.IsInRole("admin") || User.IsInRole("user"))
+                    {
+                      <a class="btn rounded-pill w-60 mb-2" href="/Words/Save?wordId=@item.Id&wordName=@item.Name"
                        style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
                        onmouseover="this.style.backgroundColor='#f1f1f1';"
                        onmouseout="this.style.backgroundColor='#ffffff';">
                         <i class="fa fa-paperclip" aria-hidden="true" style="color: #808080;"></i> @Localizer["lblSaveToFolder"]
-                    </a>
+                      </a>
+                    }
                     
                 </td>
             </tr>

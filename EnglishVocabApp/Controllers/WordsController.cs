@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using EnglishVocabApp.Data;
 using EnglishVocabApp.Models;
 using EnglishVocabApp.ViewModels;
-using System.Security.Claims;  // Importing the ViewModel namespace
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;  // Importing the ViewModel namespace
 
 namespace EnglishVocabApp.Controllers
 {
@@ -139,6 +140,7 @@ namespace EnglishVocabApp.Controllers
 
 
         // GET: Words/Create
+        [Authorize(Roles ="admin")]
         public IActionResult Create()
         {
             //ViewBag.WordTypes = _context.Types.Select(t => t.Name).ToList();
@@ -147,6 +149,7 @@ namespace EnglishVocabApp.Controllers
         }
 
         // POST: Words/Create
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(WordViewModel wordVm)
@@ -184,6 +187,7 @@ namespace EnglishVocabApp.Controllers
 
 
         // GET: Words/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -208,6 +212,7 @@ namespace EnglishVocabApp.Controllers
         }
 
         // POST: Words/Edit/5
+        [Authorize(Roles = "admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, WordViewModel wordVm)
@@ -268,6 +273,7 @@ namespace EnglishVocabApp.Controllers
 
 
         // GET: Words/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -300,6 +306,7 @@ namespace EnglishVocabApp.Controllers
         }
 
         // POST: Words/Delete/5
+        [Authorize(Roles = "admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -371,18 +378,46 @@ namespace EnglishVocabApp.Controllers
         //    return View(userFolders);
         //}
 
+        [Authorize(Roles = "admin, user")]
         public async Task<IActionResult> Save(int wordId, string wordName)
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
             if (string.IsNullOrEmpty(currentUserId)) return Unauthorized();
 
-            var userFolders = await _context.Folders
-                .Where(f => f.UserId == currentUserId)  // Folders the user created
-                .Union( // Include folders the user saved
-                    _context.Folders
-                        .Where(f => f.FoldersUsers.Any(fu => fu.UserId == currentUserId))
-                )
-                .Include(f => f.User)
+            bool isAdmin = User.IsInRole("admin");
+
+            IQueryable<Folder> foldersQuery;
+
+            if (isAdmin)
+            {
+                foldersQuery = _context.Folders.Include(f => f.User);
+            }
+            else
+            {
+                foldersQuery = _context.Folders
+                    .Where(f => f.UserId == currentUserId ||
+                                f.FoldersUsers.Any(fu => fu.UserId == currentUserId))
+                    .Include(f => f.User);
+            }
+
+            //var userFolders = await _context.Folders
+            //    .Where(f => f.UserId == currentUserId)  // Folders the user created
+            //    .Union( // Include folders the user saved
+            //        _context.Folders
+            //            .Where(f => f.FoldersUsers.Any(fu => fu.UserId == currentUserId))
+            //    )
+            //    .Include(f => f.User)
+            //    .Select(f => new FolderViewModel
+            //    {
+            //        Id = f.Id,
+            //        Name = f.Name,
+            //        Description = f.Description,
+            //        UserId = f.UserId,
+            //        User = f.User,
+            //        IsPrivate = f.IsPrivate
+            //    })
+            //    .ToListAsync();
+            var userFolders = await foldersQuery
                 .Select(f => new FolderViewModel
                 {
                     Id = f.Id,
@@ -407,7 +442,7 @@ namespace EnglishVocabApp.Controllers
         }
 
 
-
+        [Authorize(Roles = "admin, user")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveWordToFolders(int wordId, List<int> folderIds)

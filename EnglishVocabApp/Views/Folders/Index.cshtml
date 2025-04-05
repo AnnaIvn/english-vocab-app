@@ -14,19 +14,25 @@
 <h2 style="text-transform: uppercase; text-align: center; margin-top: 30px;">@Localizer["lblTitleFold"]:</h2>
 
 <div class="d-flex justify-content-between">
-    <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Create')"
-            style="background-color: #e0f2ff; color: #288bbf; border: 1px solid #cfebff; padding-left: 15px; padding-right: 15px; font-weight: 500;"
-            onmouseover="this.style.backgroundColor='#cae7fc';"
-            onmouseout="this.style.backgroundColor='#e0f2ff';">
-        <i class="fa fa-folder" aria-hidden="true" style="color: #288bbf; margin-right: 8px;"></i>+ @Localizer["lblCreateNewFolder"]
-    </button>
+    @if (User.IsInRole("admin") || User.IsInRole("user"))
+    {
+        <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Create')"
+                style="background-color: #e0f2ff; color: #288bbf; border: 1px solid #cfebff; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                onmouseover="this.style.backgroundColor='#cae7fc';"
+                onmouseout="this.style.backgroundColor='#e0f2ff';">
+            <i class="fa fa-folder" aria-hidden="true" style="color: #288bbf; margin-right: 8px;"></i>+ @Localizer["lblCreateNewFolder"]
+        </button>
+     }
 
-    <a class="btn rounded-pill w-60 mb-2" href="/Folders/MyFolders"
-       style="background-color: #e0f2ff; color: #288bbf; border: 1px solid #cfebff; padding-left: 15px; padding-right: 15px; font-weight: 500;"
-       onmouseover="this.style.backgroundColor='#cae7fc';"
-       onmouseout="this.style.backgroundColor='#e0f2ff';">
+     @if (User.IsInRole("admin") || User.IsInRole("user"))
+     {
+         <a class="btn rounded-pill w-60 mb-2" href="/Folders/MyFolders"
+           style="background-color: #e0f2ff; color: #288bbf; border: 1px solid #cfebff; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+           onmouseover="this.style.backgroundColor='#cae7fc';"
+           onmouseout="this.style.backgroundColor='#e0f2ff';">
         @Localizer["lblMyFolders"] <i class="fa fa-folder-open" aria-hidden="true" style="color: #288bbf; margin-left: 8px;"></i>
-    </a>
+         </a>
+     }
 </div>
 
 <table class="table">
@@ -57,6 +63,7 @@
         @foreach (var item in Model) {
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            bool isAdmin = User.IsInRole("admin");
             bool isOwner = item.UserId == userId;
 
             <tr>
@@ -99,7 +106,7 @@
                             onmouseout="this.style.backgroundColor='#ffffff';">
                         <i class="fa fa-scroll" aria-hidden="true" style="color: #808080; margin-right: 8px;"></i> @Localizer["lblDetailsAboutFolder"]
                     </button>
-                    @if (isOwner)
+                    @if (isOwner || isAdmin)
                     {
                         <button class="btn rounded-pill w-60 mb-2" onclick="addEntity('/Folders/Edit/@item.Id')"
                                 style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"

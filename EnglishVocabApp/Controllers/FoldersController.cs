@@ -30,11 +30,22 @@ namespace EnglishVocabApp.Controllers
                 ? User.FindFirstValue(ClaimTypes.NameIdentifier)
                 : null;
 
-            var foldersQuery = _context.Folders
-                .Include(f => f.User)
-                /*.Include(f => f.FoldersUsers)*/ 
-                .Where(f => !f.IsPrivate || (userId != null && f.UserId == userId))
-            .AsQueryable();
+            bool isAdmin = User.IsInRole("admin");
+
+            IQueryable<Folder> foldersQuery;
+
+            if (isAdmin)
+            {
+                // Admin sees everything
+                foldersQuery = _context.Folders
+                    .Include(f => f.User);
+            }
+            else
+            {
+                foldersQuery = _context.Folders
+                    .Include(f => f.User)
+                    .Where(f => !f.IsPrivate || (userId != null && f.UserId == userId));
+            }
 
             var paginatedFolders = await PaginateList<Folder, FolderViewModel>.CreateAsync( 
                 foldersQuery,
@@ -66,6 +77,7 @@ namespace EnglishVocabApp.Controllers
             return View(paginatedFolders);
         }
 
+        [Authorize(Roles = "admin, user")]
         public async Task<IActionResult> MyFolders(int? pageIndex, int? pageSize)
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
@@ -186,7 +198,7 @@ namespace EnglishVocabApp.Controllers
         //    return View(userFolders);
         //}
         // GET: Folders/Create
-        [Authorize]
+        [Authorize(Roles = "admin, user")]
         public IActionResult Create()
         {
             //ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");
@@ -197,7 +209,7 @@ namespace EnglishVocabApp.Controllers
         // POST: Folders/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+        [Authorize(Roles = "admin, user")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Description,IsPrivate")]FolderViewModel folder)
@@ -264,7 +276,7 @@ namespace EnglishVocabApp.Controllers
         //    //return View(folderVm);
         //}
 
-        [Authorize]
+        [Authorize(Roles = "admin, user")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -274,6 +286,8 @@ namespace EnglishVocabApp.Controllers
 
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+            bool isAdmin = User.IsInRole("admin");
 
             var folder = await _context.Folders
                 .Include(f => f.User)
@@ -286,7 +300,7 @@ namespace EnglishVocabApp.Controllers
             {
                 return NotFound();
             }
-            if (folder.UserId != userId)
+            if (!isAdmin && folder.UserId != userId)
             {
                 return Forbid();
             }
@@ -316,7 +330,7 @@ namespace EnglishVocabApp.Controllers
         // POST: Folders/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+        [Authorize(Roles = "admin, user")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, FolderViewModel folderVm)
@@ -326,12 +340,14 @@ namespace EnglishVocabApp.Controllers
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
+            bool isAdmin = User.IsInRole("admin");
+
             if (ModelState.IsValid)
             {
                 var folder = await _context.Folders.Include(f => f.User).FirstOrDefaultAsync(f => f.Id == id);
                 if (folder == null) return NotFound();
 
-                if (folder.UserId != userId)
+                if (!isAdmin && folder.UserId != userId)
                 {
                     return Forbid();
                 }
@@ -350,7 +366,7 @@ namespace EnglishVocabApp.Controllers
         }
 
         // GET: Folders/Delete/5
-        [Authorize]
+        [Authorize(Roles = "admin, user")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -360,12 +376,14 @@ namespace EnglishVocabApp.Controllers
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
+            bool isAdmin = User.IsInRole("admin");
+
             var folder = await _context.Folders.Include(f => f.User).FirstOrDefaultAsync(m => m.Id == id);
             if (folder == null)
             {
                 return NotFound();
             }
-            if (folder.UserId != userId)
+            if (!isAdmin && folder.UserId != userId)
             {
                 return Forbid();
             }
@@ -388,13 +406,15 @@ namespace EnglishVocabApp.Controllers
         }
 
         // POST: Folders/Delete/5
-        [Authorize]
+        [Authorize(Roles = "admin, user")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+            bool isAdmin = User.IsInRole("admin");
 
             var folder = await _context.Folders.Include(f => f.FoldersUsers).FirstOrDefaultAsync(f => f.Id == id);
 
@@ -403,7 +423,7 @@ namespace EnglishVocabApp.Controllers
                 return NotFound();
             }
 
-            if (folder.UserId != userId)
+            if (!isAdmin && folder.UserId != userId)
             {
                 return Forbid();
             }
@@ -444,7 +464,7 @@ namespace EnglishVocabApp.Controllers
 
             //return View(await folders.ToListAsync());
         //}
-        [Authorize]
+        [Authorize(Roles = "admin, user")]
         public async Task<IActionResult> SaveFolder(int folderId)
         {
             string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -472,7 +492,7 @@ namespace EnglishVocabApp.Controllers
             return RedirectToAction(nameof(MyFolders));
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin, user")]
         public async Task<IActionResult> RemoveFolder(int folderId)
         {
             string? currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -502,20 +522,27 @@ namespace EnglishVocabApp.Controllers
             return RedirectToAction(nameof(MyFolders));
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin, user")]
         [HttpPost]
         public async Task<IActionResult> RemoveWordFromFolder(int folderId, int wordId)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
+            bool isAdmin = User.IsInRole("admin");
+
             var folder = await _context.Folders
                 .Include(f => f.WordsFolders)
                 .FirstOrDefaultAsync(f => f.Id == folderId);
 
-            if (folder == null || folder.UserId != userId)
+            if (folder == null)
             {
                 return NotFound();
+            }
+
+            if (!isAdmin && folder.UserId != userId)
+            {
+                return Forbid();
             }
 
             var wordFolder = folder.WordsFolders.FirstOrDefault(wf => wf.WordId == wordId);

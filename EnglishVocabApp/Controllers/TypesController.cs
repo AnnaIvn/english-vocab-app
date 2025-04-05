@@ -10,9 +10,11 @@ using EnglishVocabApp.ViewModels;
 using EnglishVocabApp.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using static NuGet.Packaging.PackagingConstants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EnglishVocabApp.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class TypesController : Controller
     {
         private readonly ApplicationDbContext _context;

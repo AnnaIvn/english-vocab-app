@@ -41,9 +41,10 @@
             @foreach (var folder in Model)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                bool isAdmin = User.IsInRole("admin");
                 bool isOwner = folder.UserId == userId;
                 <tr>
-                    @if (isOwner)
+                    @if (isOwner || isAdmin)
                     {
                         <td>
                             <input type="checkbox" name="folderIds" value="@folder.Id" class="custom-checkbox" @(savedFolderIds.Contains(folder.Id) ? "checked" : "") />
