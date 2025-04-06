@@ -1,0 +1,19 @@
+﻿@model EnglishVocabApp.ViewModels.MultipleChoiceViewModel
+
+<h2>What is the translation of: <strong>@Model.WordText</strong>?</h2>
+
+<form asp-action="CheckAnswer" method="post">
+    <input type="hidden" name="folderId" value="@Model.FolderId" />
+    <input type="hidden" name="wordId" value="@Model.WordId" />
+    <input type="hidden" name="correctAnswer" value="@Model.CorrectAnswer" />
+
+    @foreach (var option in Model.Options)
+    {
+        <div>
+            <input type="radio" name="selectedAnswer" value="@option" required />
+            @option
+        </div>
+    }
+
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>

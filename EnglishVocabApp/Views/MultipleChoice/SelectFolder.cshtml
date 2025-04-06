@@ -1,0 +1,23 @@
+﻿@model IEnumerable<EnglishVocabApp.Models.Folder>
+
+@{
+    ViewData["Title"] = "Select a Folder";
+}
+
+<h2 class="mb-4">Select a Folder</h2>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var folder in Model)
+    {
+        <div class="col">
+            <div class="card h-100 text-center shadow-sm border-0">
+                <div class="card-body">
+                    <a asp-action="Quiz" asp-route-folderId="@folder.Id" class="text-decoration-none text-dark">
+                        <div style="font-size: 40px;">📁</div>
+                        <h5 class="card-title mt-2">@folder.Name</h5>
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

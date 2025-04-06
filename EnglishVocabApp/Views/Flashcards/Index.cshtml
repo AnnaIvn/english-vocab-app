@@ -1,0 +1,30 @@
+﻿@model List<Word>
+
+<h2>Картки для вивчення</h2>
+
+<div class="row">
+    @foreach (var word in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card flip-card">
+                <div class="card-body text-center">
+                    <h4>@word.Name</h4>
+                    <button class="btn btn-sm btn-primary" onclick="toggleCard(this)">Показати</button>
+                    <div class="card-details d-none mt-2">
+                        <p><strong>Значення:</strong> @word.Meaning</p>
+                        <p><strong>Приклад:</strong> @word.Examples</p>
+                        <p><strong>Тип:</strong> @word.Type</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function toggleCard(button) {
+        const details = button.nextElementSibling;
+        details.classList.toggle("d-none");
+        button.innerText = details.classList.contains("d-none") ? "Показати" : "Сховати";
+    }
+</script>

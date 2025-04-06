@@ -1,0 +1,19 @@
+﻿@model Word
+
+<h2>Слово дня</h2>
+
+@if (Model != null)
+{
+    <div class="card p-4">
+        <h3>@Model.Name</h3>
+        <p><strong>Транскрипція:</strong> @Model.Transcript</p>
+        <p><strong>Значення:</strong> @Model.Meaning</p>
+        <p><strong>Приклад:</strong> @Model.Examples</p>
+        <p><strong>Синоніми:</strong> @Model.Synonyms</p>
+        <p><strong>Антоніми:</strong> @Model.Antonyms</p>
+    </div>
+}
+else
+{
+    <p>Слово не знайдено.</p>
+}

@@ -1,0 +1,10 @@
+﻿@{
+    var isCorrect = (bool)ViewBag.IsCorrect;
+    var correctAnswer = (string)ViewBag.CorrectAnswer;
+    var folderId = (int)ViewBag.FolderId;
+}
+
+<h2>@(isCorrect ? "Correct!" : "Wrong!")</h2>
+<p>The correct answer was: <strong>@correctAnswer</strong></p>
+
+<a asp-action="NextQuestion" asp-route-folderId="@folderId" class="btn btn-primary">Next</a>

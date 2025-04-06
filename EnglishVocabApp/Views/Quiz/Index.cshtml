@@ -1,0 +1,25 @@
+﻿@model List<Word>
+@{
+    int q = 1;
+}
+
+<h2>Тест: Обери правильне значення</h2>
+
+<form>
+    @foreach (var word in Model)
+    {
+        var options = Model.OrderBy(x => Guid.NewGuid()).Take(3).ToList();
+        options.Add(word);
+        options = options.OrderBy(x => Guid.NewGuid()).ToList();
+        <div class="mb-4">
+            <strong>@(q++). @word.Name</strong><br />
+            @foreach (var opt in options)
+            {
+                <div>
+                    <input type="radio" name="q@word.Id" value="@opt.Meaning" /> @opt.Meaning
+                </div>
+            }
+        </div>
+    }
+    <button class="btn btn-success">Перевірити</button>
+</form>

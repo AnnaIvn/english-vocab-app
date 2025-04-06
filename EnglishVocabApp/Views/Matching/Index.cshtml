@@ -1,0 +1,98 @@
+﻿@model Dictionary<string, string>
+@{
+    ViewData["Title"] = "Matching Game";
+    var englishWords = Model.Keys.ToList();
+    var ukrainianWords = Model.Values.OrderBy(x => Guid.NewGuid()).ToList(); // shuffle
+    var icons = new Dictionary<string, string> {
+        {"Apple", "🍎"}, {"Dog", "🐶"}, {"Car", "🚗"}, {"Book", "📖"}
+    };
+}
+
+<h2>Match the words</h2>
+<div style="display: flex; gap: 50px; flex-wrap: wrap;">
+    <div>
+        <h4>English</h4>
+        @foreach (var word in englishWords)
+        {
+            <div class="word eng" draggable="true" data-word="@word">
+                @icons[word] @word
+            </div>
+        }
+    </div>
+    <div>
+        <h4>Українська</h4>
+        @foreach (var translation in ukrainianWords)
+        {
+            var correctKey = Model.FirstOrDefault(x => x.Value == translation).Key;
+            <div class="word dropzone" data-target="@correctKey">
+                @translation
+            </div>
+        }
+    </div>
+</div>
+
+<div id="result" style="margin-top: 20px; font-weight: bold;"></div>
+
+<style>
+    .word {
+        padding: 10px;
+        border: 1px solid gray;
+        margin: 5px;
+        background: #f0f0f0;
+        cursor: grab;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+
+    .dropzone {
+        min-height: 40px;
+        position: relative;
+    }
+
+        .dropzone.success {
+            background-color: #d4edda;
+            border-color: green;
+        }
+
+        .dropzone.fail {
+            background-color: #f8d7da;
+            border-color: red;
+        }
+</style>
+
+<script>
+    let dragged;
+
+    document.querySelectorAll(".eng").forEach(el => {
+        el.addEventListener("dragstart", e => {
+            dragged = e.target;
+        });
+    });
+
+    document.querySelectorAll(".dropzone").forEach(zone => {
+        zone.addEventListener("dragover", e => e.preventDefault());
+
+        zone.addEventListener("drop", e => {
+            e.preventDefault();
+
+            if (zone.classList.contains("matched")) return;
+
+            if (dragged.dataset.word === zone.dataset.target) {
+                zone.classList.add("success", "matched");
+                zone.innerHTML += " ✅";
+                dragged.remove();
+
+                if (document.querySelectorAll(".eng").length === 0) {
+                    document.getElementById("result").textContent = "Вітаємо! Усі слова зіставлено!";
+                }
+            } else {
+                zone.classList.add("fail");
+                zone.innerHTML += " ❌";
+                setTimeout(() => {
+                    zone.classList.remove("fail");
+                    zone.innerHTML = zone.innerHTML.replace("❌", "");
+                }, 1000);
+            }
+        });
+    });
+</script>
