@@ -1,4 +1,9 @@
-﻿@{
+﻿@using Humanizer.Localisation
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -7,10 +12,10 @@
 @*     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
 @* </div> *@
 
-<h2 style="text-transform: uppercase; text-align: center; margin-top: 30px; margin-bottom: 30px;">Start by searching for a word:</h2>
+<h2 style="text-transform: uppercase; text-align: center; margin-top: 30px; margin-bottom: 30px;">@Localizer["lblTitle"]</h2>
 
 <div class="input-group mb-3">
-    <input type="text" id="searchInput" class="form-control rounded-pill" placeholder="Search for the word..." style="width: 300px;" />
+    <input type="text" id="searchInput" class="form-control rounded-pill" placeholder="@Localizer["lblHint"]... " style="width: 300px;" />
     <span class="input-group-text bg-white border-0">
         <i class="fa fa-search" style="color: #5daade;"></i> <!-- Search icon -->
     </span>
@@ -19,14 +24,14 @@
 <table class="table mt-3">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Transcript</th>
-            <th>Meaning</th>
-            <th>Examples</th>
-            <th>Synonyms</th>
-            <th>Antonyms</th>
-            <th>Actions</th>
+            <th>@Localizer["lblWord"]</th>
+            <th>@Localizer["lblType"]</th>
+            <th>@Localizer["lblTranscript"]</th>
+            <th>@Localizer["lblMeaning"]</th>
+            <th>@Localizer["lblExamples"]</th>
+            <th>@Localizer["lblSynonyms"]</th>
+            <th>@Localizer["lblAntonyms"]</th>
+            <th>@Localizer["lblActions"]</th>
         </tr>
     </thead>
     <tbody id="wordsTableBody">
