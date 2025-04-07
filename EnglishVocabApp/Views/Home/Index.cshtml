@@ -31,7 +31,7 @@
             <th>@Localizer["lblExamples"]</th>
             <th>@Localizer["lblSynonyms"]</th>
             <th>@Localizer["lblAntonyms"]</th>
-            <th>@Localizer["lblActions"]</th>
+            @* <th>@Localizer["lblActions"]</th> *@
         </tr>
     </thead>
     <tbody id="wordsTableBody">
@@ -75,32 +75,32 @@
                                     <td>${word.examplesString || ""}</td>
                                     <td>${word.synonymsString || ""}</td>
                                     <td>${word.antonymsString || ""}</td>
-                                    <td>
-                                        <!-- Edit Button -->
-                                        <button class="btn rounded-pill w-60 mb-2" onclick="editEntityWord('${editUrl}')"
-                                                style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
-                                                onmouseover="this.style.backgroundColor='#f1f1f1';"
-                                                onmouseout="this.style.backgroundColor='#ffffff';">
-                                            <i class="fa fa-feather" aria-hidden="true" style="color: #808080;"></i> Edit
-                                        </button>
+                                //     <td>
+                                //         <!-- Edit Button -->
+                                //         <button class="btn rounded-pill w-60 mb-2" onclick="editEntityWord('${editUrl}')"
+                                //                 style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                                //                 onmouseover="this.style.backgroundColor='#f1f1f1';"
+                                //                 onmouseout="this.style.backgroundColor='#ffffff';">
+                                //             <i class="fa fa-feather" aria-hidden="true" style="color: #808080;"></i> Edit
+                                //         </button>
 
-                                        <!-- Details Button -->
-                                        <button class="btn rounded-pill w-60 mb-2" onclick="addEntityWord('${detailsUrl}')"
-                                                style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
-                                                onmouseover="this.style.backgroundColor='#f1f1f1';"
-                                                onmouseout="this.style.backgroundColor='#ffffff';">
-                                            <i class="fa fa-scroll" aria-hidden="true" style="color: #808080;"></i> Details
-                                        </button>
+                                //         <!-- Details Button -->
+                                //         <button class="btn rounded-pill w-60 mb-2" onclick="addEntityWord('${detailsUrl}')"
+                                //                 style="background-color: #ffffff; color: grey; border: 1px solid #d3d3d3; padding-left: 15px; padding-right: 15px; font-weight: 500;"
+                                //                 onmouseover="this.style.backgroundColor='#f1f1f1';"
+                                //                 onmouseout="this.style.backgroundColor='#ffffff';">
+                                //             <i class="fa fa-scroll" aria-hidden="true" style="color: #808080;"></i> Details
+                                //         </button>
 
-                                        <!-- Delete Button -->
-                                        <button class="btn rounded-pill w-60 mb-2" onclick="addEntityWord('${deleteUrl}')"
-                                                style="background-color: #555555; color: white; border: none; font-weight: 500;"
-                                                onmouseover="this.style.backgroundColor='#777777';"
-                                                onmouseout="this.style.backgroundColor='#555555';">
-                                            <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                                        </button>
-                                    </td>
-                                </tr>`;
+                                //         <!-- Delete Button -->
+                                //         <button class="btn rounded-pill w-60 mb-2" onclick="addEntityWord('${deleteUrl}')"
+                                //                 style="background-color: #555555; color: white; border: none; font-weight: 500;"
+                                //                 onmouseover="this.style.backgroundColor='#777777';"
+                                //                 onmouseout="this.style.backgroundColor='#555555';">
+                                //             <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                //         </button>
+                                //     </td>
+                                // </tr>`;
                         });
                     }
                     $("#wordsTableBody").html(tableContent);
