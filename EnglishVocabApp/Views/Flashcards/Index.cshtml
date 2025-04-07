@@ -1,4 +1,4 @@
-﻿@model List<Word>
+@model List<EnglishVocabApp.Models.Word>
 
 <h2>Картки для вивчення</h2>
 
@@ -12,8 +12,19 @@
                     <button class="btn btn-sm btn-primary" onclick="toggleCard(this)">Показати</button>
                     <div class="card-details d-none mt-2">
                         <p><strong>Значення:</strong> @word.Meaning</p>
-                        <p><strong>Приклад:</strong> @word.Examples</p>
-                        <p><strong>Тип:</strong> @word.Type</p>
+
+                        @if (word.Examples.Any())
+                        {
+                            <p><strong>Приклади:</strong></p>
+                            <ul class="text-start">
+                                @foreach (var example in word.Examples)
+                                {
+                                    <li>@example</li>
+                                }
+                            </ul>
+                        }
+
+                        <p><strong>Тип:</strong> @word.Type?.Name</p>
                     </div>
                 </div>
             </div>
